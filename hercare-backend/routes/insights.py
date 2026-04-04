@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 import google.generativeai as genai
-from models.user import db
+from bson import ObjectId
 
 insights_bp = Blueprint('insights', __name__)
 
@@ -10,6 +10,8 @@ insights_bp = Blueprint('insights', __name__)
 @jwt_required()
 def get_insights():
     try:
+        from app import mongo
+        db = mongo
         user_id = get_jwt_identity()
 
         # Configure API Key (done inside the route to ensure .env is fully loaded if lazy-loaded)
@@ -72,8 +74,10 @@ def get_insights():
 @jwt_required()
 def chat_with_ai():
     try:
+        from app import mongo
+        db = mongo
         user_id = get_jwt_identity()
-        data = db.users.find_one({"_id": user_id})
+        data = db.users.find_one({"_id": ObjectId(user_id)})
         user_name = data.get('first_name', 'User') if data else 'User'
         
         user_msg = request.json.get('message')
