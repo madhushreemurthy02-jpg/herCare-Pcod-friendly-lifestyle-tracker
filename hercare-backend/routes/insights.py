@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 import google.generativeai as genai
@@ -66,4 +66,47 @@ def get_insights():
 
     except Exception as e:
         print(f"Insight Generation Error: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@insights_bp.route('/chat', methods=['POST'])
+@jwt_required()
+def chat_with_ai():
+    try:
+        user_id = get_jwt_identity()
+        data = db.users.find_one({"_id": user_id})
+        user_name = data.get('first_name', 'User') if data else 'User'
+        
+        user_msg = request.json.get('message')
+        if not user_msg:
+            return jsonify({"success": False, "message": "No message provided"}), 400
+
+        # Configure Gemini
+        api_key = os.environ.get("GEMINI_API_KEY")
+        genai.configure(api_key=api_key)
+
+        # Context (Profile + Logs)
+        profile = db.health_profiles.find_one({"user_id": user_id})
+        daily_logs = list(db.daily_logs.find({"user_id": user_id}).sort("date", -1).limit(3))
+        
+        context = f"User Name: {user_name}. "
+        if profile:
+            context += f"Profile: Age {profile.get('age')}, Cycle {profile.get('cycle_length')} days. "
+        
+        prompt = f"""
+        You are 'herCare AI', a supportive, expert wellness coach for women with PCOD/PCOS. 
+        Your tone is gentle, uplifting, and medically informed but conversational.
+        User Context: {context}
+        User's question: {user_msg}
+        
+        Keep your response concise (max 2-3 short paragraphs). Use only standard HTML tags if needed (<b>, <i>, <br>). 
+        Always be encouraging. If asked medical questions, provide wellness advice but remind the user to consult their doctor.
+        """
+
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
+
+        return jsonify({"success": True, "response": response.text}), 200
+
+    except Exception as e:
+        print(f"Chat Error: {e}")
         return jsonify({"success": False, "message": str(e)}), 500
