@@ -311,53 +311,7 @@
   </style>
 </head>
 <body>
-<!-- ── BLOB BG ── -->
-<div class="blob-wrap">
-  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"   stop-color="#f9a0a8"/>
-        <stop offset="60%"  stop-color="#f07070"/>
-        <stop offset="100%" stop-color="#f06050"/>
-      </linearGradient>
-    </defs>
-    <path fill="url(#blobGrad)"
-      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
-         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
-    <g class="petal">
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
-      </g>
-  </svg>
-</div>
+
   
   <!-- ── NAVBAR ── -->
   <nav class="navbar">
@@ -366,8 +320,8 @@
     </a>
     <ul class="nav-links">
       <li><a href="#" class="active">profile</a></li>
-      <li><a href="daily.html">Tracker</a></li>
-      <li><a href="#">Learn</a></li>
+      <li><a href="daily.html">Daily Tracker</a></li>
+      <li><a href="#"></a></li>
       <li><a href="#">Community</a></li>
       <li><a href="#">Profile</a></li>
     </ul>
@@ -377,9 +331,8 @@
   <!-- ── PAGE BODY ── -->
   <div class="page-body">
 
-    <!-- Welcome -->
     <div class="welcome-section">
-      <div class="welcome-greeting">Good morning, <span>Ananya</span> 🌸</div>
+      <div class="welcome-greeting">Good morning, <span id="welcomeName">User</span> 🌸</div>
       <div class="welcome-sub">Let's set up your health profile so we can personalise your care journey.</div>
     </div>
 
@@ -474,6 +427,34 @@
   <div class="toast" id="toast"></div>
 
   <script>
+    const API_BASE = 'http://127.0.0.1:5000/api';
+    const TOKEN    = localStorage.getItem('hc_token');
+    const USERNAME = localStorage.getItem('hc_username') || 'User';
+    if (!TOKEN) window.location.href = 'signin.html';
+
+    // Set initial welcome name
+    document.getElementById('welcomeName').textContent = USERNAME;
+
+    /* ── LOAD EXISTING PROFILE ── */
+    async function loadProfile() {
+      try {
+        const res = await fetch(`${API_BASE}/profile`, {
+          headers: { 'Authorization': `Bearer ${TOKEN}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const p = data.data;
+          document.getElementById('age').value = p.age || '';
+          document.getElementById('height').value = p.height || '';
+          document.getElementById('weight').value = p.weight || '';
+          document.getElementById('cycleLength').value = p.cycle_length || '';
+          document.getElementById('lastPeriod').value = p.last_period || '';
+          if (p.age && p.height && p.weight) goToStep(3);
+        }
+      } catch (err) { console.log('Starting fresh profile! 🌸'); }
+    }
+    loadProfile();
+
     /* ── STEPPER ── */
     let currentStep = 0;
     const flowers = document.querySelectorAll('.flower-btn');
@@ -526,7 +507,7 @@
     }
 
     /* ── CONTINUE BUTTON ── */
-    document.getElementById('continueBtn').addEventListener('click', function(e) {
+    document.getElementById('continueBtn').addEventListener('click', async function(e) {
       addRipple(this, e);
 
       const age    = document.getElementById('age').value.trim();
@@ -542,27 +523,49 @@
         showToast('Please select your typical cycle length'); return;
       }
 
-      /* Predict next period */
-      if (last && cycle !== 'irregular') {
-        const lastDate = new Date(last);
-        const next = new Date(lastDate);
-        next.setDate(next.getDate() + parseInt(cycle));
-        const opts = { day: 'numeric', month: 'long', year: 'numeric' };
-        showToast(`🩸 Next period predicted: ${next.toLocaleDateString('en-IN', opts)}`);
-      } else if (cycle === 'irregular') {
-        showToast('Profile saved! We will help you track your irregular cycle 🌷');
-      } else {
-        showToast('Profile saved successfully! 🌸');
-      }
+      this.textContent = 'Saving…';
+      this.disabled = true;
 
-      goToStep(4);
-      const btn = this;
-      btn.textContent = '✓ Profile Saved!';
-      btn.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
-      setTimeout(() => {
-        btn.textContent = 'Continue →';
-        btn.style.background = '';
-      }, 3000);
+      try {
+        const res = await fetch(`${API_BASE}/profile`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${TOKEN}`
+          },
+          body: JSON.stringify({
+            age: parseInt(age),
+            height: parseInt(height),
+            weight: parseInt(weight),
+            cycle_length: cycle,
+            last_period: last
+          })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          showToast('Profile saved successfully! 🌸');
+          goToStep(4);
+          this.textContent = '✓ Profile Saved!';
+          this.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+          setTimeout(() => {
+            this.textContent = 'Continue →';
+            this.style.background = '';
+            this.disabled = false;
+            window.location.href = 'daily.html'; 
+          }, 1500);
+        } else {
+          showToast(data.message || 'Error occurred');
+          this.disabled = false;
+          this.textContent = 'Continue →';
+        }
+      } catch (err) {
+        showToast('Offline — Saved locally 🌷');
+        localStorage.setItem('hc_profile', JSON.stringify({ age, height, weight, cycle, last }));
+        this.disabled = false;
+        this.textContent = 'Continue →';
+        setTimeout(() => window.location.href = 'daily.html', 1500);
+      }
     });
 
     /* ── SHAKE ── */
@@ -585,7 +588,8 @@
 
     /* ── SET TODAY AS MAX for date picker ── */
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('lastPeriod').setAttribute('max', today);
+    const lastP = document.getElementById('lastPeriod');
+    if (lastP) lastP.setAttribute('max', today);
   </script>
 </body>
 </html>

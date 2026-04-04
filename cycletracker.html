@@ -844,6 +844,27 @@
   document.getElementById('usernameDisplay').textContent = storedName;
   document.querySelector('.nav-avatar').textContent = storedName.charAt(0).toUpperCase();
 
+  /* ════════ CONFIG ════════ */
+  const API_BASE = 'http://127.0.0.1:5000/api';
+  const TOKEN = localStorage.getItem('hc_token');
+  if (!TOKEN) window.location.href = 'signin.html';
+
+  let cycleHistory = [];
+
+  /* ════════ LOAD HISTORY ════════ */
+  async function loadHistory() {
+    try {
+      const res = await fetch(`${API_BASE}/cycle/history`, {
+        headers: { 'Authorization': `Bearer ${TOKEN}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        cycleHistory = data.data;
+        // You can use cycleHistory to render history list or highlight on calendar
+      }
+    } catch (err) { console.log('Fresh account - no history yet.'); }
+  }
+
   /* ── TOAST ── */
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -1020,24 +1041,72 @@
   }
 
   /* ════════ SAVE ════════ */
-  document.getElementById('saveBtn').addEventListener('click', function(e) {
+  document.getElementById('saveBtn').addEventListener('click', async function(e) {
+    const bt = this;
     const rp = document.createElement('span'); rp.className = 'ripple';
-    const rect = this.getBoundingClientRect();
+    const rect = bt.getBoundingClientRect();
     const s = Math.max(rect.width, rect.height);
     rp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
-    this.appendChild(rp); setTimeout(() => rp.remove(), 550);
+    bt.appendChild(rp); setTimeout(() => rp.remove(), 550);
 
     const start = document.getElementById('periodStart').value;
     if (!start) { showToast('⚠️ Please enter your period start date'); return; }
 
-    showToast('🌸 Cycle log saved successfully!');
-    this.textContent = '✓ Saved!';
-    this.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
-    setTimeout(() => {
-      this.textContent = '💾 Save Log';
-      this.style.background = '';
-    }, 2500);
+    const selStatus = document.querySelector('.status-btn.sel');
+    const status = selStatus ? selStatus.textContent.trim() : '';
+
+    const selFlow = document.querySelector('.flow-btn.sel');
+    const flow = selFlow ? selFlow.textContent.trim() : '';
+
+    const payload = {
+      start_date: start,
+      status: status,
+      symptoms: symStates,
+      flow: { intensity: flow },
+      pain: selectedPain
+    };
+
+    bt.textContent = 'Saving…';
+    bt.disabled = true;
+
+    try {
+      const res = await fetch(`${API_BASE}/cycle`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${TOKEN}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🌸 Cycle log saved successfully!');
+        bt.textContent = '✓ Saved!';
+        bt.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+        setTimeout(() => {
+          bt.textContent = '💾 Save Log';
+          bt.style.background = '';
+          bt.disabled = false;
+        }, 2000);
+      } else {
+        showToast(data.message || 'Error occurred');
+        bt.disabled = false;
+        bt.textContent = '💾 Save Log';
+      }
+    } catch (err) {
+      showToast('Offline — Cycle logged locally 🌷');
+      localStorage.setItem(`hc_cycle_${start}`, JSON.stringify(payload));
+      bt.disabled = false;
+      bt.textContent = '💾 Save Log';
+    }
   });
+
+  /* Set today's date as default */
+  document.getElementById('periodStart').value = today.toISOString().split('T')[0];
+  document.getElementById('periodStart').dispatchEvent(new Event('change'));
+
+  // Init fetch history
+  loadHistory();
 
   /* Set today's date as default */
   document.getElementById('periodStart').value = today.toISOString().split('T')[0];

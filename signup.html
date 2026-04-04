@@ -359,25 +359,37 @@
 
     /* ── Sign Up handler (API) ── */
     async function handleSignup() {
-      const firstName = document.querySelector('input[autocomplete="given-name"]').value.trim();
-      const lastName  = document.querySelector('input[autocomplete="family-name"]').value.trim();
-      const email     = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const password  = document.getElementById('password').value;
-      const confirm   = document.getElementById('confirmPassword').value;
-      const agreed    = document.getElementById('terms').checked;
-
-      if (!firstName || !lastName || !email || !password || !confirm) { shake(); return; }
-      if (password !== confirm) { showToast('Passwords do not match! 🌷', true); return; }
-      if (password.length < 6) { showToast('Password must be at least 6 characters 🌸', true); return; }
-      if (!email.includes('@')) { showToast('Enter a valid email 🌷', true); return; }
-      if (!agreed)              { showToast('Please agree to the Terms of Service 🌸', true); return; }
-
-      const btn = document.querySelector('.btn-signup-main');
-      btn.textContent = 'Creating account…';
-      btn.disabled    = true;
-
       try {
+        const firstNameEl = document.querySelector('input[autocomplete="given-name"]');
+        const lastNameEl  = document.querySelector('input[autocomplete="family-name"]');
+        const emailEl     = document.getElementById('email');
+        const passEl      = document.getElementById('password');
+        const confirmEl   = document.getElementById('confirmPassword');
+        const termsEl     = document.getElementById('terms');
+        
+        // Safety check for phone input (might not have ID)
+        const phoneEl = document.getElementById('phone') || document.getElementsByName('phone')[0];
+        const phone = phoneEl ? phoneEl.value.trim() : '';
+
+        const firstName = firstNameEl.value.trim();
+        const lastName  = lastNameEl.value.trim();
+        const email     = emailEl.value.trim();
+        const password  = passEl.value;
+        const confirm   = confirmEl.value;
+        const agreed    = termsEl.checked;
+
+        if (!firstName || !lastName || !email || !password || !confirm) { 
+          showToast('Please fill all fields 🌸', true); shake(); return; 
+        }
+        if (password !== confirm) { showToast('Passwords do not match! 🌷', true); return; }
+        if (password.length < 6) { showToast('Password must be at least 6 characters 🌸', true); return; }
+        if (!email.includes('@')) { showToast('Enter a valid email 🌷', true); return; }
+        if (!agreed) { showToast('Please agree to the Terms of Service 🌸', true); return; }
+
+        const btn = document.querySelector('.btn-signup-main');
+        btn.textContent = 'Creating account…';
+        btn.disabled    = true;
+
         const res  = await fetch(`${API_BASE}/auth/register`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -386,27 +398,24 @@
         const data = await res.json();
 
         if (data.success) {
-          // Save token & username
-          localStorage.setItem('hc_token',    data.token);
+          localStorage.setItem('hc_token', data.token);
           localStorage.setItem('hc_username', data.user.first_name);
-          localStorage.setItem('hc_user_id',  data.user.id);
+          localStorage.setItem('hc_user_id', data.user.id);
 
           btn.textContent = '✓ Account Created!';
           showToast(data.message);
-          setTimeout(() => window.location.href = 'health-profile.html', 1200);
+          setTimeout(() => window.location.href = 'profile.html', 1200);
         } else {
-          showToast(data.message || 'Registration failed. Please try again.', true);
+          showToast(data.message || 'Registration failed.', true);
           btn.textContent = 'Create Account';
           btn.disabled    = false;
         }
       } catch (err) {
-        // ── Backend not running — save locally and continue ──
-        localStorage.setItem('hc_username',   firstName);
-        localStorage.setItem('hc_user_email', email);
-        localStorage.setItem('hc_token',      'local_' + Date.now());
-        btn.textContent = '✓ Account Created!';
-        showToast(`Welcome to herCare, ${firstName}! 🌸`);
-        setTimeout(() => window.location.href = 'health-profile.html', 1200);
+        console.error('Signup error:', err);
+        showToast('Account created! (Offline Mode) 🌸');
+        localStorage.setItem('hc_token', 'local_token_' + Date.now());
+        localStorage.setItem('hc_username', 'User');
+        setTimeout(() => window.location.href = 'profile.html', 1200);
       }
     }
 

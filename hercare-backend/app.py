@@ -37,7 +37,14 @@ mongo.users.create_index("email", unique=True)
 #  Register Blueprints (Routes)
 # ──────────────────────────────────────────────
 from routes.auth import auth_bp
+from routes.profile import profile_bp
+from routes.daily_log import daily_log_bp
+from routes.cycle import cycle_bp
+
 app.register_blueprint(auth_bp)
+app.register_blueprint(profile_bp)
+app.register_blueprint(daily_log_bp)
+app.register_blueprint(cycle_bp)
 
 # ──────────────────────────────────────────────
 #  Health Check Route

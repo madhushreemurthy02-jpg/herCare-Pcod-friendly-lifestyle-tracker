@@ -712,6 +712,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  /* ════════ CONFIG ════════ */
+  const API_BASE = 'http://127.0.0.1:5000/api';
+  const TOKEN = localStorage.getItem('hc_token');
+  if (!TOKEN) window.location.href = 'signin.html';
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
   /* ── TODAY DATE ── */
   const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
   document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', opts);
@@ -722,6 +729,73 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ════════ LOAD DATA ════════ */
+  async function loadDailyData() {
+    try {
+      const res = await fetch(`${API_BASE}/daily-log?date=${todayStr}`, {
+        headers: { 'Authorization': `Bearer ${TOKEN}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        const log = data.data;
+        
+        // Restore Sleep
+        if (log.sleep) {
+          document.getElementById('bedtime').value = log.sleep.bedtime || '';
+          document.getElementById('waketime').value = log.sleep.waketime || '';
+          // quality handled via .sel class on btns
+          if (log.sleep.quality) {
+             const qBtns = document.querySelectorAll('.quality-btn');
+             const idx = Math.floor(log.sleep.quality / 2); // rough mapping to 5 buttons
+             if (qBtns[idx]) selectQuality(qBtns[idx]);
+          }
+          calcSleep();
+        }
+
+        // Restore Hydration
+        if (log.hydration) {
+          glassCount = log.hydration.glasses || 0;
+          totalMl = log.hydration.ml || 0;
+          document.querySelectorAll('.glass-btn').forEach((btn, i) => {
+            btn.classList.toggle('filled', i < glassCount);
+          });
+          updateHydration();
+        }
+
+        // Restore Mood
+        if (log.mood) {
+          selectedMood = log.mood.mood;
+          document.querySelectorAll('.mood-btn').forEach(btn => {
+            if (btn.textContent.includes(selectedMood)) btn.classList.add('sel');
+          });
+          document.getElementById('moodNotes').value = log.mood.note || '';
+        }
+
+        // Restore Nutrition
+        if (log.nutrition) {
+          document.querySelectorAll('.nutrition-item').forEach(item => {
+            const label = item.querySelector('.nutrition-label').textContent.trim();
+            if (log.nutrition.includes(label)) {
+              item.classList.add('checked');
+              item.querySelector('.nutrition-cb').textContent = '✓';
+            }
+          });
+          updateNutritionProgress();
+        }
+
+        // Restore Activity
+        if (log.activities) {
+          activities = log.activities;
+          renderActivities();
+        }
+
+        // Notes
+        document.getElementById('dailyNotes').value = log.notes || '';
+        updateChar();
+      }
+    } catch (err) { console.log('Fresh start for today! 🌸'); }
   }
 
   /* ════════ SLEEP ════════ */
@@ -735,10 +809,10 @@
     if (mins < 0) mins += 1440;
     const h = Math.floor(mins / 60), m = mins % 60;
     document.getElementById('sleepHours').textContent = `${h}h ${String(m).padStart(2,'0')}m`;
+    return mins;
   }
   document.getElementById('bedtime').addEventListener('change', calcSleep);
   document.getElementById('waketime').addEventListener('change', calcSleep);
-  calcSleep();
 
   function selectQuality(btn) {
     document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('sel'));
@@ -785,7 +859,6 @@
     const pct = Math.min((totalMl / GOAL_ML) * 100, 100);
     document.getElementById('hydrationBar').style.width = pct + '%';
     document.getElementById('mlLabel').textContent = totalMl + ' ml consumed';
-    if (glassCount >= 8) showToast('🎉 Hydration goal reached! Amazing!');
   }
 
   /* ════════ MOOD ════════ */
@@ -885,31 +958,80 @@
   }
 
   /* ════════ SAVE ALL ════════ */
-  document.getElementById('saveAllBtn').addEventListener('click', function(e) {
+  document.getElementById('saveAllBtn').addEventListener('click', async function(e) {
+    const bt = this;
     // ripple
     const rp = document.createElement('span'); rp.className = 'ripple';
-    const rect = this.getBoundingClientRect();
+    const rect = bt.getBoundingClientRect();
     const s = Math.max(rect.width, rect.height);
     rp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
-    this.appendChild(rp);
+    bt.appendChild(rp);
     setTimeout(() => rp.remove(), 550);
 
-    const checks = [];
-    if (!selectedMood) checks.push('mood');
-    if (glassCount === 0) checks.push('hydration');
+    const nutrition = [];
+    document.querySelectorAll('.nutrition-item.checked .nutrition-label').forEach(el => nutrition.push(el.textContent.trim()));
 
-    if (checks.length) {
-      showToast(`⚠️ Don't forget to log your ${checks.join(' & ')}!`);
-      return;
+    const moodTags = [];
+    document.querySelectorAll('.tag-btn.sel').forEach(el => moodTags.push(el.textContent.trim()));
+
+    const selQualBtn = document.querySelector('.quality-btn.sel');
+    const sleepQual = selQualBtn ? parseInt(selQualBtn.textContent) || 5 : 5;
+
+    const payload = {
+      date: todayStr,
+      sleep: {
+        bedtime: document.getElementById('bedtime').value,
+        waketime: document.getElementById('waketime').value,
+        quality: sleepQual
+      },
+      hydration: { glasses: glassCount, ml: totalMl },
+      mood: {
+        mood: selectedMood,
+        note: document.getElementById('moodNotes').value,
+        tags: moodTags
+      },
+      nutrition: nutrition,
+      activities: activities,
+      notes: document.getElementById('dailyNotes').value
+    };
+
+    bt.textContent = 'Saving…';
+    bt.disabled = true;
+
+    try {
+      const res = await fetch(`${API_BASE}/daily-log`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${TOKEN}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🌸 Today\'s log saved successfully!');
+        bt.textContent = '✓ Saved!';
+        bt.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+        setTimeout(() => {
+          bt.textContent = '💾 Save Today\'s Log';
+          bt.style.background = '';
+          bt.disabled = false;
+        }, 2500);
+      } else {
+        showToast(data.message || 'Error occurred');
+        bt.disabled = false;
+        bt.textContent = '💾 Save Today\'s Log';
+      }
+    } catch (err) {
+      showToast('Offline — Saved locally 🌷');
+      localStorage.setItem(`hc_log_${todayStr}`, JSON.stringify(payload));
+      bt.disabled = false;
+      bt.textContent = '💾 Save Today\'s Log';
     }
-    showToast('🌸 Today\'s log saved successfully!');
-    this.textContent = '✓ Saved!';
-    this.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
-    setTimeout(() => {
-      this.textContent = '💾 Save Today\'s Log';
-      this.style.background = '';
-    }, 2500);
   });
+
+  // Init
+  loadDailyData();
 </script>
 </body>
 </html>
