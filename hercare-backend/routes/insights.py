@@ -1,8 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
-import google.generativeai as genai
-from bson import ObjectId
 
 insights_bp = Blueprint('insights', __name__)
 
@@ -10,107 +8,64 @@ insights_bp = Blueprint('insights', __name__)
 @jwt_required()
 def get_insights():
     try:
-        from app import mongo
-        db = mongo
         user_id = get_jwt_identity()
-
-        # Configure API Key (done inside the route to ensure .env is fully loaded if lazy-loaded)
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            return jsonify({"success": False, "message": "Gemini API key not configured."}), 500
-        
-        genai.configure(api_key=api_key)
+        from app import mongo
 
         # Fetch user's profile
-        profile = db.health_profiles.find_one({"user_id": user_id})
+        profile = mongo.profiles.find_one({"user_id": user_id})
         
         # Fetch user's most recent daily logs
-        daily_logs = list(db.daily_logs.find({"user_id": user_id}).sort("date", -1).limit(7))
+        daily_logs = list(mongo.daily_logs.find({"user_id": user_id}).sort("date", -1).limit(7))
         
         # Fetch user's cycle logs
-        cycle_logs = list(db.cycle_logs.find({"user_id": user_id}).sort("start_date", -1).limit(1))
-        
-        # Format the data for Gemini
-        profile_data = ""
-        if profile:
-            profile_data = f"Age: {profile.get('age')}, Weight: {profile.get('weight')}kg, Height: {profile.get('height')}cm, Avg Cycle Length: {profile.get('cycle_length')} days."
-        
-        logs_data = ""
-        for log in daily_logs:
-            mood = log.get('mood', {}).get('mood', 'Not logged')
-            sleep_quality = log.get('sleep', {}).get('quality', 'Not logged')
-            glasses = log.get('hydration', {}).get('glasses', 0)
-            logs_data += f"- Date: {log.get('date')}, Mood: {mood}, Sleep Quality: {sleep_quality}/10, Water: {glasses} glasses.\n"
+        cycle_logs = list(mongo.cycle_logs.find({"user_id": user_id}).sort("start_date", -1).limit(1))
 
-        cycle_data = ""
+        # --- RULE-BASED INSIGHTS LOGIC ---
+        insights = []
+
+        # 1. Sleep Rule
+        avg_sleep = 0
+        if daily_logs:
+            sleep_vals = [log.get('sleep', {}).get('quality', 0) for log in daily_logs if isinstance(log.get('sleep', {}).get('quality'), (int, float))]
+            if sleep_vals:
+                avg_sleep = sum(sleep_vals) / len(sleep_vals)
+        
+        if avg_sleep < 6:
+            insights.append("<b>Improve Sleep Hygiene:</b> Your recent sleep quality has been lower than ideal. Try creating a fixed bedtime routine with no screens 30 minutes before bed to help regulate your hormones.")
+        else:
+            insights.append("<b>Steady Rest:</b> Your sleep quality looks consistent! Keep prioritizing rest, as it's vital for managing PCOD-related fatigue.")
+
+        # 2. Hydration Rule
+        avg_water = 0
+        if daily_logs:
+            water_vals = [log.get('hydration', {}).get('glasses', 0) for log in daily_logs if isinstance(log.get('hydration', {}).get('glasses', 0), (int, float))]
+            if water_vals:
+                avg_water = sum(water_vals) / len(water_vals)
+        
+        if avg_water < 6:
+            insights.append("<b>Hydration Boost:</b> Staying hydrated helps reduce bloating and skin issues. Aim for at least 8-10 glasses of water daily.")
+        else:
+            insights.append("<b>Great Hydration:</b> You're doing a fantastic job with your water intake! This helps flush out toxins and keeps your energy levels stable.")
+
+        # 3. Cycle & Pain Rule
         if cycle_logs:
-            cl = cycle_logs[0]
-            cycle_data = f"Last Period Start: {cl.get('start_date')}, Flow: {cl.get('flow', {}).get('intensity', 'Not logged')}, Pain Level: {cl.get('pain', 'Not logged')}/10"
+            last_pain = cycle_logs[0].get('pain', 0)
+            if last_pain > 6:
+                insights.append("<b>Managing Discomfort:</b> Your last period pain was reported as high. Consider gentle anti-inflammatory foods like ginger or turmeric tea during your next cycle.")
+            else:
+                insights.append("<b>Monitor Cycle Phase:</b> Keep tracking your symptoms. Regular movement like walking or light yoga can help maintain cycle regularity.")
+        else:
+            insights.append("<b>Start Cycle Tracking:</b> Logging your period dates and symptoms will help us provide more specific hormone-balancing tips.")
 
-        prompt = f"""
-        You are an empathetic, knowledgeable wellness assistant specializing in PCOS/PCOD context.
-        The user has provided the following health profile: {profile_data}
-        
-        Here are their recent daily logs:
-        {logs_data}
-        
-        And their latest cycle information:
-        {cycle_data}
-        
-        Based on this data, provide 3 short, personalized, actionable insights or tips for their daily routine to manage their PCOD lifestyle. 
-        Format your response nicely in clear HTML (using only <b>, <i>, <br>, <ul>, <li> tags as appropriate, do NOT use markdown or generic text). Make it supportive and uplifting.
-        """
+        # Format as HTML list
+        html_response = "<ul>"
+        for item in insights:
+            html_response += f"<li>{item}</li><br>"
+        html_response += "</ul>"
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        response = model.generate_content(prompt)
-
-        return jsonify({"success": True, "insights": response.text}), 200
+        return jsonify({"success": True, "insights": html_response}), 200
 
     except Exception as e:
         print(f"Insight Generation Error: {e}")
         return jsonify({"success": False, "message": str(e)}), 500
 
-@insights_bp.route('/chat', methods=['POST'])
-@jwt_required()
-def chat_with_ai():
-    try:
-        from app import mongo
-        db = mongo
-        user_id = get_jwt_identity()
-        data = db.users.find_one({"_id": ObjectId(user_id)})
-        user_name = data.get('first_name', 'User') if data else 'User'
-        
-        user_msg = request.json.get('message')
-        if not user_msg:
-            return jsonify({"success": False, "message": "No message provided"}), 400
-
-        # Configure Gemini
-        api_key = os.environ.get("GEMINI_API_KEY")
-        genai.configure(api_key=api_key)
-
-        # Context (Profile + Logs)
-        profile = db.health_profiles.find_one({"user_id": user_id})
-        daily_logs = list(db.daily_logs.find({"user_id": user_id}).sort("date", -1).limit(3))
-        
-        context = f"User Name: {user_name}. "
-        if profile:
-            context += f"Profile: Age {profile.get('age')}, Cycle {profile.get('cycle_length')} days. "
-        
-        prompt = f"""
-        You are 'herCare AI', a supportive, expert wellness coach for women with PCOD/PCOS. 
-        Your tone is gentle, uplifting, and medically informed but conversational.
-        User Context: {context}
-        User's question: {user_msg}
-        
-        Keep your response concise (max 2-3 short paragraphs). Use only standard HTML tags if needed (<b>, <i>, <br>). 
-        Always be encouraging. If asked medical questions, provide wellness advice but remind the user to consult their doctor.
-        """
-
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        response = model.generate_content(prompt)
-
-        return jsonify({"success": True, "response": response.text}), 200
-
-    except Exception as e:
-        print(f"Chat Error: {e}")
-        return jsonify({"success": False, "message": str(e)}), 500
