@@ -1,0 +1,14 @@
+# Virtual environment
+hercare-backend/venv/
+
+# Environment variables (contains passwords!)
+hercare-backend/.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
