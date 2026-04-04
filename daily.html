@@ -425,27 +425,38 @@
 
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
-  <a href="login.html" class="nav-logo">
+  <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
     <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
-  </a>
+  </div>
   <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#" class="active">Tracker</a></li>
-    <li><a href="#">Learn</a></li>
-    <li><a href="#">Community</a></li>
-    <li><a href="#">Profile</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="daily.html" class="active">Daily Tracker</a></li>
+    <li><a href="cycletracker.html">Cycle Tracker</a></li>
+    <li><a href="insight.html">AI Insights</a></li>
+    <li><a href="#" onclick="logout()">Logout</a></li>
   </ul>
   <div class="nav-right">
-    <div class="nav-avatar">A</div>
+    <div class="nav-avatar" id="navAvatar">A</div>
   </div>
 </nav>
+
+<script>
+  /* ── BASIC AUTH & SETUP ── */
+  const storedName = localStorage.getItem('hc_username') || 'User';
+  document.addEventListener('DOMContentLoaded', () => {
+    const uDisp = document.getElementById('usernameDisplay');
+    const nAvat = document.getElementById('navAvatar');
+    if (uDisp) uDisp.textContent = storedName;
+    if (nAvat) nAvat.textContent = storedName.charAt(0).toUpperCase();
+  });
+</script>
 
 <!-- ── PAGE BODY ── -->
 <div class="page-body">
 
   <!-- Welcome -->
   <div class="welcome-section">
-    <div class="welcome-greeting">Hello, <span>usernameDisplays</span> 🌸</div>
+    <div class="welcome-greeting">Hello, <span id="usernameDisplay"></span> 🌸</div>
     <div class="welcome-sub">Track your daily wellness — every small step counts on your herCare journey.</div>
   </div>
 
@@ -729,6 +740,12 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── LOGOUT ── */
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'signin.html';
   }
 
   /* ════════ LOAD DATA ════════ */

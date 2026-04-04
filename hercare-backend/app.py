@@ -40,11 +40,13 @@ from routes.auth import auth_bp
 from routes.profile import profile_bp
 from routes.daily_log import daily_log_bp
 from routes.cycle import cycle_bp
+from routes.insights import insights_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(profile_bp)
 app.register_blueprint(daily_log_bp)
 app.register_blueprint(cycle_bp)
+app.register_blueprint(insights_bp, url_prefix="/api/insights")
 
 # ──────────────────────────────────────────────
 #  Health Check Route

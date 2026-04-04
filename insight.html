@@ -468,16 +468,15 @@
 
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
-  <a href="health-profile.html" class="nav-logo">
+  <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
     <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
-  </a>
+  </div>
   <ul class="nav-links">
-    <li><a href="health-profile.html">Home</a></li>
-    <li><a href="daily-log.html">Tracker</a></li>
-    <li><a href="cycle-tracker.html">Cycle</a></li>
-    <li><a href="ai-insights.html" class="active">AI Insights</a></li>
-    <li><a href="#">Learn</a></li>
-    <li><a href="#">Profile</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="daily.html">Daily Tracker</a></li>
+    <li><a href="cycletracker.html">Cycle Tracker</a></li>
+    <li><a href="insight.html" class="active">AI Insights</a></li>
+    <li><a href="#" onclick="logout()">Logout</a></li>
   </ul>
   <div class="nav-right">
     <div class="nav-avatar" id="navAvatar">A</div>
@@ -683,6 +682,11 @@
 
 <script>
  
+/* ── CONFIG ── */
+const API_BASE = 'http://127.0.0.1:5000/api';
+const TOKEN = localStorage.getItem('hc_token');
+if (!TOKEN) window.location.href = 'signin.html';
+
 /* ── BASIC USER SETUP ── */
 if (!localStorage.getItem('hc_username')) {
   localStorage.setItem('hc_username', 'User');
@@ -698,6 +702,12 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── LOGOUT ── */
+function logout() {
+  localStorage.clear();
+  window.location.href = 'signin.html';
 }
 
 /* ── SUMMARY LOAD ── */
@@ -755,56 +765,58 @@ function saveTime(idx) {
   showToast("Saved!");
 }
 
-/* ── STATIC INSIGHTS ── */
-function getStaticInsights() {
-  return [
-    {
-      type: "tip",
-      icon: "💧",
-      title: "Stay Hydrated",
-      text: "Drink at least 7–8 glasses of water daily."
-    },
-    {
-      type: "positive",
-      icon: "🏃‍♀️",
-      title: "Keep Moving",
-      text: "Regular movement helps regulate hormones."
-    },
-    {
-      type: "reminder",
-      icon: "😴",
-      title: "Sleep Well",
-      text: "Aim for 7–8 hours of sleep daily."
-    }
-  ];
-}
-
-/* ── RENDER INSIGHTS ── */
-function renderInsights() {
-  var list = document.getElementById('insightsList');
+/* ── ANALYZE BUTTON (GEMINI AI) ── */
+document.getElementById('analyzeBtn').addEventListener('click', async function () {
+  const list = document.getElementById('insightsList');
+  const loader = document.getElementById('loadingState');
+  
   list.innerHTML = '';
+  list.style.display = 'none';
+  loader.style.display = 'flex';
+  document.getElementById('pdfBtn').disabled = true;
 
-  let insights = getStaticInsights();
+  try {
+    const res = await fetch(`${API_BASE}/insights`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`
+      }
+    });
+    
+    const data = await res.json();
+    loader.style.display = 'none';
+    list.style.display = 'block';
 
-  insights.forEach(ins => {
-    let div = document.createElement('div');
-    div.className = 'insight-item type-' + ins.type;
-    div.innerHTML = `
-      <div class="ii-icon">${ins.icon}</div>
-      <div>
-        <div class="ii-title">${ins.title}</div>
-        <div class="ii-text">${ins.text}</div>
-      </div>
-    `;
-    list.appendChild(div);
-  });
-}
+    if (data.success) {
+      // The Gemini text comes back as HTML (we asked for HTML tags in prompt)
+      let div = document.createElement('div');
+      div.className = 'insight-item type-positive'; // generic style wrapper
+      div.style.alignItems = 'flex-start';
+      div.innerHTML = `
+        <div class="ii-icon">✨</div>
+        <div style="line-height: 1.6; padding-top: 2px;">
+          <div class="ii-title">Your AI Wellness Insights</div>
+          <div class="ii-text" style="margin-top: 10px;">${data.insights}</div>
+        </div>
+      `;
+      list.appendChild(div);
+      
+      document.getElementById('pdfInsightsContent').innerHTML = div.innerHTML;
+      document.getElementById('pdfBtn').disabled = false;
+      showToast("Insights generated successfully! 🌸");
+    } else {
+      list.innerHTML = `<div class="empty-state">⚠️ Error: ${data.message}</div>`;
+      showToast("Failed to load insights.", true);
+    }
 
-/* ── ANALYZE BUTTON ── */
-document.getElementById('analyzeBtn').addEventListener('click', function () {
-  renderInsights();
-  document.getElementById('pdfBtn').disabled = false;
-  showToast("Insights generated!");
+  } catch (err) {
+    loader.style.display = 'none';
+    list.style.display = 'block';
+    console.error("AI Insights Error:", err);
+    list.innerHTML = `<div class="empty-state">⚠️ Connect to backend to see insights!</div>`;
+    showToast("Offline Mode", true);
+  }
 });
 
 /* ── PDF MODAL ── */

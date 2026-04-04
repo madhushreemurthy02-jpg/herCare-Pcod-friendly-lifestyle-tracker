@@ -315,15 +315,15 @@
   
   <!-- ── NAVBAR ── -->
   <nav class="navbar">
-    <a href="login.html" class="nav-logo">
+    <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
       <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
-    </a>
+    </div>
     <ul class="nav-links">
-      <li><a href="#" class="active">profile</a></li>
+      <li><a href="profile.html" class="active">Profile</a></li>
       <li><a href="daily.html">Daily Tracker</a></li>
-      <li><a href="#"></a></li>
-      <li><a href="#">Community</a></li>
-      <li><a href="#">Profile</a></li>
+      <li><a href="cycletracker.html">Cycle Tracker</a></li>
+      <li><a href="insight.html">AI Insights</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
     </ul>
     
   </nav>
@@ -491,6 +491,12 @@
       t.textContent = msg;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    /* ── LOGOUT ── */
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'signin.html';
     }
 
     /* ── RIPPLE ── */
