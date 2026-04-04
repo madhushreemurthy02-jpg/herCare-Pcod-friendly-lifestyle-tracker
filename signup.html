@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>herCare – Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink-light: #f9a8b0;
+      --pink-mid:   #f07080;
+      --pink-dark:  #e8506a;
+      --coral:      #f07060;
+      --maroon:     #8b1a3a;
+      --cream:      #f5f0e8;
+      --white:      #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Wavy pink background blob ───────────────────────────── */
+    .blob-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-wrap svg {
+      width: 100%;
+      height: 100%;
+    }
+    .petal { opacity: .18; fill: #fff; }
+
+    /* ── Card ────────────────────────────────────────────────── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--white);
+      border-radius: 24px;
+      padding: 40px 52px 40px;
+      width: 440px;
+      box-shadow: 0 20px 60px rgba(180,60,80,.15), 0 4px 16px rgba(0,0,0,.06);
+      animation: cardIn .6s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(28px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);   }
+    }
+
+    /* ── Logo ────────────────────────────────────────────────── */
+    .logo {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .logo-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .logo-her  { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--maroon); line-height: 1; }
+    .logo-care { font-family: 'Nunito', sans-serif; font-size: 1.55rem; font-weight: 700; color: var(--maroon); line-height: 1; }
+    .logo-flower { font-size: 1.3rem; margin-left: 2px; line-height: 1; }
+
+    /* ── Heading ─────────────────────────────────────────────── */
+    h1 {
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--maroon);
+      margin-bottom: 22px;
+    }
+
+    .divider { width: 100%; height: 1px; background: #eee; margin-bottom: 22px; }
+
+    /* ── Name row ────────────────────────────────────────────── */
+    .row-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Inputs ──────────────────────────────────────────────── */
+    .field { margin-bottom: 14px; }
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.8px solid var(--maroon);
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .93rem;
+      color: #333;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      background: transparent;
+    }
+    .field input::placeholder { color: #aaa; }
+    .field input:focus {
+      border-color: var(--pink-dark);
+      box-shadow: 0 0 0 3px rgba(232,80,106,.15);
+    }
+
+    /* ── Password strength bar ───────────────────────────────── */
+    .strength-wrap {
+      margin-top: 6px;
+      height: 4px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      transition: width .3s, background .3s;
+    }
+    .strength-label {
+      font-size: .75rem;
+      color: #999;
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
+    /* ── Terms ───────────────────────────────────────────────── */
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .83rem;
+      color: #666;
+      margin-bottom: 18px;
+    }
+    .terms input[type=checkbox] {
+      accent-color: var(--pink-dark);
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .terms a { color: var(--maroon); text-decoration: none; font-weight: 600; }
+    .terms a:hover { text-decoration: underline; }
+
+    /* ── Button ──────────────────────────────────────────────── */
+    .btn-signup-main {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: .03em;
+      transition: transform .15s, box-shadow .15s, filter .15s;
+      box-shadow: 0 6px 20px rgba(232,80,106,.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-signup-main:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(232,80,106,.45);
+      filter: brightness(1.04);
+    }
+    .btn-signup-main:active { transform: translateY(0); }
+
+    /* ── Sign In row ─────────────────────────────────────────── */
+    .signin-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .signin-row span { font-size: .9rem; color: #555; }
+    .btn-signin-link {
+      padding: 8px 20px;
+      border: 1.8px solid #333;
+      border-radius: 8px;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: #222;
+      cursor: pointer;
+      transition: background .18s, color .18s;
+    }
+    .btn-signin-link:hover { background: #222; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Blob background (same as login) -->
+  <div class="blob-wrap">
+    <svg viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#f9a0a8"/>
+          <stop offset="60%"  stop-color="#f07070"/>
+          <stop offset="100%" stop-color="#f06050"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#blobGrad)"
+        d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
+           C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
+      <g class="petal">
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9"  transform="rotate(5 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9"  transform="rotate(77 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9"  transform="rotate(149 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9"  transform="rotate(221 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9"  transform="rotate(293 60 220)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8"  transform="rotate(20 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8"  transform="rotate(92 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8"  transform="rotate(164 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8"  transform="rotate(236 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8"  transform="rotate(308 190 700)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Signup card -->
+  <div class="card">
+    <div class="logo">
+      <div class="logo-text">
+        <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h1>Create your account</h1>
+
+    <!-- First & Last Name -->
+    <div class="row-two">
+      <div class="field" style="margin-bottom:0">
+        <input type="text" name="first_name" placeholder="First Name" autocomplete="given-name"/>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <input type="text" name="last_name" placeholder="Last Name" autocomplete="family-name"/>
+      </div>
+    </div>
+
+    <div style="margin-top:14px"></div>
+
+    <div class="field">
+      <input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email"/>
+    </div>
+
+    <div class="field">
+      <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel"/>
+    </div>
+
+    <div class="field">
+      <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" oninput="checkStrength(this.value)"/>
+      <div class="strength-wrap"><div class="strength-bar" id="strengthBar"></div></div>
+      <div class="strength-label" id="strengthLabel"></div>
+    </div>
+
+    <div class="field">
+      <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" autocomplete="new-password"/>
+    </div>
+
+    <!-- Terms -->
+    <label class="terms">
+      <input type="checkbox" id="terms"/>
+      I agree to the <a href="#">Terms of Service</a> &amp; <a href="#">Privacy Policy</a>
+    </label>
+
+    <button class="btn-signup-main" onclick="handleSignup()">Create Account</button>
+
+    <div class="signin-row">
+      <span>Already have an account?</span>
+      <button class="btn-signin-link" onclick="window.location.href='signin.html'">Sign In</button>
+    </div>
+  </div>
+
+  <script>
+    /* ── CONFIG ── */
+    const API_BASE = 'http://127.0.0.1:5000/api';
+
+    /* ── TOAST ── */
+    function showToast(msg, isError = false) {
+      let toast = document.getElementById('hc-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'hc-toast';
+        toast.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);
+          padding:11px 28px;border-radius:50px;font-family:'Nunito',sans-serif;font-size:.88rem;
+          font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.15);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .35s;
+          opacity:0;z-index:999;white-space:nowrap;`;
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.background = isError ? '#c0392b' : '#8b1a3a';
+      toast.style.color = '#fff';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      toast.style.opacity   = '1';
+      setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(70px)';
+        toast.style.opacity   = '0';
+      }, 3200);
+    }
+
+    /* ── Password strength checker ── */
+    function checkStrength(val) {
+      const bar   = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
+      if (!val) { bar.style.width = '0%'; label.textContent = ''; return; }
+      let score = 0;
+      if (val.length >= 8)          score++;
+      if (/[A-Z]/.test(val))        score++;
+      if (/[0-9]/.test(val))        score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = [
+        { pct:'25%', color:'#e74c3c', text:'Weak'   },
+        { pct:'50%', color:'#e67e22', text:'Fair'   },
+        { pct:'75%', color:'#f1c40f', text:'Good'   },
+        { pct:'100%',color:'#2ecc71', text:'Strong' },
+      ];
+      const lvl = levels[score - 1] || levels[0];
+      bar.style.width      = lvl.pct;
+      bar.style.background = lvl.color;
+      label.style.color    = lvl.color;
+      label.textContent    = lvl.text;
+    }
+
+    /* ── Sign Up handler (API) ── */
+    async function handleSignup() {
+      const firstName = document.querySelector('input[autocomplete="given-name"]').value.trim();
+      const lastName  = document.querySelector('input[autocomplete="family-name"]').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password  = document.getElementById('password').value;
+      const confirm   = document.getElementById('confirmPassword').value;
+      const agreed    = document.getElementById('terms').checked;
+
+      if (!firstName || !lastName || !email || !password || !confirm) { shake(); return; }
+      if (password !== confirm) { showToast('Passwords do not match! 🌷', true); return; }
+      if (password.length < 6) { showToast('Password must be at least 6 characters 🌸', true); return; }
+      if (!email.includes('@')) { showToast('Enter a valid email 🌷', true); return; }
+      if (!agreed)              { showToast('Please agree to the Terms of Service 🌸', true); return; }
+
+      const btn = document.querySelector('.btn-signup-main');
+      btn.textContent = 'Creating account…';
+      btn.disabled    = true;
+
+      try {
+        const res  = await fetch(`${API_BASE}/auth/register`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ first_name: firstName, last_name: lastName, email, password, phone })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // Save token & username
+          localStorage.setItem('hc_token',    data.token);
+          localStorage.setItem('hc_username', data.user.first_name);
+          localStorage.setItem('hc_user_id',  data.user.id);
+
+          btn.textContent = '✓ Account Created!';
+          showToast(data.message);
+          setTimeout(() => window.location.href = 'health-profile.html', 1200);
+        } else {
+          showToast(data.message || 'Registration failed. Please try again.', true);
+          btn.textContent = 'Create Account';
+          btn.disabled    = false;
+        }
+      } catch (err) {
+        // ── Backend not running — save locally and continue ──
+        localStorage.setItem('hc_username',   firstName);
+        localStorage.setItem('hc_user_email', email);
+        localStorage.setItem('hc_token',      'local_' + Date.now());
+        btn.textContent = '✓ Account Created!';
+        showToast(`Welcome to herCare, ${firstName}! 🌸`);
+        setTimeout(() => window.location.href = 'health-profile.html', 1200);
+      }
+    }
+
+    /* ── Shake ── */
+    function shake() {
+      const card = document.querySelector('.card');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'shake .4s ease';
+    }
+
+    /* ── Ripple on button ── */
+    const btn = document.querySelector('.btn-signup-main');
+    btn.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      const rect   = btn.getBoundingClientRect();
+      const size   = Math.max(rect.width, rect.height);
+      ripple.style.cssText = `
+        position:absolute; border-radius:50%; background:rgba(255,255,255,.4);
+        width:${size}px; height:${size}px;
+        left:${e.clientX - rect.left - size/2}px;
+        top:${e.clientY - rect.top - size/2}px;
+        transform:scale(0); animation:ripple .5s linear; pointer-events:none;`;
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+
+    /* ── Keyframes ── */
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple { to { transform:scale(2.5); opacity:0; } }
+      @keyframes shake  {
+        0%,100% { transform: translateX(0); }
+        20%,60% { transform: translateX(-8px); }
+        40%,80% { transform: translateX(8px); }
+      }`;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

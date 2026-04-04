@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>herCare – Cycle Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink-light: #f9a8b0;
+      --pink-mid:   #f07080;
+      --pink-dark:  #e8506a;
+      --maroon:     #8b1a3a;
+      --cream:      #f5f0e8;
+      --white:      #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── BLOB BG ── */
+    .blob-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .blob-wrap svg { width: 100%; height: 100%; }
+    .petal { opacity: .18; fill: #fff; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139,26,58,0.10);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(180,60,80,.08);
+    }
+    .nav-logo { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; }
+    .logo-her  { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--maroon); line-height: 1; }
+    .logo-care { font-size: 1.3rem; font-weight: 800; color: var(--maroon); line-height: 1; }
+    .logo-flower { font-size: 1.1rem; margin-left: 3px; }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: .88rem; font-weight: 600;
+      color: #666; padding: 6px 14px; border-radius: 20px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { background: rgba(232,80,106,.12); color: var(--maroon); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-bell { font-size: 1.2rem; cursor: pointer; background: none; border: none; position: relative; padding: 4px; }
+    .bell-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: var(--pink-dark); border-radius: 50%; border: 2px solid #fff; }
+    .nav-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark)); display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; color: #fff; cursor: pointer; border: 2px solid rgba(232,80,106,.3); }
+
+    /* ── PAGE ── */
+    .page-body { position: relative; z-index: 1; padding: 36px 40px 72px; max-width: 1040px; margin: 0 auto; }
+
+    /* ── WELCOME ── */
+    .welcome-section { margin-bottom: 28px; animation: fadeUp .5s ease both; }
+    .welcome-greeting { font-size: 1.5rem; font-weight: 800; color: var(--maroon); margin-bottom: 4px; }
+    .welcome-greeting span { font-family: 'Dancing Script', cursive; font-size: 1.85rem; }
+    .welcome-sub { font-size: .92rem; color: #9a7070; font-weight: 500; }
+
+    /* ── PAGE TITLE ── */
+    .page-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 26px; animation: fadeUp .5s .05s ease both;
+    }
+    .page-title { font-size: 1.45rem; font-weight: 800; color: var(--maroon); }
+    .save-btn {
+      padding: 10px 26px;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 700;
+      cursor: pointer; position: relative; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(232,80,106,.3);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,80,106,.4); }
+
+    /* ── MAIN GRID ── */
+    .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; }
+    .col-left  { display: flex; flex-direction: column; gap: 22px; }
+    .col-right { display: flex; flex-direction: column; gap: 22px; }
+
+    /* ── CARD BASE ── */
+    .tracker-card {
+      background: var(--white); border-radius: 20px;
+      padding: 26px 28px 24px;
+      box-shadow: 0 8px 32px rgba(180,60,80,.09), 0 2px 8px rgba(0,0,0,.04);
+      animation: fadeUp .5s ease both; position: relative; overflow: hidden;
+    }
+    .tracker-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 4px; border-radius: 20px 20px 0 0;
+    }
+    .card-period::before   { background: linear-gradient(90deg, #e8506a, #f9a8b0); }
+    .card-calendar::before { background: linear-gradient(90deg, #c9184a, #ff758f); }
+    .card-phase::before    { background: linear-gradient(90deg, #f953c6, #b91d73); }
+    .card-symptoms::before { background: linear-gradient(90deg, #a4133c, #ff4d6d); }
+    .card-flow::before     { background: linear-gradient(90deg, #800f2f, #e8506a); }
+    .card-history::before  { background: linear-gradient(90deg, #590d22, #a4133c); }
+
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; flex-shrink: 0;
+    }
+    .icon-period   { background: rgba(232,80,106,.12); }
+    .icon-calendar { background: rgba(201,24,74,.12); }
+    .icon-phase    { background: rgba(249,83,198,.12); }
+    .icon-symptoms { background: rgba(164,19,60,.12); }
+    .icon-flow     { background: rgba(128,15,47,.12); }
+    .icon-history  { background: rgba(89,13,34,.12); }
+
+    .card-title { font-size: 1.05rem; font-weight: 800; color: var(--maroon); }
+    .card-sub   { font-size: .75rem; color: #bbb; font-weight: 500; margin-top: 2px; }
+
+    /* ════════════════════════
+       PERIOD LOGGING
+    ════════════════════════ */
+    .period-form { display: flex; flex-direction: column; gap: 16px; }
+    .period-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pf-label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 6px; }
+    .pf-input {
+      width: 100%; padding: 11px 14px;
+      border: 1.8px solid #f4c0cc; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .92rem;
+      color: #333; outline: none; background: #fff8f9;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .pf-input:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.12); }
+
+    .period-status-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .status-btn {
+      flex: 1; min-width: 80px; padding: 10px 8px;
+      border-radius: 12px; border: 2px solid #f4c0cc;
+      background: #fff8f9; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 700;
+      color: #b06080; text-align: center;
+      transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .status-btn .sb-icon { font-size: 1.3rem; }
+    .status-btn:hover { background: #ffe4ec; transform: translateY(-1px); }
+    .status-btn.sel {
+      background: linear-gradient(135deg, rgba(232,80,106,.15), rgba(249,168,176,.15));
+      border-color: var(--pink-dark); color: var(--maroon);
+      box-shadow: 0 4px 14px rgba(232,80,106,.2);
+    }
+
+    /* predicted next period banner */
+    .next-period-banner {
+      background: linear-gradient(135deg, #fff0f3, #ffe4ec);
+      border: 1.5px solid rgba(232,80,106,.25);
+      border-radius: 12px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .npb-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .npb-label { font-size: .74rem; font-weight: 700; color: #c07080; text-transform: uppercase; letter-spacing: .05em; }
+    .npb-date  { font-size: 1.05rem; font-weight: 800; color: var(--maroon); margin-top: 2px; }
+    .npb-days  { font-size: .75rem; color: var(--pink-mid); font-weight: 600; margin-top: 2px; }
+
+    /* ════════════════════════
+       MINI CALENDAR
+    ════════════════════════ */
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .cal-nav button {
+      background: none; border: none; cursor: pointer;
+      font-size: 1.1rem; color: var(--maroon); padding: 4px 8px;
+      border-radius: 8px; transition: background .2s;
+    }
+    .cal-nav button:hover { background: rgba(232,80,106,.1); }
+    .cal-month { font-size: 1rem; font-weight: 800; color: var(--maroon); }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .cal-day-name {
+      text-align: center; font-size: .68rem; font-weight: 700;
+      color: #c0a0a8; padding: 4px 0; text-transform: uppercase;
+    }
+    .cal-day {
+      text-align: center; font-size: .8rem; font-weight: 600;
+      padding: 7px 2px; border-radius: 8px; cursor: pointer;
+      color: #555; transition: all .18s; position: relative;
+    }
+    .cal-day:hover { background: rgba(232,80,106,.1); color: var(--maroon); }
+    .cal-day.empty { cursor: default; }
+    .cal-day.today { background: rgba(232,80,106,.12); color: var(--maroon); font-weight: 800; }
+    .cal-day.period {
+      background: linear-gradient(135deg, var(--pink-dark), var(--pink-mid));
+      color: #fff; font-weight: 800;
+      box-shadow: 0 2px 8px rgba(232,80,106,.3);
+    }
+    .cal-day.predicted {
+      background: rgba(249,168,176,.25);
+      color: var(--maroon); border: 1.5px dashed var(--pink-light);
+    }
+    .cal-day.ovulation {
+      background: rgba(255,200,50,.2);
+      color: #a07020; border: 1.5px solid #ffd200;
+    }
+
+    .cal-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: #888; font-weight: 600; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .ld-period    { background: var(--pink-dark); }
+    .ld-predicted { background: rgba(249,168,176,.5); border: 1.5px dashed var(--pink-light); }
+    .ld-ovulation { background: rgba(255,200,50,.4); border: 1.5px solid #ffd200; }
+    .ld-today     { background: rgba(232,80,106,.2); }
+
+    /* ════════════════════════
+       CYCLE PHASE
+    ════════════════════════ */
+    .phase-ring-wrap {
+      display: flex; justify-content: center; margin-bottom: 18px;
+    }
+    .phase-ring { position: relative; width: 160px; height: 160px; }
+    .phase-ring svg { transform: rotate(-90deg); }
+    .phase-ring circle { fill: none; stroke-width: 14; }
+    .pr-bg    { stroke: #f5e8ec; }
+    .pr-fill  { stroke-dasharray: 408; stroke-dashoffset: 200; stroke-linecap: round; transition: stroke-dashoffset .8s ease, stroke .4s; }
+    .pr-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .pr-emoji  { font-size: 2rem; line-height: 1; }
+    .pr-name   { font-size: .78rem; font-weight: 800; color: var(--maroon); margin-top: 4px; text-align: center; }
+    .pr-day    { font-size: .68rem; color: #c09090; font-weight: 600; }
+
+    .phase-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .phase-card {
+      padding: 10px 12px; border-radius: 12px;
+      border: 1.5px solid #f4c0cc;
+      background: #fff8f9; cursor: pointer;
+      transition: all .2s;
+    }
+    .phase-card:hover { background: #ffe8ee; }
+    .phase-card.active { background: linear-gradient(135deg,rgba(232,80,106,.12),rgba(249,168,176,.1)); border-color: var(--pink-dark); }
+    .pc-name  { font-size: .8rem; font-weight: 800; color: var(--maroon); }
+    .pc-days  { font-size: .7rem; color: #c09090; font-weight: 600; margin-top: 2px; }
+    .pc-emoji { font-size: 1.1rem; margin-bottom: 5px; }
+
+    /* ════════════════════════
+       SYMPTOMS TRACKER
+    ════════════════════════ */
+    .symptoms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+    .symptom-card {
+      padding: 14px; border-radius: 14px;
+      border: 1.8px solid #f4c0cc; background: #fff8f9;
+      transition: all .2s; cursor: pointer;
+    }
+    .symptom-card:hover { background: #ffe8ee; }
+    .symptom-card.active { border-color: var(--pink-dark); background: rgba(232,80,106,.07); }
+
+    .sc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sc-label { display: flex; align-items: center; gap: 8px; }
+    .sc-icon  { font-size: 1.3rem; }
+    .sc-name  { font-size: .85rem; font-weight: 800; color: var(--maroon); }
+    .sc-toggle {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid #f4c0cc; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; transition: all .2s; flex-shrink: 0;
+    }
+    .symptom-card.active .sc-toggle { background: var(--pink-dark); border-color: var(--pink-dark); color: #fff; }
+
+    /* severity slider */
+    .sc-severity { display: flex; gap: 5px; }
+    .sev-dot {
+      width: 24px; height: 8px; border-radius: 4px;
+      background: #f4c0cc; cursor: pointer; transition: all .2s;
+    }
+    .sev-dot.lit { background: var(--pink-dark); }
+    .sev-dot.lit-mild   { background: #ffd200; }
+    .sev-dot.lit-mod    { background: #f7971e; }
+    .sev-dot.lit-severe { background: var(--pink-dark); }
+
+    /* extra symptoms list */
+    .extra-symptoms { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .extra-sym-btn {
+      padding: 6px 13px; border-radius: 20px;
+      border: 1.5px solid #f4c0cc; background: #fff8f9;
+      font-family: 'Nunito', sans-serif; font-size: .75rem; font-weight: 700;
+      color: #b06080; cursor: pointer; transition: all .18s;
+    }
+    .extra-sym-btn:hover, .extra-sym-btn.sel {
+      background: rgba(232,80,106,.12); border-color: var(--pink-dark); color: var(--maroon);
+    }
+
+    /* notes */
+    .sym-notes-label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 6px; }
+    .sym-notes {
+      width: 100%; height: 68px; padding: 10px 13px;
+      border: 1.5px solid #f4c0cc; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .86rem;
+      color: #444; resize: none; outline: none; background: #fff8f9;
+      transition: border-color .2s, box-shadow .2s; line-height: 1.5;
+    }
+    .sym-notes:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.1); }
+
+    /* ════════════════════════
+       FLOW INTENSITY
+    ════════════════════════ */
+    .flow-btns { display: flex; gap: 10px; justify-content: space-between; margin-bottom: 18px; }
+    .flow-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 12px 6px; border-radius: 12px;
+      border: 2px solid #f4c0cc; background: #fff8f9;
+      cursor: pointer; transition: all .2s;
+    }
+    .flow-btn:hover { background: #ffe8ee; transform: translateY(-1px); }
+    .flow-btn.sel {
+      border-color: var(--pink-dark);
+      background: rgba(232,80,106,.1);
+      box-shadow: 0 4px 12px rgba(232,80,106,.2);
+    }
+    .flow-icon  { font-size: 1.5rem; line-height: 1; }
+    .flow-label { font-size: .7rem; font-weight: 800; color: var(--maroon); text-align: center; }
+
+    .flow-duration { margin-top: 6px; }
+    .flow-duration label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 6px; }
+    .flow-duration input {
+      width: 100%; padding: 11px 14px;
+      border: 1.8px solid #f4c0cc; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .92rem;
+      color: #333; outline: none; background: #fff8f9;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .flow-duration input:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.12); }
+
+    .pain-scale { margin-top: 16px; }
+    .pain-scale label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 10px; }
+    .pain-dots { display: flex; gap: 6px; align-items: center; }
+    .pain-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid #f4c0cc; background: #fff8f9;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; font-weight: 800; color: #c09090;
+      cursor: pointer; transition: all .2s;
+    }
+    .pain-dot:hover { transform: scale(1.1); }
+    .pain-dot.sel   { background: var(--pink-dark); border-color: var(--pink-dark); color: #fff; transform: scale(1.15); box-shadow: 0 3px 10px rgba(232,80,106,.3); }
+    .pain-label-row { display: flex; justify-content: space-between; margin-top: 5px; }
+    .pain-label-row span { font-size: .65rem; color: #c0a0a8; font-weight: 600; }
+
+    /* ════════════════════════
+       LOG HISTORY
+    ════════════════════════ */
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 14px; border-radius: 12px;
+      background: #fff8f9; border: 1.5px solid #f4c0cc;
+      transition: background .2s;
+    }
+    .history-item:hover { background: #ffe8ee; }
+    .hi-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--pink-dark); flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(232,80,106,.2);
+    }
+    .hi-dot.predicted { background: #f4c0cc; border: 2px dashed var(--pink-mid); }
+    .hi-info { flex: 1; }
+    .hi-date { font-size: .88rem; font-weight: 800; color: var(--maroon); }
+    .hi-detail { font-size: .72rem; color: #c09090; font-weight: 600; margin-top: 2px; }
+    .hi-badge {
+      font-size: .68rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .badge-logged    { background: rgba(232,80,106,.12); color: var(--pink-dark); }
+    .badge-predicted { background: rgba(249,168,176,.2); color: #c09090; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--maroon); color: #fff;
+      padding: 11px 28px; border-radius: 50px;
+      font-size: .88rem; font-weight: 700;
+      box-shadow: 0 6px 24px rgba(0,0,0,.15);
+      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
+      opacity: 0; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── RIPPLE ── */
+    .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,.38); transform: scale(0); animation: rip .5s linear; pointer-events: none; }
+    @keyframes rip { to { transform: scale(2.5); opacity: 0; } }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .page-body { padding: 20px 16px 56px; }
+      .main-grid { grid-template-columns: 1fr; }
+      .symptoms-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .period-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── BLOB BG ── -->
+<div class="blob-wrap">
+  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#f9a0a8"/>
+        <stop offset="60%"  stop-color="#f07070"/>
+        <stop offset="100%" stop-color="#f06050"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#blobGrad)"
+      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
+         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
+    <g class="petal">
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
+      </g>
+  </svg>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="login.html" class="nav-logo">
+    <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Tracker</a></li>
+    <li><a href="#" class="active">Cycle</a></li>
+    <li><a href="#">Learn</a></li>
+    <li><a href="#">Community</a></li>
+    <li><a href="#">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-avatar">A</div>
+  </div>
+</nav>
+
+<!-- ── PAGE BODY ── -->
+<div class="page-body">
+
+  <div class="welcome-section">
+    <div class="welcome-greeting">Hi, <span id="usernameDisplay"></span> 🌸</div>
+    <div class="welcome-sub">Track your cycle and symptoms — understanding your body is the first step to feeling better.</div>
+  </div>
+
+  <div class="page-title-row">
+    <div class="page-title">🩸 Cycle Tracker & Symptoms</div>
+    <button class="save-btn" id="saveBtn">💾 Save Log</button>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- ══════════ LEFT COLUMN ══════════ -->
+    <div class="col-left">
+
+      <!-- PERIOD LOGGING -->
+      <div class="tracker-card card-period">
+        <div class="card-header">
+          <div class="card-icon icon-period">🩸</div>
+          <div>
+            <div class="card-title">Period Logging</div>
+            <div class="card-sub">Log your period start & end dates</div>
+          </div>
+        </div>
+
+        <div class="period-form">
+          <!-- Status -->
+          <div>
+            <div class="pf-label">Current Status</div>
+            <div class="period-status-btns">
+              <button class="status-btn sel" onclick="selectStatus(this)"><span class="sb-icon">🩸</span>On Period</button>
+              <button class="status-btn" onclick="selectStatus(this)"><span class="sb-icon">✅</span>Period Ended</button>
+              <button class="status-btn" onclick="selectStatus(this)"><span class="sb-icon">⏳</span>Late Period</button>
+
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="period-row">
+            <div>
+              <label class="pf-label">Start Date</label>
+              <input type="date" class="pf-input" id="periodStart"/>
+            </div>
+            <div>
+              <label class="pf-label">End Date</label>
+              <input type="date" class="pf-input" id="periodEnd"/>
+            </div>
+          </div>
+
+          <!-- Next period prediction -->
+          <div class="next-period-banner">
+            <div class="npb-icon">📅</div>
+            <div>
+              <div class="npb-label">Predicted Next Period</div>
+              <div class="npb-date" id="nextPeriodDate">—</div>
+              <div class="npb-days" id="nextPeriodDays">Enter start date to predict</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYMPTOMS TRACKER -->
+      <div class="tracker-card card-symptoms">
+        <div class="card-header">
+          <div class="card-icon icon-symptoms">🔍</div>
+          <div>
+            <div class="card-title">Symptoms Tracker</div>
+            <div class="card-sub">Tap a symptom & set severity</div>
+          </div>
+        </div>
+
+        <!-- Main PCOD symptoms -->
+        <div class="symptoms-grid">
+
+          <!-- Stress -->
+          <div class="symptom-card" id="sym-stress" onclick="toggleSymptom('stress')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">😰</span>
+                <span class="sc-name">Stress</span>
+              </div>
+              <div class="sc-toggle" id="tog-stress"></div>
+            </div>
+            <div class="sc-severity" id="sev-stress">
+              <div class="sev-dot" onclick="setSev(event,'stress',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'stress',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'stress',3)"></div>
+            </div>
+          </div>
+
+          <!-- Hair Fall -->
+          <div class="symptom-card" id="sym-hairfall" onclick="toggleSymptom('hairfall')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">💇‍♀️</span>
+                <span class="sc-name">Hair Fall</span>
+              </div>
+              <div class="sc-toggle" id="tog-hairfall"></div>
+            </div>
+            <div class="sc-severity" id="sev-hairfall">
+              <div class="sev-dot" onclick="setSev(event,'hairfall',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'hairfall',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'hairfall',3)"></div>
+            </div>
+          </div>
+
+          <!-- Acne -->
+          <div class="symptom-card" id="sym-acne" onclick="toggleSymptom('acne')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">🔴</span>
+                <span class="sc-name">Acne</span>
+              </div>
+              <div class="sc-toggle" id="tog-acne"></div>
+            </div>
+            <div class="sc-severity" id="sev-acne">
+              <div class="sev-dot" onclick="setSev(event,'acne',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'acne',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'acne',3)"></div>
+            </div>
+          </div>
+
+          <!-- Cramps -->
+          <div class="symptom-card" id="sym-cramps" onclick="toggleSymptom('cramps')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">🤕</span>
+                <span class="sc-name">Cramps</span>
+              </div>
+              <div class="sc-toggle" id="tog-cramps"></div>
+            </div>
+            <div class="sc-severity" id="sev-cramps">
+              <div class="sev-dot" onclick="setSev(event,'cramps',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'cramps',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'cramps',3)"></div>
+            </div>
+          </div>
+
+          <!-- Bloating -->
+          <div class="symptom-card" id="sym-bloating" onclick="toggleSymptom('bloating')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">🫃</span>
+                <span class="sc-name">Bloating</span>
+              </div>
+              <div class="sc-toggle" id="tog-bloating"></div>
+            </div>
+            <div class="sc-severity" id="sev-bloating">
+              <div class="sev-dot" onclick="setSev(event,'bloating',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'bloating',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'bloating',3)"></div>
+            </div>
+          </div>
+
+          <!-- Fatigue -->
+          <div class="symptom-card" id="sym-fatigue" onclick="toggleSymptom('fatigue')">
+            <div class="sc-top">
+              <div class="sc-label">
+                <span class="sc-icon">😴</span>
+                <span class="sc-name">Fatigue</span>
+              </div>
+              <div class="sc-toggle" id="tog-fatigue"></div>
+            </div>
+            <div class="sc-severity" id="sev-fatigue">
+              <div class="sev-dot" onclick="setSev(event,'fatigue',1)"></div>
+              <div class="sev-dot" onclick="setSev(event,'fatigue',2)"></div>
+              <div class="sev-dot" onclick="setSev(event,'fatigue',3)"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Extra symptoms -->
+        <div style="font-size:.76rem;font-weight:700;color:#5a3a44;margin-bottom:8px;">Other Symptoms</div>
+        <div class="extra-symptoms">
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">🍬 Sugar Cravings</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">🏋️ Weight Gain</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">😤 Mood Swings</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">🤯 Headache</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">😶 Brain Fog</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">🌙 Insomnia</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">🧴 Oily Skin</button>
+          <button class="extra-sym-btn" onclick="this.classList.toggle('sel')">💊 Nausea</button>
+        </div>
+
+        <label class="sym-notes-label">Symptom Notes</label>
+        <textarea class="sym-notes" placeholder="Describe your symptoms in more detail…"></textarea>
+      </div>
+
+    </div>
+
+    <!-- ══════════ RIGHT COLUMN ══════════ -->
+    <div class="col-right">
+
+      <!-- MINI CALENDAR -->
+      <div class="tracker-card card-calendar">
+        <div class="card-header">
+          <div class="card-icon icon-calendar">📅</div>
+          <div>
+            <div class="card-title">Cycle Calendar</div>
+            <div class="card-sub">Tap any date to mark period</div>
+          </div>
+        </div>
+        <div class="cal-nav">
+          <button onclick="changeMonth(-1)">‹</button>
+          <div class="cal-month" id="calMonth"></div>
+          <button onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="legend-item"><div class="legend-dot ld-period"></div>Period</div>
+          <div class="legend-item"><div class="legend-dot ld-predicted"></div>Predicted</div>
+          <div class="legend-item"><div class="legend-dot ld-ovulation"></div>Ovulation</div>
+          <div class="legend-item"><div class="legend-dot ld-today"></div>Today</div>
+        </div>
+      </div>
+
+      <!-- CYCLE PHASE -->
+      <div class="tracker-card card-phase">
+        <div class="card-header">
+          <div class="card-icon icon-phase">🌀</div>
+          <div>
+            <div class="card-title">Cycle Phase</div>
+            <div class="card-sub">Your current phase today</div>
+          </div>
+        </div>
+        <div class="phase-ring-wrap">
+          <div class="phase-ring">
+            <svg viewBox="0 0 66 66" width="160" height="160">
+              <circle class="pr-bg"   cx="33" cy="33" r="26"/>
+              <circle class="pr-fill" id="prFill" cx="33" cy="33" r="26" stroke="#e8506a"/>
+            </svg>
+            <div class="pr-center">
+              <div class="pr-emoji" id="phaseEmoji">🌸</div>
+              <div class="pr-name"  id="phaseName">Menstrual</div>
+              <div class="pr-day"   id="phaseDay">Day 1–5</div>
+            </div>
+          </div>
+        </div>
+        <div class="phase-cards">
+          <div class="phase-card active" onclick="setPhase(this,0)">
+            <div class="pc-emoji">🌸</div>
+            <div class="pc-name">Menstrual</div>
+            <div class="pc-days">Day 1–5</div>
+          </div>
+          <div class="phase-card" onclick="setPhase(this,1)">
+            <div class="pc-emoji">🌱</div>
+            <div class="pc-name">Follicular</div>
+            <div class="pc-days">Day 6–13</div>
+          </div>
+          <div class="phase-card" onclick="setPhase(this,2)">
+            <div class="pc-emoji">🌕</div>
+            <div class="pc-name">Ovulation</div>
+            <div class="pc-days">Day 14</div>
+          </div>
+          <div class="phase-card" onclick="setPhase(this,3)">
+            <div class="pc-emoji">🍂</div>
+            <div class="pc-name">Luteal</div>
+            <div class="pc-days">Day 15–28</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLOW & PAIN -->
+      <div class="tracker-card card-flow">
+        <div class="card-header">
+          <div class="card-icon icon-flow">💧</div>
+          <div>
+            <div class="card-title">Flow & Pain</div>
+            <div class="card-sub">Log today's flow & cramp intensity</div>
+          </div>
+        </div>
+
+        <div style="font-size:.76rem;font-weight:700;color:#5a3a44;margin-bottom:10px;">Flow Intensity</div>
+        <div class="flow-btns">
+          <button class="flow-btn" onclick="selectFlow(this)">
+            <span class="flow-icon">💧</span>
+            <span class="flow-label">Spotting</span>
+          </button>
+          <button class="flow-btn sel" onclick="selectFlow(this)">
+            <span class="flow-icon">💧💧</span>
+            <span class="flow-label">Light</span>
+          </button>
+          <button class="flow-btn" onclick="selectFlow(this)">
+            <span class="flow-icon">🩸</span>
+            <span class="flow-label">Medium</span>
+          </button>
+          <button class="flow-btn" onclick="selectFlow(this)">
+            <span class="flow-icon">🩸🩸</span>
+            <span class="flow-label">Heavy</span>
+          </button>
+        </div>
+
+        <div class="flow-duration">
+          <label>Period Duration (days)</label>
+          <input type="number" placeholder="e.g. 5" min="1" max="10" id="flowDays"/>
+        </div>
+
+        <div class="pain-scale">
+          <label>Pain / Cramp Level (1–10)</label>
+          <div class="pain-dots" id="painDots"></div>
+          <div class="pain-label-row">
+            <span>No pain</span>
+            <span>Moderate</span>
+            <span>Severe</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOG HISTORY -->
+      <div class="tracker-card card-history">
+        <div class="card-header">
+          <div class="card-icon icon-history">📋</div>
+          <div>
+            <div class="card-title">Cycle History</div>
+            <div class="card-sub">Last 3 periods + next prediction</div>
+          </div>
+        </div>
+        <div class="history-list">
+          <div class="history-item">
+            <div class="hi-dot"></div>
+            <div class="hi-info">
+              <div class="hi-date">24 Feb – 29 Feb 2025</div>
+              <div class="hi-detail">5 days · Medium flow · Pain: 4/10</div>
+            </div>
+            <div class="hi-badge badge-logged">Logged</div>
+          </div>
+          <div class="history-item">
+            <div class="hi-dot"></div>
+            <div class="hi-info">
+              <div class="hi-date">27 Jan – 1 Feb 2025</div>
+              <div class="hi-detail">5 days · Light flow · Pain: 3/10</div>
+            </div>
+            <div class="hi-badge badge-logged">Logged</div>
+          </div>
+          <div class="history-item">
+            <div class="hi-dot"></div>
+            <div class="hi-info">
+              <div class="hi-date">30 Dec – 4 Jan 2025</div>
+              <div class="hi-detail">6 days · Heavy flow · Pain: 7/10</div>
+            </div>
+            <div class="hi-badge badge-logged">Logged</div>
+          </div>
+          <div class="history-item">
+            <div class="hi-dot predicted"></div>
+            <div class="hi-info">
+              <div class="hi-date" id="nextHistDate">Next period: calculating…</div>
+              <div class="hi-detail">Based on your 28-day cycle</div>
+            </div>
+            <div class="hi-badge badge-predicted">Predicted</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── USERNAME ── */
+  const storedName = localStorage.getItem('hc_username') || 'there';
+  document.getElementById('usernameDisplay').textContent = storedName;
+  document.querySelector('.nav-avatar').textContent = storedName.charAt(0).toUpperCase();
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  /* ════════ PERIOD STATUS ════════ */
+  function selectStatus(btn) {
+    document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+  }
+
+  /* ════════ PERIOD DATE → NEXT PREDICTION ════════ */
+  const CYCLE_DAYS = 28;
+  document.getElementById('periodStart').addEventListener('change', function() {
+    const start = new Date(this.value);
+    if (isNaN(start)) return;
+    const next = new Date(start);
+    next.setDate(next.getDate() + CYCLE_DAYS);
+    const opts = { day:'numeric', month:'long', year:'numeric' };
+    document.getElementById('nextPeriodDate').textContent = next.toLocaleDateString('en-IN', opts);
+    const daysLeft = Math.round((next - new Date()) / 86400000);
+    document.getElementById('nextPeriodDays').textContent =
+      daysLeft > 0 ? `In ${daysLeft} days` : daysLeft === 0 ? 'Today!' : `${Math.abs(daysLeft)} days ago`;
+    document.getElementById('nextHistDate').textContent = 'Next: ' + next.toLocaleDateString('en-IN', opts);
+
+    // highlight predicted on calendar
+    buildCalendar();
+    showToast(`📅 Next period predicted for ${next.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}`);
+  });
+
+  /* ════════ CALENDAR ════════ */
+  let calYear, calMonth;
+  const periodDays = new Set();
+  const today = new Date();
+
+  function buildCalendar() {
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('calMonth').textContent = `${monthNames[calMonth]} ${calYear}`;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-name'; el.textContent = d;
+      grid.appendChild(el);
+    });
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+    // get predicted start from input
+    const ps = document.getElementById('periodStart').value;
+    let predStart = null;
+    if (ps) {
+      predStart = new Date(ps);
+      predStart.setDate(predStart.getDate() + CYCLE_DAYS);
+    }
+
+    // ovulation ~ day 14 of cycle from period start
+    let ovDay = null;
+    if (ps) {
+      const pStart = new Date(ps);
+      ovDay = new Date(pStart);
+      ovDay.setDate(ovDay.getDate() + 14);
+    }
+
+    for (let i = 0; i < firstDay; i++) {
+      const blank = document.createElement('div');
+      blank.className = 'cal-day empty';
+      grid.appendChild(blank);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day';
+      el.textContent = d;
+      const key = `${calYear}-${calMonth+1}-${d}`;
+      const thisDate = new Date(calYear, calMonth, d);
+
+      if (today.getDate()===d && today.getMonth()===calMonth && today.getFullYear()===calYear)
+        el.classList.add('today');
+      if (periodDays.has(key))
+        el.classList.add('period');
+      if (predStart && thisDate >= predStart && thisDate < new Date(predStart.getTime() + 5*86400000))
+        el.classList.add('predicted');
+      if (ovDay && thisDate.toDateString() === ovDay.toDateString())
+        el.classList.add('ovulation');
+
+      el.addEventListener('click', () => {
+        if (periodDays.has(key)) { periodDays.delete(key); el.classList.remove('period'); }
+        else { periodDays.add(key); el.classList.add('period'); }
+        showToast(`${d} ${monthNames[calMonth]} ${periodDays.has(key)?'marked as period day':'unmarked'}`);
+      });
+      grid.appendChild(el);
+    }
+  }
+
+  function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    buildCalendar();
+  }
+
+  calYear = today.getFullYear();
+  calMonth = today.getMonth();
+  buildCalendar();
+
+  /* ════════ CYCLE PHASE ════════ */
+  const phases = [
+    { emoji:'🌸', name:'Menstrual',  day:'Day 1–5',  color:'#e8506a', offset: 300 },
+    { emoji:'🌱', name:'Follicular', day:'Day 6–13', color:'#56ab2f', offset: 200 },
+    { emoji:'🌕', name:'Ovulation',  day:'Day 14',   color:'#ffd200', offset: 100 },
+    { emoji:'🍂', name:'Luteal',     day:'Day 15–28',color:'#f7971e', offset: 0   },
+  ];
+
+  function setPhase(card, idx) {
+    document.querySelectorAll('.phase-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    const p = phases[idx];
+    document.getElementById('phaseEmoji').textContent = p.emoji;
+    document.getElementById('phaseName').textContent  = p.name;
+    document.getElementById('phaseDay').textContent   = p.day;
+    document.getElementById('prFill').style.stroke    = p.color;
+    document.getElementById('prFill').style.strokeDashoffset = p.offset;
+  }
+
+  /* ════════ SYMPTOMS ════════ */
+  const symStates = {};
+  function toggleSymptom(id) {
+    const card = document.getElementById('sym-' + id);
+    const tog  = document.getElementById('tog-' + id);
+    const active = card.classList.toggle('active');
+    tog.textContent = active ? '✓' : '';
+    symStates[id] = active ? (symStates[id] || 1) : 0;
+  }
+
+  function setSev(e, id, level) {
+    e.stopPropagation();
+    const dots = document.querySelectorAll(`#sev-${id} .sev-dot`);
+    const colorMap = ['#ffd200','#f7971e','#e8506a'];
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('lit', i < level);
+      if (i < level) dot.style.background = colorMap[level-1];
+      else dot.style.background = '';
+    });
+    symStates[id] = level;
+    const labels = ['','Mild','Moderate','Severe'];
+    showToast(`${id.charAt(0).toUpperCase()+id.slice(1)}: ${labels[level]}`);
+  }
+
+  /* ════════ FLOW ════════ */
+  function selectFlow(btn) {
+    document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+  }
+
+  /* ════════ PAIN SCALE ════════ */
+  const painContainer = document.getElementById('painDots');
+  let selectedPain = 0;
+  for (let i = 1; i <= 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'pain-dot';
+    dot.textContent = i;
+    dot.addEventListener('click', () => {
+      selectedPain = i;
+      document.querySelectorAll('.pain-dot').forEach((d, idx) => {
+        d.classList.toggle('sel', idx < i);
+      });
+      const msg = i <= 3 ? 'Mild discomfort' : i <= 6 ? 'Moderate pain' : 'Severe pain — take care 💊';
+      showToast(`Pain level ${i}/10 — ${msg}`);
+    });
+    painContainer.appendChild(dot);
+  }
+
+  /* ════════ SAVE ════════ */
+  document.getElementById('saveBtn').addEventListener('click', function(e) {
+    const rp = document.createElement('span'); rp.className = 'ripple';
+    const rect = this.getBoundingClientRect();
+    const s = Math.max(rect.width, rect.height);
+    rp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
+    this.appendChild(rp); setTimeout(() => rp.remove(), 550);
+
+    const start = document.getElementById('periodStart').value;
+    if (!start) { showToast('⚠️ Please enter your period start date'); return; }
+
+    showToast('🌸 Cycle log saved successfully!');
+    this.textContent = '✓ Saved!';
+    this.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+    setTimeout(() => {
+      this.textContent = '💾 Save Log';
+      this.style.background = '';
+    }, 2500);
+  });
+
+  /* Set today's date as default */
+  document.getElementById('periodStart').value = today.toISOString().split('T')[0];
+  document.getElementById('periodStart').dispatchEvent(new Event('change'));
+</script>
+</body>
+</html>

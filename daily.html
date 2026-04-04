@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>herCare – Daily Log</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink-light: #f9a8b0;
+      --pink-mid:   #f07080;
+      --pink-dark:  #e8506a;
+      --maroon:     #8b1a3a;
+      --cream:      #f5f0e8;
+      --white:      #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── BLOB BG ── */
+    .blob-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .blob-wrap svg { width: 100%; height: 100%; }
+    .petal { opacity: .18; fill: #fff; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139,26,58,0.10);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(180,60,80,.08);
+    }
+    .nav-logo { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; }
+    .logo-her  { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--maroon); line-height: 1; }
+    .logo-care { font-size: 1.3rem; font-weight: 800; color: var(--maroon); line-height: 1; }
+    .logo-flower { font-size: 1.1rem; margin-left: 3px; }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: .88rem; font-weight: 600;
+      color: #666; padding: 6px 14px; border-radius: 20px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { background: rgba(232,80,106,.12); color: var(--maroon); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-bell { font-size: 1.2rem; cursor: pointer; background: none; border: none; position: relative; padding: 4px; }
+    .bell-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: var(--pink-dark); border-radius: 50%; border: 2px solid #fff; }
+    .nav-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark)); display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; color: #fff; cursor: pointer; border: 2px solid rgba(232,80,106,.3); }
+
+    /* ── PAGE ── */
+    .page-body { position: relative; z-index: 1; padding: 36px 40px 72px; max-width: 1040px; margin: 0 auto; }
+
+    /* ── WELCOME ── */
+    .welcome-section { margin-bottom: 24px; animation: fadeUp .5s ease both; }
+    .welcome-greeting { font-size: 1.5rem; font-weight: 800; color: var(--maroon); margin-bottom: 4px; }
+    .welcome-greeting span { font-family: 'Dancing Script', cursive; font-size: 1.85rem; }
+    .welcome-sub { font-size: .92rem; color: #9a7070; font-weight: 500; }
+
+    /* ── DATE BAR ── */
+    .date-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; animation: fadeUp .5s .05s ease both;
+    }
+    .date-label { font-size: 1rem; font-weight: 700; color: var(--maroon); }
+    .date-label span { font-weight: 400; color: #9a7070; font-size: .88rem; margin-left: 8px; }
+    .save-all-btn {
+      padding: 10px 26px;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 700;
+      cursor: pointer; position: relative; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(232,80,106,.3);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .save-all-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,80,106,.4); }
+
+    /* ── GRID ── */
+    .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+    /* ── CARD BASE ── */
+    .log-card {
+      background: var(--white); border-radius: 20px;
+      padding: 26px 28px 24px;
+      box-shadow: 0 8px 32px rgba(180,60,80,.09), 0 2px 8px rgba(0,0,0,.04);
+      animation: fadeUp .5s ease both; position: relative; overflow: hidden;
+    }
+    .log-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 4px;
+    }
+    .card-sleep::before      { background: linear-gradient(90deg,#667eea,#764ba2); }
+    .card-hydration::before  { background: linear-gradient(90deg,#43b8f0,#1e90ff); }
+    .card-mood::before       { background: linear-gradient(90deg,#f7971e,#ffd200); }
+    .card-nutrition::before  { background: linear-gradient(90deg,#56ab2f,#a8e063); }
+    .card-activity::before   { background: linear-gradient(90deg,#f953c6,#b91d73); }
+    .card-notes::before      { background: linear-gradient(90deg,#f5af19,#f0ec32); }
+
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .icon-sleep     { background: rgba(102,126,234,.12); }
+    .icon-hydration { background: rgba(67,184,240,.12); }
+    .icon-mood      { background: rgba(247,151,30,.12); }
+    .icon-nutrition { background: rgba(86,171,47,.12); }
+    .icon-activity  { background: rgba(249,83,198,.12); }
+    .icon-notes     { background: rgba(245,175,25,.12); }
+
+    .card-title { font-size: 1.05rem; font-weight: 800; color: var(--maroon); }
+    .card-sub   { font-size: .75rem; color: #bbb; font-weight: 500; margin-top: 2px; }
+
+    /* ════════════════════════
+       SLEEP TRACKER
+    ════════════════════════ */
+    .sleep-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .sleep-inputs label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 5px; }
+    .sleep-inputs input[type=time] {
+      width: 100%; padding: 10px 12px;
+      border: 1.8px solid #e8d0d8; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .9rem;
+      color: #333; outline: none; background: #fdf8f9;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .sleep-inputs input[type=time]:focus { border-color: #764ba2; box-shadow: 0 0 0 3px rgba(118,75,162,.1); }
+
+    .sleep-result {
+      background: linear-gradient(135deg,#f3f0ff,#ede8ff);
+      border-radius: 10px; padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .sleep-result span { font-size: .8rem; color: #7060a0; font-weight: 600; }
+    .sleep-hours { font-size: 1.3rem; font-weight: 800; color: #5a3a9a; }
+
+    .quality-row { display: flex; gap: 7px; flex-wrap: wrap; }
+    .quality-btn {
+      padding: 5px 13px; border-radius: 20px;
+      border: 1.5px solid #e0d0e8; background: transparent;
+      font-family: 'Nunito', sans-serif; font-size: .75rem; font-weight: 700; color: #888;
+      cursor: pointer; transition: all .18s;
+    }
+    .quality-btn:hover, .quality-btn.sel { background: rgba(118,75,162,.12); border-color: #764ba2; color: #5a3080; }
+
+    /* ════════════════════════
+       HYDRATION TRACKER
+    ════════════════════════ */
+    .hydration-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .hydration-top span { font-size: .82rem; color: #5a8aaa; font-weight: 700; }
+    .hydration-count { font-size: 1.5rem; font-weight: 800; color: #1e7ab0; }
+
+    .water-glasses { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 14px; }
+    .glass-btn {
+      width: 38px; height: 50px;
+      background: #eaf6fd; border: 2px solid #b8dff0;
+      border-radius: 6px 6px 10px 10px;
+      cursor: pointer; position: relative;
+      transition: all .2s; overflow: hidden;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px;
+    }
+    .glass-btn::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 0%; background: linear-gradient(180deg,#7ad4f5,#43b8f0);
+      transition: height .35s ease; border-radius: 0 0 7px 7px;
+    }
+    .glass-btn.filled::before { height: 100%; }
+    .glass-btn.filled { border-color: #1e90ff; }
+    .glass-lbl { position: relative; z-index: 1; font-size: .95rem; }
+
+    .hydration-bar-wrap { height: 8px; background: #e0f0fb; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+    .hydration-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#43b8f0,#1e90ff); border-radius: 4px; transition: width .4s ease; }
+    .hydration-labels { display: flex; justify-content: space-between; }
+    .hydration-labels span { font-size: .7rem; color: #aaa; font-weight: 600; }
+    .hydration-labels .hl-current { color: #1e7ab0; font-weight: 800; }
+
+    .custom-water { display: flex; gap: 8px; margin-top: 12px; }
+    .custom-water input {
+      flex: 1; padding: 8px 12px;
+      border: 1.5px solid #b8dff0; border-radius: 8px;
+      font-family: 'Nunito', sans-serif; font-size: .85rem; outline: none;
+      transition: border-color .2s; background: #f0f8ff;
+    }
+    .custom-water input:focus { border-color: #43b8f0; }
+    .custom-water button {
+      padding: 8px 16px; background: linear-gradient(135deg,#43b8f0,#1e90ff);
+      color: #fff; border: none; border-radius: 8px;
+      font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 700;
+      cursor: pointer; transition: transform .15s;
+    }
+    .custom-water button:hover { transform: translateY(-1px); }
+
+    /* ════════════════════════
+       MOOD TRACKER
+    ════════════════════════ */
+    .mood-emojis { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 16px; }
+    .mood-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+      padding: 10px 4px; border-radius: 12px; border: 2px solid transparent;
+      background: #fdf8f0; cursor: pointer; transition: all .2s;
+    }
+    .mood-btn:hover { background: #fff3e0; transform: translateY(-2px); }
+    .mood-btn.sel { border-color: #f7971e; background: rgba(247,151,30,.10); transform: translateY(-3px); box-shadow: 0 4px 14px rgba(247,151,30,.22); }
+    .mood-emoji { font-size: 1.65rem; line-height: 1; }
+    .mood-label { font-size: .62rem; font-weight: 700; color: #a07040; text-align: center; }
+
+    .mood-note-label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 6px; }
+    .mood-note {
+      width: 100%; padding: 10px 13px;
+      border: 1.5px solid #f0dfc8; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .86rem; color: #444;
+      resize: none; outline: none; background: #fffaf4;
+      transition: border-color .2s, box-shadow .2s; line-height: 1.5; height: 64px;
+    }
+    .mood-note:focus { border-color: #f7971e; box-shadow: 0 0 0 3px rgba(247,151,30,.1); }
+
+    .mood-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .mood-tag {
+      padding: 4px 11px; border-radius: 20px;
+      border: 1.5px solid #f0dfc8; background: transparent;
+      font-family: 'Nunito', sans-serif; font-size: .7rem; font-weight: 700;
+      color: #c08050; cursor: pointer; transition: all .18s;
+    }
+    .mood-tag:hover, .mood-tag.sel { background: rgba(247,151,30,.15); border-color: #f7971e; color: #b06020; }
+
+    /* ════════════════════════
+       NUTRITION CHECKLIST
+    ════════════════════════ */
+    .nutrition-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .nutrition-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 9px 13px; background: #f8fbf3;
+      border-radius: 10px; border: 1.5px solid #d4edc0;
+      cursor: pointer; transition: all .2s;
+    }
+    .nutrition-item:hover { background: #f0f8e8; }
+    .nutrition-item.checked { background: rgba(86,171,47,.09); border-color: #7eca45; }
+    .nutrition-cb {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 2px solid #a8d880; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all .2s; font-size: .75rem;
+    }
+    .nutrition-item.checked .nutrition-cb { background: linear-gradient(135deg,#56ab2f,#a8e063); border-color: #56ab2f; color: #fff; }
+    .nutrition-info { flex: 1; }
+    .nutrition-name { font-size: .85rem; font-weight: 700; color: #3a6020; }
+    .nutrition-item.checked .nutrition-name { text-decoration: line-through; color: #7aaa50; }
+    .nutrition-desc { font-size: .7rem; color: #8aaa60; font-weight: 500; margin-top: 1px; }
+    .nutrition-emoji { font-size: 1.15rem; flex-shrink: 0; }
+
+    .nutrition-progress { margin-top: 14px; background: #eef7e4; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 14px; }
+    .np-ring { width: 42px; height: 42px; flex-shrink: 0; }
+    .np-ring svg { transform: rotate(-90deg); }
+    .np-ring circle { fill: none; stroke-width: 5; }
+    .np-track { stroke: #d4edc0; }
+    .np-fill { stroke: #56ab2f; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset .5s ease; stroke-linecap: round; }
+    .np-info { font-size: .78rem; font-weight: 700; color: #3a6020; }
+    .np-info strong { display: block; font-size: .98rem; color: #2a8010; }
+
+    /* ════════════════════════
+       ACTIVITY TRACKER
+    ════════════════════════ */
+    .activity-types { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .act-type-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 20px;
+      border: 1.8px solid #f4c0e0; background: #fdf0f8;
+      font-family: 'Nunito', sans-serif; font-size: .78rem; font-weight: 700;
+      color: #a03070; cursor: pointer; transition: all .2s;
+    }
+    .act-type-btn:hover { background: #fce0f0; transform: translateY(-1px); }
+    .act-type-btn.sel { background: rgba(185,29,115,.12); border-color: #b91d73; color: #8a0050; box-shadow: 0 3px 10px rgba(185,29,115,.15); }
+    .act-type-icon { font-size: 1rem; }
+
+    .activity-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .act-field label { font-size: .74rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 5px; }
+    .act-field input {
+      width: 100%; padding: 9px 12px;
+      border: 1.8px solid #f4c0e0; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .88rem;
+      color: #333; outline: none; background: #fdf0f8;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .act-field input:focus { border-color: #b91d73; box-shadow: 0 0 0 3px rgba(185,29,115,.1); }
+
+    .activity-log-list { display: flex; flex-direction: column; gap: 8px; }
+    .activity-log-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 13px; background: #fdf0f8; border-radius: 10px;
+      border: 1.5px solid #f4c0e0;
+      animation: fadeUp .3s ease both;
+    }
+    .ali-left { display: flex; align-items: center; gap: 10px; }
+    .ali-icon { font-size: 1.1rem; }
+    .ali-name { font-size: .85rem; font-weight: 700; color: #8a0050; }
+    .ali-details { font-size: .72rem; color: #c080a0; font-weight: 500; margin-top: 1px; }
+    .ali-cal { font-size: .8rem; font-weight: 800; color: #b91d73; }
+    .ali-del { background: none; border: none; cursor: pointer; color: #e0a0c0; font-size: 1rem; transition: color .2s; padding: 2px 4px; }
+    .ali-del:hover { color: #b91d73; }
+
+    .activity-summary {
+      display: flex; gap: 10px; margin-top: 14px;
+    }
+    .act-sum-box {
+      flex: 1; background: linear-gradient(135deg,#fdf0f8,#fce0f0);
+      border-radius: 10px; padding: 10px 12px; text-align: center;
+      border: 1px solid #f4c0e0;
+    }
+    .act-sum-val { font-size: 1.2rem; font-weight: 800; color: #b91d73; }
+    .act-sum-label { font-size: .68rem; font-weight: 600; color: #c080a0; margin-top: 2px; }
+
+    .add-activity-btn {
+      width: 100%; padding: 10px;
+      background: linear-gradient(135deg,#f953c6,#b91d73);
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 700;
+      cursor: pointer; margin-top: 4px; transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 14px rgba(185,29,115,.25);
+    }
+    .add-activity-btn:hover { transform: translateY(-1px); box-shadow: 0 7px 20px rgba(185,29,115,.35); }
+
+    /* ════════════════════════
+       DAILY NOTES (full width)
+    ════════════════════════ */
+    .card-full { grid-column: 1 / -1; }
+    .daily-notes textarea {
+      width: 100%; height: 88px;
+      border: 1.5px solid #e8d0d8; border-radius: 10px;
+      padding: 12px 14px; font-family: 'Nunito', sans-serif;
+      font-size: .9rem; color: #444; resize: none; outline: none;
+      background: #fdf8f9; line-height: 1.5;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .daily-notes textarea:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.1); }
+    .char-count { text-align: right; font-size: .7rem; color: #ccc; margin-top: 4px; font-weight: 600; }
+
+    /* ── RIPPLE ── */
+    .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,.38); transform: scale(0); animation: rip .5s linear; pointer-events: none; }
+    @keyframes rip { to { transform: scale(2.5); opacity: 0; } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--maroon); color: #fff;
+      padding: 11px 28px; border-radius: 50px;
+      font-size: .88rem; font-weight: 700;
+      box-shadow: 0 6px 24px rgba(0,0,0,.15);
+      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
+      opacity: 0; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      .page-body { padding: 20px 16px 56px; }
+      .log-grid { grid-template-columns: 1fr; }
+      .card-full { grid-column: 1; }
+      .nav-links { display: none; }
+      .activity-inputs { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── BLOB BG ── -->
+<div class="blob-wrap">
+  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#f9a0a8"/>
+        <stop offset="60%"  stop-color="#f07070"/>
+        <stop offset="100%" stop-color="#f06050"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#blobGrad)"
+      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
+         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
+    <g class="petal">
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
+      </g>
+  </svg>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="login.html" class="nav-logo">
+    <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#" class="active">Tracker</a></li>
+    <li><a href="#">Learn</a></li>
+    <li><a href="#">Community</a></li>
+    <li><a href="#">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-avatar">A</div>
+  </div>
+</nav>
+
+<!-- ── PAGE BODY ── -->
+<div class="page-body">
+
+  <!-- Welcome -->
+  <div class="welcome-section">
+    <div class="welcome-greeting">Hello, <span>usernameDisplays</span> 🌸</div>
+    <div class="welcome-sub">Track your daily wellness — every small step counts on your herCare journey.</div>
+  </div>
+
+  <!-- Date bar -->
+  <div class="date-bar">
+    <div class="date-label" id="todayLabel">Today's Log <span id="todayDate"></span></div>
+    <button class="save-all-btn" id="saveAllBtn">💾 Save Today's Log</button>
+  </div>
+
+  <!-- LOG GRID -->
+  <div class="log-grid">
+
+    <!-- ══ SLEEP TRACKER ══ -->
+    <div class="log-card card-sleep">
+      <div class="card-header">
+        <div class="card-icon icon-sleep">😴</div>
+        <div>
+          <div class="card-title">Sleep Tracker</div>
+          <div class="card-sub">Log your bedtime & wake time</div>
+        </div>
+      </div>
+      <div class="sleep-inputs">
+        <div>
+          <label>Bedtime</label>
+          <input type="time" id="bedtime" value="22:30"/>
+        </div>
+        <div>
+          <label>Wake Time</label>
+          <input type="time" id="waketime" value="06:30"/>
+        </div>
+      </div>
+      <div class="sleep-result">
+        <span>Total Sleep</span>
+        <div class="sleep-hours" id="sleepHours">8h 00m</div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:.76rem;font-weight:700;color:#5a3a44;margin-bottom:8px;">Sleep Quality</div>
+        <div class="quality-row">
+          <button class="quality-btn" onclick="selectQuality(this)">😴 Deep</button>
+          <button class="quality-btn" onclick="selectQuality(this)">🌙 Light</button>
+          <button class="quality-btn" onclick="selectQuality(this)">😵 Restless</button>
+          <button class="quality-btn" onclick="selectQuality(this)">☀️ Refreshed</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HYDRATION TRACKER ══ -->
+    <div class="log-card card-hydration">
+      <div class="card-header">
+        <div class="card-icon icon-hydration">💧</div>
+        <div>
+          <div class="card-title">Hydration</div>
+          <div class="card-sub">Goal: 8 glasses (2L) per day</div>
+        </div>
+      </div>
+      <div class="hydration-top">
+        <span>Glasses consumed</span>
+        <div class="hydration-count"><span id="glassCount">0</span> / 8</div>
+      </div>
+      <div class="water-glasses" id="waterGlasses"></div>
+      <div class="hydration-bar-wrap">
+        <div class="hydration-bar" id="hydrationBar"></div>
+      </div>
+      <div class="hydration-labels">
+        <span>0 ml</span>
+        <span class="hl-current" id="mlLabel">0 ml consumed</span>
+        <span>2000 ml</span>
+      </div>
+      <div class="custom-water">
+        <input type="number" id="customMl" placeholder="Custom ml (e.g. 350)" min="50" max="1000"/>
+        <button onclick="addCustomWater()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- ══ MOOD TRACKER ══ -->
+    <div class="log-card card-mood">
+      <div class="card-header">
+        <div class="card-icon icon-mood">🌈</div>
+        <div>
+          <div class="card-title">Mood Tracker</div>
+          <div class="card-sub">How are you feeling today?</div>
+        </div>
+      </div>
+      <div class="mood-emojis">
+        <button class="mood-btn" onclick="selectMood(this,'Awful')">
+          <span class="mood-emoji">😢</span><span class="mood-label">Awful</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood(this,'Bad')">
+          <span class="mood-emoji">😕</span><span class="mood-label">Bad</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood(this,'Okay')">
+          <span class="mood-emoji">😐</span><span class="mood-label">Okay</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood(this,'Good')">
+          <span class="mood-emoji">🙂</span><span class="mood-label">Good</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood(this,'Great')">
+          <span class="mood-emoji">😄</span><span class="mood-label">Great</span>
+        </button>
+      </div>
+      <label class="mood-note-label">What's on your mind?</label>
+      <textarea class="mood-note" id="moodNote" placeholder="Write a few words about how you're feeling…"></textarea>
+      <div class="mood-tags" id="moodTags">
+        <button class="mood-tag" onclick="toggleTag(this)">😤 Anxious</button>
+        <button class="mood-tag" onclick="toggleTag(this)">😴 Tired</button>
+        <button class="mood-tag" onclick="toggleTag(this)">💪 Energetic</button>
+        <button class="mood-tag" onclick="toggleTag(this)">😊 Calm</button>
+        <button class="mood-tag" onclick="toggleTag(this)">😤 Irritable</button>
+        <button class="mood-tag" onclick="toggleTag(this)">🤗 Hopeful</button>
+        <button class="mood-tag" onclick="toggleTag(this)">😣 Bloated</button>
+        <button class="mood-tag" onclick="toggleTag(this)">❤️ Happy</button>
+      </div>
+    </div>
+
+    <!-- ══ NUTRITION CHECKLIST ══ -->
+    <div class="log-card card-nutrition">
+      <div class="card-header">
+        <div class="card-icon icon-nutrition">🥗</div>
+        <div>
+          <div class="card-title">Nutrition Checklist</div>
+          <div class="card-sub">Tick off what you've eaten today</div>
+        </div>
+      </div>
+      <ul class="nutrition-list" id="nutritionList">
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Leafy Greens</div>
+            <div class="nutrition-desc">Spinach, kale — rich in iron & folate</div>
+          </div>
+          <span class="nutrition-emoji">🥬</span>
+        </li>
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Protein Source</div>
+            <div class="nutrition-desc">Eggs, lentils, tofu, chicken</div>
+          </div>
+          <span class="nutrition-emoji">🥚</span>
+        </li>
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Whole Grains</div>
+            <div class="nutrition-desc">Brown rice, oats, quinoa</div>
+          </div>
+          <span class="nutrition-emoji">🌾</span>
+        </li>
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Fruits</div>
+            <div class="nutrition-desc">Berries, banana, citrus — antioxidants</div>
+          </div>
+          <span class="nutrition-emoji">🍎</span>
+        </li>
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Healthy Fats</div>
+            <div class="nutrition-desc">Avocado, nuts, olive oil</div>
+          </div>
+          <span class="nutrition-emoji">🥑</span>
+        </li>
+        <li class="nutrition-item" onclick="toggleNutrition(this)">
+          <div class="nutrition-cb"></div>
+          <div class="nutrition-info">
+            <div class="nutrition-name">Low Sugar</div>
+            <div class="nutrition-desc">Avoided processed sugars today</div>
+          </div>
+          <span class="nutrition-emoji">🚫🍬</span>
+        </li>
+      </ul>
+      <div class="nutrition-progress">
+        <div class="np-ring">
+          <svg viewBox="0 0 36 36" width="42" height="42">
+            <circle class="np-track" cx="18" cy="18" r="15.9"/>
+            <circle class="np-fill" id="npFill" cx="18" cy="18" r="15.9"/>
+          </svg>
+        </div>
+        <div class="np-info">
+          <strong id="npText">0 / 6</strong>
+          items checked today
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ACTIVITY TRACKER (full width) ══ -->
+    <div class="log-card card-activity card-full">
+      <div class="card-header">
+        <div class="card-icon icon-activity">🏃‍♀️</div>
+        <div>
+          <div class="card-title">Activity Tracker</div>
+          <div class="card-sub">Log your workouts & movements today</div>
+        </div>
+      </div>
+
+      <!-- Activity type selector -->
+      <div style="font-size:.76rem;font-weight:700;color:#5a3a44;margin-bottom:10px;">Select Activity Type</div>
+      <div class="activity-types" id="activityTypes">
+        <button class="act-type-btn sel" onclick="selectActType(this)" data-cal="6"><span class="act-type-icon">🚶‍♀️</span> Walking</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="9"><span class="act-type-icon">🏃‍♀️</span> Running</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="5"><span class="act-type-icon">🧘‍♀️</span> Yoga</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="8"><span class="act-type-icon">🚴‍♀️</span> Cycling</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="10"><span class="act-type-icon">🏊‍♀️</span> Swimming</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="7"><span class="act-type-icon">💪</span> Strength</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="8"><span class="act-type-icon">💃</span> Dance</button>
+        <button class="act-type-btn" onclick="selectActType(this)" data-cal="4"><span class="act-type-icon">🧘</span> Stretching</button>
+      </div>
+
+      <!-- Inputs -->
+      <div class="activity-inputs">
+        <div class="act-field">
+          <label>Duration (mins)</label>
+          <input type="number" id="actDuration" placeholder="e.g. 30" min="1" max="300"/>
+        </div>
+        <div class="act-field">
+          <label>Intensity</label>
+          <input type="text" id="actIntensity" placeholder="Low / Moderate / High"/>
+        </div>
+        <div class="act-field">
+          <label>Notes</label>
+          <input type="text" id="actNotes" placeholder="Optional note…"/>
+        </div>
+      </div>
+      <button class="add-activity-btn" id="addActBtn">+ Log Activity</button>
+
+      <!-- Logged activities list -->
+      <div class="activity-log-list" id="activityLogList" style="margin-top:16px;"></div>
+
+      <!-- Summary -->
+      <div class="activity-summary" id="actSummary" style="display:none;">
+        <div class="act-sum-box">
+          <div class="act-sum-val" id="totalMins">0</div>
+          <div class="act-sum-label">Total Minutes</div>
+        </div>
+        <div class="act-sum-box">
+          <div class="act-sum-val" id="totalCals">0</div>
+          <div class="act-sum-label">Est. Calories</div>
+        </div>
+        <div class="act-sum-box">
+          <div class="act-sum-val" id="totalSessions">0</div>
+          <div class="act-sum-label">Sessions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DAILY NOTES (full width) ══ -->
+    <div class="log-card card-notes card-full daily-notes">
+      <div class="card-header">
+        <div class="card-icon icon-notes">📝</div>
+        <div>
+          <div class="card-title">Daily Notes</div>
+          <div class="card-sub">Anything else you'd like to remember today?</div>
+        </div>
+      </div>
+      <textarea id="dailyNotes" placeholder="e.g. Felt a bit tired in the morning but better after lunch. Had mild cramps…" maxlength="300" oninput="updateChar()"></textarea>
+      <div class="char-count"><span id="charCount">0</span> / 300</div>
+    </div>
+
+  </div><!-- end log-grid -->
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── TODAY DATE ── */
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', opts);
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ════════ SLEEP ════════ */
+  function calcSleep() {
+    const b = document.getElementById('bedtime').value;
+    const w = document.getElementById('waketime').value;
+    if (!b || !w) return;
+    const [bh, bm] = b.split(':').map(Number);
+    const [wh, wm] = w.split(':').map(Number);
+    let mins = (wh * 60 + wm) - (bh * 60 + bm);
+    if (mins < 0) mins += 1440;
+    const h = Math.floor(mins / 60), m = mins % 60;
+    document.getElementById('sleepHours').textContent = `${h}h ${String(m).padStart(2,'0')}m`;
+  }
+  document.getElementById('bedtime').addEventListener('change', calcSleep);
+  document.getElementById('waketime').addEventListener('change', calcSleep);
+  calcSleep();
+
+  function selectQuality(btn) {
+    document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+  }
+
+  /* ════════ HYDRATION ════════ */
+  let glassCount = 0;
+  let totalMl = 0;
+  const GOAL_ML = 2000;
+
+  const glassContainer = document.getElementById('waterGlasses');
+  for (let i = 0; i < 8; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'glass-btn';
+    btn.innerHTML = '<span class="glass-lbl">🥛</span>';
+    btn.dataset.index = i;
+    btn.addEventListener('click', () => toggleGlass(btn, i));
+    glassContainer.appendChild(btn);
+  }
+
+  function toggleGlass(btn, idx) {
+    const filled = btn.classList.toggle('filled');
+    glassCount += filled ? 1 : -1;
+    totalMl += filled ? 250 : -250;
+    updateHydration();
+  }
+
+  function addCustomWater() {
+    const ml = parseInt(document.getElementById('customMl').value);
+    if (!ml || ml < 50) { showToast('Enter a valid amount (min 50ml)'); return; }
+    totalMl = Math.min(totalMl + ml, 3000);
+    glassCount = Math.round(totalMl / 250);
+    document.querySelectorAll('.glass-btn').forEach((btn, i) => {
+      btn.classList.toggle('filled', i < glassCount);
+    });
+    document.getElementById('customMl').value = '';
+    updateHydration();
+    showToast(`💧 Added ${ml}ml of water!`);
+  }
+
+  function updateHydration() {
+    document.getElementById('glassCount').textContent = Math.min(glassCount, 8);
+    const pct = Math.min((totalMl / GOAL_ML) * 100, 100);
+    document.getElementById('hydrationBar').style.width = pct + '%';
+    document.getElementById('mlLabel').textContent = totalMl + ' ml consumed';
+    if (glassCount >= 8) showToast('🎉 Hydration goal reached! Amazing!');
+  }
+
+  /* ════════ MOOD ════════ */
+  let selectedMood = '';
+  function selectMood(btn, mood) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    selectedMood = mood;
+  }
+  function toggleTag(btn) { btn.classList.toggle('sel'); }
+
+  /* ════════ NUTRITION ════════ */
+  function toggleNutrition(item) {
+    item.classList.toggle('checked');
+    item.querySelector('.nutrition-cb').textContent = item.classList.contains('checked') ? '✓' : '';
+    updateNutritionProgress();
+  }
+  function updateNutritionProgress() {
+    const total = document.querySelectorAll('.nutrition-item').length;
+    const done  = document.querySelectorAll('.nutrition-item.checked').length;
+    document.getElementById('npText').textContent = `${done} / ${total}`;
+    const offset = 100 - (done / total * 100);
+    document.getElementById('npFill').style.strokeDashoffset = offset;
+    if (done === total) showToast('🥗 Nutrition goals all checked — great job!');
+  }
+
+  /* ════════ ACTIVITY ════════ */
+  let selectedActType = { name: 'Walking', calPerMin: 6 };
+  let activities = [];
+
+  function selectActType(btn) {
+    document.querySelectorAll('.act-type-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    selectedActType = { name: btn.textContent.trim(), calPerMin: parseInt(btn.dataset.cal) };
+  }
+
+  document.getElementById('addActBtn').addEventListener('click', function(e) {
+    const dur  = parseInt(document.getElementById('actDuration').value);
+    const intensity = document.getElementById('actIntensity').value.trim() || 'Moderate';
+    const notes = document.getElementById('actNotes').value.trim();
+
+    if (!dur || dur < 1) { showToast('Please enter a valid duration ⏱️'); return; }
+
+    const cal = dur * selectedActType.calPerMin;
+    const act = { name: selectedActType.name, duration: dur, intensity, notes, cal };
+    activities.push(act);
+    renderActivities();
+
+    document.getElementById('actDuration').value = '';
+    document.getElementById('actIntensity').value = '';
+    document.getElementById('actNotes').value = '';
+    showToast(`✅ ${act.name} logged — ~${cal} kcal burned!`);
+  });
+
+  function renderActivities() {
+    const list = document.getElementById('activityLogList');
+    list.innerHTML = '';
+    let totalM = 0, totalC = 0;
+
+    activities.forEach((act, idx) => {
+      totalM += act.duration; totalC += act.cal;
+      const icons = {'Walking':'🚶‍♀️','Running':'🏃‍♀️','Yoga':'🧘‍♀️','Cycling':'🚴‍♀️','Swimming':'🏊‍♀️','Strength':'💪','Dance':'💃','Stretching':'🧘'};
+      const icon = icons[act.name.split(' ').pop()] || '🏋️';
+      const div = document.createElement('div');
+      div.className = 'activity-log-item';
+      div.innerHTML = `
+        <div class="ali-left">
+          <span class="ali-icon">${icon}</span>
+          <div>
+            <div class="ali-name">${act.name}</div>
+            <div class="ali-details">${act.duration} mins · ${act.intensity}${act.notes ? ' · ' + act.notes : ''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="ali-cal">~${act.cal} kcal</div>
+          <button class="ali-del" onclick="deleteActivity(${idx})">✕</button>
+        </div>`;
+      list.appendChild(div);
+    });
+
+    const summary = document.getElementById('actSummary');
+    summary.style.display = activities.length ? 'flex' : 'none';
+    document.getElementById('totalMins').textContent = totalM;
+    document.getElementById('totalCals').textContent = totalC;
+    document.getElementById('totalSessions').textContent = activities.length;
+  }
+
+  function deleteActivity(idx) {
+    activities.splice(idx, 1);
+    renderActivities();
+  }
+
+  /* ════════ NOTES ════════ */
+  function updateChar() {
+    const val = document.getElementById('dailyNotes').value;
+    document.getElementById('charCount').textContent = val.length;
+  }
+
+  /* ════════ SAVE ALL ════════ */
+  document.getElementById('saveAllBtn').addEventListener('click', function(e) {
+    // ripple
+    const rp = document.createElement('span'); rp.className = 'ripple';
+    const rect = this.getBoundingClientRect();
+    const s = Math.max(rect.width, rect.height);
+    rp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
+    this.appendChild(rp);
+    setTimeout(() => rp.remove(), 550);
+
+    const checks = [];
+    if (!selectedMood) checks.push('mood');
+    if (glassCount === 0) checks.push('hydration');
+
+    if (checks.length) {
+      showToast(`⚠️ Don't forget to log your ${checks.join(' & ')}!`);
+      return;
+    }
+    showToast('🌸 Today\'s log saved successfully!');
+    this.textContent = '✓ Saved!';
+    this.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+    setTimeout(() => {
+      this.textContent = '💾 Save Today\'s Log';
+      this.style.background = '';
+    }, 2500);
+  });
+</script>
+</body>
+</html>

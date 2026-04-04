@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>herCare – Health Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink-light: #f9a8b0;
+      --pink-mid:   #f07080;
+      --pink-dark:  #e8506a;
+      --maroon:     #8b1a3a;
+      --cream:      #f5f0e8;
+      --white:      #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── BLOB BG ── */
+    .blob-wrap {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+    .blob-wrap svg { width: 100%; height: 100%; }
+    .petal { opacity: .18; fill: #fff; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139,26,58,0.10);
+      padding: 0 40px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(180,60,80,.08);
+    }
+
+    .nav-logo {
+      display: inline-flex; align-items: center; gap: 2px;
+      text-decoration: none;
+    }
+    .logo-her  { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--maroon); line-height: 1; }
+    .logo-care { font-family: 'Nunito', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--maroon); line-height: 1; }
+    .logo-flower { font-size: 1.1rem; margin-left: 3px; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 6px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: .88rem; font-weight: 600;
+      color: #666;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(232,80,106,.12);
+      color: var(--maroon);
+    }
+
+    .nav-right {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .nav-bell {
+      font-size: 1.2rem; cursor: pointer;
+      background: none; border: none;
+      position: relative; padding: 4px;
+    }
+    .bell-dot {
+      position: absolute; top: 2px; right: 2px;
+      width: 8px; height: 8px;
+      background: var(--pink-dark);
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 800; color: #fff;
+      cursor: pointer;
+      border: 2px solid rgba(232,80,106,.3);
+    }
+
+    /* ── PAGE BODY ── */
+    .page-body {
+      position: relative; z-index: 1;
+      padding: 36px 40px 60px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ── WELCOME SECTION ── */
+    .welcome-section {
+      margin-bottom: 32px;
+      animation: fadeUp .6s ease both;
+    }
+    .welcome-greeting {
+      font-size: 1.55rem; font-weight: 800;
+      color: var(--maroon);
+      margin-bottom: 6px;
+    }
+    .welcome-greeting span { font-family: 'Dancing Script', cursive; font-size: 1.9rem; }
+    .welcome-sub {
+      font-size: .93rem; color: #9a7070; font-weight: 500;
+    }
+
+    /* ── PAGE TITLE ── */
+    .page-title {
+      text-align: center;
+      font-size: 1.6rem; font-weight: 800;
+      color: var(--maroon);
+      margin-bottom: 24px;
+      animation: fadeUp .6s .1s ease both;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 48px 52px 44px;
+      box-shadow: 0 20px 60px rgba(180,60,80,.12), 0 4px 16px rgba(0,0,0,.05);
+      animation: fadeUp .6s .2s ease both;
+    }
+
+    /* ── SET UP HEADING ── */
+    .setup-heading {
+      text-align: center;
+      font-size: 1.45rem; font-weight: 800;
+      color: var(--maroon);
+      margin-bottom: 22px;
+    }
+
+    /* ── FLOWER STEPPER ── */
+    .stepper {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 38px;
+    }
+    .step-flower {
+      display: flex; flex-direction: column; align-items: center;
+      position: relative;
+    }
+    .flower-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: none; border: none;
+      font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s;
+      filter: grayscale(1) opacity(.4);
+      padding: 0;
+    }
+    .flower-btn.done   { filter: none; }
+    .flower-btn.active { filter: none; transform: scale(1.2); }
+    .step-dash {
+      width: 36px; height: 2px;
+      background: linear-gradient(90deg, var(--pink-light), var(--pink-mid));
+      margin: 0 2px;
+      border-radius: 2px;
+      opacity: .5;
+    }
+    .step-dash.done { opacity: 1; }
+
+    /* ── FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px 32px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label {
+      font-size: .88rem; font-weight: 700;
+      color: #5a3a44;
+      letter-spacing: .01em;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.8px solid var(--maroon);
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      color: #333;
+      background: transparent;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field input::placeholder { color: #bbb; }
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--pink-dark);
+      box-shadow: 0 0 0 3px rgba(232,80,106,.13);
+    }
+
+    /* custom select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--maroon); font-size: .9rem;
+      pointer-events: none;
+    }
+    .select-wrap select { padding-right: 36px; cursor: pointer; }
+
+    /* ── LAST PERIOD ROW ── */
+    .field-full { grid-column: 1 / -1; }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #fff0f3, #ffe4ec);
+      border: 1px solid rgba(232,80,106,.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: .83rem;
+      color: #7a3a4a;
+      display: flex; gap: 10px; align-items: flex-start;
+      line-height: 1.5;
+    }
+    .info-box span { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── SUBMIT BTN ── */
+    .btn-wrap {
+      margin-top: 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .btn-continue {
+      width: 100%;
+      max-width: 320px;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      border: none; border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: .04em;
+      transition: transform .15s, box-shadow .15s, filter .15s;
+      box-shadow: 0 6px 20px rgba(232,80,106,.35);
+      position: relative; overflow: hidden;
+    }
+    .btn-continue:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(232,80,106,.45);
+      filter: brightness(1.04);
+    }
+    .btn-continue:active { transform: translateY(0); }
+
+    .skip-link {
+      font-size: .83rem; color: #aaa; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: color .2s;
+    }
+    .skip-link:hover { color: var(--maroon); }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,.38);
+      transform: scale(0); animation: rip .5s linear;
+      pointer-events: none;
+    }
+    @keyframes rip { to { transform: scale(2.5); opacity: 0; } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--maroon); color: #fff;
+      padding: 11px 28px; border-radius: 50px;
+      font-size: .88rem; font-weight: 700;
+      box-shadow: 0 6px 24px rgba(0,0,0,.15);
+      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
+      opacity: 0; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .page-body { padding: 24px 18px 48px; }
+      .card { padding: 32px 22px 32px; }
+      .form-grid { grid-template-columns: 1fr; gap: 18px; }
+      .field-full { grid-column: 1; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+<!-- ── BLOB BG ── -->
+<div class="blob-wrap">
+  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#f9a0a8"/>
+        <stop offset="60%"  stop-color="#f07070"/>
+        <stop offset="100%" stop-color="#f06050"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#blobGrad)"
+      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
+         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
+    <g class="petal">
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
+        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
+        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
+        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
+        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
+        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
+        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
+      </g>
+  </svg>
+</div>
+  
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a href="login.html" class="nav-logo">
+      <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">profile</a></li>
+      <li><a href="daily.html">Tracker</a></li>
+      <li><a href="#">Learn</a></li>
+      <li><a href="#">Community</a></li>
+      <li><a href="#">Profile</a></li>
+    </ul>
+    
+  </nav>
+
+  <!-- ── PAGE BODY ── -->
+  <div class="page-body">
+
+    <!-- Welcome -->
+    <div class="welcome-section">
+      <div class="welcome-greeting">Good morning, <span>Ananya</span> 🌸</div>
+      <div class="welcome-sub">Let's set up your health profile so we can personalise your care journey.</div>
+    </div>
+
+    <!-- Page Title -->
+    <h2 class="page-title">Health Profile</h2>
+
+    <!-- Card -->
+    <div class="card">
+      <h3 class="setup-heading">Set Up Your Profile</h3>
+
+      <!-- Flower Stepper -->
+      <div class="stepper" id="stepper">
+        <div class="step-flower">
+          <button class="flower-btn active" data-step="0">🌸</button>
+        </div>
+        <div class="step-dash" id="dash0"></div>
+        <div class="step-flower">
+          <button class="flower-btn" data-step="1">🌸</button>
+        </div>
+        <div class="step-dash" id="dash1"></div>
+        <div class="step-flower">
+          <button class="flower-btn" data-step="2">🌸</button>
+        </div>
+        <div class="step-dash" id="dash2"></div>
+        <div class="step-flower">
+          <button class="flower-btn" data-step="3">🌸</button>
+        </div>
+        <div class="step-dash" id="dash3"></div>
+        <div class="step-flower">
+          <button class="flower-btn" data-step="4">🌸</button>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-grid">
+
+        <!-- Age -->
+        <div class="field">
+          <label for="age">Age</label>
+          <input type="number" id="age" placeholder="e.g. 24" min="10" max="60"/>
+        </div>
+
+        <!-- Height -->
+        <div class="field">
+          <label for="height">Height (cm)</label>
+          <input type="number" id="height" placeholder="e.g. 162" min="100" max="220"/>
+        </div>
+
+        <!-- Weight -->
+        <div class="field">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" placeholder="e.g. 58" min="20" max="200"/>
+        </div>
+
+        <!-- Cycle Length -->
+        <div class="field">
+          <label for="cycleLength">Typical Cycle Length</label>
+          <div class="select-wrap">
+            <select id="cycleLength">
+              <option value="" disabled selected>Typical Length</option>
+              <option value="21">21 Days</option>
+              <option value="28">28 Days</option>
+              <option value="35">35 Days</option>
+              <option value="irregular">Irregular</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Last Period Date -->
+        <div class="field field-full">
+          <label for="lastPeriod">Last Period Start Date</label>
+          <input type="date" id="lastPeriod"/>
+        </div>
+
+        <!-- Info box -->
+        <div class="info-box">
+          <span>💡</span>
+          <div>This information helps us predict your next period and send you timely reminders. Your data is private and secure.</div>
+        </div>
+
+      </div>
+
+      <!-- Button -->
+      <div class="btn-wrap">
+        <button class="btn-continue" id="continueBtn">Continue →</button>
+        <a class="skip-link" href="#">Skip for now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ── STEPPER ── */
+    let currentStep = 0;
+    const flowers = document.querySelectorAll('.flower-btn');
+    const dashes  = document.querySelectorAll('.step-dash');
+
+    function goToStep(n) {
+      flowers.forEach((f, i) => {
+        f.classList.remove('active', 'done');
+        if (i < n)  f.classList.add('done');
+        if (i === n) f.classList.add('active');
+      });
+      dashes.forEach((d, i) => {
+        d.classList.toggle('done', i < n);
+      });
+      currentStep = n;
+    }
+
+    flowers.forEach((f, i) => {
+      f.addEventListener('click', () => goToStep(i));
+    });
+
+    /* ── INPUTS auto-advance stepper ── */
+    const fields = ['age','height','weight','cycleLength','lastPeriod'];
+    fields.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.addEventListener('change', () => {
+        if (i + 1 > currentStep) goToStep(i + 1 < 5 ? i + 1 : 4);
+      });
+    });
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    /* ── RIPPLE ── */
+    function addRipple(btn, e) {
+      const rp = document.createElement('span');
+      rp.className = 'ripple';
+      const rect = btn.getBoundingClientRect();
+      const s = Math.max(rect.width, rect.height);
+      rp.style.width = rp.style.height = s + 'px';
+      rp.style.left = (e.clientX - rect.left - s/2) + 'px';
+      rp.style.top  = (e.clientY - rect.top  - s/2) + 'px';
+      btn.appendChild(rp);
+      setTimeout(() => rp.remove(), 550);
+    }
+
+    /* ── CONTINUE BUTTON ── */
+    document.getElementById('continueBtn').addEventListener('click', function(e) {
+      addRipple(this, e);
+
+      const age    = document.getElementById('age').value.trim();
+      const height = document.getElementById('height').value.trim();
+      const weight = document.getElementById('weight').value.trim();
+      const cycle  = document.getElementById('cycleLength').value;
+      const last   = document.getElementById('lastPeriod').value;
+
+      if (!age || !height || !weight) {
+        showToast('Please fill in Age, Height and Weight 🌸'); shake(); return;
+      }
+      if (!cycle) {
+        showToast('Please select your typical cycle length'); return;
+      }
+
+      /* Predict next period */
+      if (last && cycle !== 'irregular') {
+        const lastDate = new Date(last);
+        const next = new Date(lastDate);
+        next.setDate(next.getDate() + parseInt(cycle));
+        const opts = { day: 'numeric', month: 'long', year: 'numeric' };
+        showToast(`🩸 Next period predicted: ${next.toLocaleDateString('en-IN', opts)}`);
+      } else if (cycle === 'irregular') {
+        showToast('Profile saved! We will help you track your irregular cycle 🌷');
+      } else {
+        showToast('Profile saved successfully! 🌸');
+      }
+
+      goToStep(4);
+      const btn = this;
+      btn.textContent = '✓ Profile Saved!';
+      btn.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
+      setTimeout(() => {
+        btn.textContent = 'Continue →';
+        btn.style.background = '';
+      }, 3000);
+    });
+
+    /* ── SHAKE ── */
+    function shake() {
+      const card = document.querySelector('.card');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'shake .4s ease';
+    }
+
+    /* ── KEYFRAMES ── */
+    const s = document.createElement('style');
+    s.textContent = `
+      @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        20%,60%  { transform: translateX(-8px); }
+        40%,80%  { transform: translateX(8px); }
+      }`;
+    document.head.appendChild(s);
+
+    /* ── SET TODAY AS MAX for date picker ── */
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('lastPeriod').setAttribute('max', today);
+  </script>
+</body>
+</html>
