@@ -257,7 +257,7 @@
       <input type="email" id="email" placeholder="Email Address" autocomplete="email"/>
     </div>
     <div class="field">
-      <input type="password" placeholder="Password" autocomplete="current-password"/>
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password"/>
     </div>
 
     <button class="btn-signin">Sign In</button>
@@ -268,9 +268,9 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script>
     /* ── CONFIG ── */
-    const API_BASE = 'http://127.0.0.1:5000/api';
 
     /* ── TOAST ── */
     function showToast(msg, isError = false) {
@@ -350,7 +350,6 @@
         }
       } catch (err) {
         // ── Backend not running — use localStorage fallback ──
-        const email = document.getElementById("email").value.trim();
         const savedEmail = localStorage.getItem('hc_user_email');
         if (savedEmail && savedEmail === email) {
           // User previously signed up — let them in
@@ -365,12 +364,7 @@
       }
     });
 
-    /* ── FORGOT PASSWORD ── */
-    document.querySelector('.forgot a').addEventListener('click', e => {
-      e.preventDefault();
-      const email = document.querySelector('input[type="email"]').value.trim();
-      showToast(email ? `Reset link sent to ${email} 📩` : 'Enter your email above first');
-    });
+
 
     /* ── KEYFRAMES ── */
     const style = document.createElement('style');

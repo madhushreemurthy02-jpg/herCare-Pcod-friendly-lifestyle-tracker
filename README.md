@@ -39,12 +39,12 @@ monitor symptoms, and receive AI-powered personalised wellness insights
 ## 📁 Project Structure
 hercare/
 ├── Frontend (6 HTML pages)
-│   ├── login.html
+│   ├── signin.html
 │   ├── signup.html
-│   ├── health-profile.html
-│   ├── daily-log.html
-│   ├── cycle-tracker.html
-│   └── ai-insights.html
+│   ├── profile.html
+│   ├── daily.html
+│   ├── cycletracker.html
+│   └── insight.html
 └── hercare-backend/
     ├── app.py
     ├── config.py

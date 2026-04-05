@@ -82,7 +82,7 @@
     .save-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,80,106,.4); }
 
     /* ── MAIN GRID ── */
-    .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; }
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
     .col-left  { display: flex; flex-direction: column; gap: 22px; }
     .col-right { display: flex; flex-direction: column; gap: 22px; }
 
@@ -103,6 +103,7 @@
     .card-symptoms::before { background: linear-gradient(90deg, #a4133c, #ff4d6d); }
     .card-flow::before     { background: linear-gradient(90deg, #800f2f, #e8506a); }
     .card-history::before  { background: linear-gradient(90deg, #590d22, #a4133c); }
+    .card-history           { grid-column: 1 / -1; }
 
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
     .card-icon {
@@ -786,57 +787,59 @@
         </div>
       </div>
 
-      <!-- LOG HISTORY -->
-      <div class="tracker-card card-history">
-        <div class="card-header">
-          <div class="card-icon icon-history">📋</div>
-          <div>
-            <div class="card-title">Cycle History</div>
-            <div class="card-sub">Last 3 periods + next prediction</div>
-          </div>
-        </div>
-        <div class="history-list">
-          <div class="history-item">
-            <div class="hi-dot"></div>
-            <div class="hi-info">
-              <div class="hi-date">24 Feb – 29 Feb 2025</div>
-              <div class="hi-detail">5 days · Medium flow · Pain: 4/10</div>
-            </div>
-            <div class="hi-badge badge-logged">Logged</div>
-          </div>
-          <div class="history-item">
-            <div class="hi-dot"></div>
-            <div class="hi-info">
-              <div class="hi-date">27 Jan – 1 Feb 2025</div>
-              <div class="hi-detail">5 days · Light flow · Pain: 3/10</div>
-            </div>
-            <div class="hi-badge badge-logged">Logged</div>
-          </div>
-          <div class="history-item">
-            <div class="hi-dot"></div>
-            <div class="hi-info">
-              <div class="hi-date">30 Dec – 4 Jan 2025</div>
-              <div class="hi-detail">6 days · Heavy flow · Pain: 7/10</div>
-            </div>
-            <div class="hi-badge badge-logged">Logged</div>
-          </div>
-          <div class="history-item">
-            <div class="hi-dot predicted"></div>
-            <div class="hi-info">
-              <div class="hi-date" id="nextHistDate">Next period: calculating…</div>
-              <div class="hi-detail">Based on your 28-day cycle</div>
-            </div>
-            <div class="hi-badge badge-predicted">Predicted</div>
-          </div>
+    </div>
+
+    <!-- LOG HISTORY (full width) -->
+    <div class="tracker-card card-history">
+      <div class="card-header">
+        <div class="card-icon icon-history">📋</div>
+        <div>
+          <div class="card-title">Cycle History</div>
+          <div class="card-sub">Last 3 periods + next prediction</div>
         </div>
       </div>
-
+      <div class="history-list">
+        <div class="history-item">
+          <div class="hi-dot"></div>
+          <div class="hi-info">
+            <div class="hi-date">24 Feb – 29 Feb 2025</div>
+            <div class="hi-detail">5 days · Medium flow · Pain: 4/10</div>
+          </div>
+          <div class="hi-badge badge-logged">Logged</div>
+        </div>
+        <div class="history-item">
+          <div class="hi-dot"></div>
+          <div class="hi-info">
+            <div class="hi-date">27 Jan – 1 Feb 2025</div>
+            <div class="hi-detail">5 days · Light flow · Pain: 3/10</div>
+          </div>
+          <div class="hi-badge badge-logged">Logged</div>
+        </div>
+        <div class="history-item">
+          <div class="hi-dot"></div>
+          <div class="hi-info">
+            <div class="hi-date">30 Dec – 4 Jan 2025</div>
+            <div class="hi-detail">6 days · Heavy flow · Pain: 7/10</div>
+          </div>
+          <div class="hi-badge badge-logged">Logged</div>
+        </div>
+        <div class="history-item">
+          <div class="hi-dot predicted"></div>
+          <div class="hi-info">
+            <div class="hi-date" id="nextHistDate">Next period: calculating…</div>
+            <div class="hi-detail">Based on your 28-day cycle</div>
+          </div>
+          <div class="hi-badge badge-predicted">Predicted</div>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
 <script>
   /* ── USERNAME ── */
   const storedName = localStorage.getItem('hc_username') || 'User';
@@ -850,9 +853,9 @@
   }
 
   /* ════════ CONFIG ════════ */
-  const API_BASE = 'http://127.0.0.1:5000/api';
+  // const API_BASE = 'http://127.0.0.1:5000/api';
   const TOKEN = localStorage.getItem('hc_token');
-  if (!TOKEN) window.location.href = 'signin.html';
+  if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
 
   let cycleHistory = [];
 
@@ -1112,10 +1115,6 @@
 
   // Init fetch history
   loadHistory();
-
-  /* Set today's date as default */
-  document.getElementById('periodStart').value = today.toISOString().split('T')[0];
-  document.getElementById('periodStart').dispatchEvent(new Event('change'));
 </script>
 </body>
 </html>

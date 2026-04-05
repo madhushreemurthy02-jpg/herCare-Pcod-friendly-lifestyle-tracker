@@ -89,6 +89,7 @@
     .card-insights::before { background: linear-gradient(90deg,#a4133c,#ff758f); }
     .card-chat::before     { background: linear-gradient(90deg,#590d22,#c9184a); }
     .card-remind::before   { background: linear-gradient(90deg,#800f2f,#ff4d6d); }
+    .insights-full         { grid-column: 1 / -1; }
 
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
     .card-icon {
@@ -380,40 +381,6 @@
       .nav-links { display: none; }
       .summary-grid { grid-template-columns: 1fr 1fr; }
     }
-    .pdf-btn {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, #8b1a3a, #e8506a);
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.pdf-btn:disabled {
-  opacity: 0.5;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-overlay.open {
-  display: flex;
-}
-
-.modal-box {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-}
   </style>
 
 </head>
@@ -493,7 +460,6 @@
 
   <div class="page-title-row">
     <div class="page-title">✨ Insights & Reminders</div>
-    <button class="pdf-btn" id="pdfBtn" disabled>📄 Export as PDF</button>
   </div>
 
   <div class="main-grid">
@@ -657,34 +623,14 @@
   </div>
 </div>
 
-<!-- ── PDF PREVIEW MODAL ── -->
-<div class="modal-overlay" id="pdfModal">
-  <div class="modal-box" id="printArea">
-    <button class="modal-close" onclick="closePdfModal()">✕</button>
-    <div class="modal-title">herCare 🌸</div>
-    <div class="modal-sub" id="pdfDate"></div>
-    <div class="modal-sub">Wellness Insights Report — <span id="pdfUsername"></span></div>
-    <hr class="modal-divider"/>
-    <strong style="font-size:.85rem;color:#8b1a3a;display:block;margin-bottom:10px;">📊 Today's Health Summary</strong>
-    <div class="pdf-summary-grid" id="pdfSummaryGrid"></div>
-    <hr class="modal-divider"/>
-    <strong style="font-size:.85rem;color:#8b1a3a;display:block;margin-bottom:10px;">✨ Your Personalised Insights</strong>
-    <div id="pdfInsightsContent"></div>
-    <div class="modal-actions">
-      <button class="modal-cancel-btn" onclick="closePdfModal()">Cancel</button>
-      <button class="modal-dl-btn" onclick="downloadPDF()">📄 Download PDF</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
 <script>
  
 /* ── CONFIG ── */
-const API_BASE = 'http://127.0.0.1:5000/api';
 const TOKEN = localStorage.getItem('hc_token');
-if (!TOKEN) window.location.href = 'signin.html';
+if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
 
 /* ── BASIC USER SETUP ── */
 if (!localStorage.getItem('hc_username')) {
@@ -764,71 +710,288 @@ function saveTime(idx) {
   showToast("Saved!");
 }
 
-/* ── ANALYZE BUTTON (GEMINI AI) ── */
-document.getElementById('analyzeBtn').addEventListener('click', async function () {
-  const list = document.getElementById('insightsList');
+/* ── ANALYZE BUTTON (Rule-Based Insights) ── */
+document.getElementById('analyzeBtn').addEventListener('click', function () {
+  const list   = document.getElementById('insightsList');
   const loader = document.getElementById('loadingState');
-  
-  list.innerHTML = '';
-  list.style.display = 'none';
-  loader.style.display = 'flex';
-  document.getElementById('pdfBtn').disabled = true;
 
-  try {
-    const res = await fetch(`${API_BASE}/insights`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TOKEN}`
-      }
-    });
-    
-    const data = await res.json();
-    loader.style.display = 'none';
-    list.style.display = 'block';
+  list.innerHTML   = '';
+  list.style.display   = 'none';
+  loader.classList.add('active');
 
-    if (data.success) {
-      let div = document.createElement('div');
-      div.className = 'insight-item type-positive';
-      div.style.alignItems = 'flex-start';
-      div.innerHTML = `
-        <div class="ii-icon">✨</div>
-        <div style="line-height: 1.6; padding-top: 2px;">
-          <div class="ii-title">Your Wellness Insights</div>
-          <div class="ii-text" style="margin-top: 10px;">${data.insights}</div>
-        </div>
-      `;
-      list.appendChild(div);
-      
-      document.getElementById('pdfInsightsContent').innerHTML = div.innerHTML;
-      document.getElementById('pdfBtn').disabled = false;
-      showToast("Insights generated successfully.");
-    } else {
-      list.innerHTML = `<div class="empty-state">⚠️ Error: ${data.message}</div>`;
-      showToast("Failed to load insights.", true);
+  // Brief loading pause for UX feel
+  setTimeout(() => {
+    loader.classList.remove('active');
+    list.style.display = 'flex';
+    list.style.flexDirection = 'column';
+
+    const insights = generateInsights();
+
+    if (insights.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="es-icon">📋</div>
+          <p>No health data found yet!<br>Log your daily habits on the Daily Tracker page first, then come back for insights 🌸</p>
+        </div>`;
+      return;
     }
 
-  } catch (err) {
-    loader.style.display = 'none';
-    list.style.display = 'block';
-    console.error("AI Insights Error:", err);
-    list.innerHTML = `<div class="empty-state">⚠️ Connect to backend to see insights!</div>`;
-    showToast("Offline Mode", true);
+    insights.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = `insight-item type-${item.type}`;
+      el.style.animationDelay = `${i * 0.08}s`;
+      el.innerHTML = `
+        <div class="ii-icon">${item.icon}</div>
+        <div class="ii-content">
+          <div class="ii-title">${item.title}</div>
+          <div class="ii-text">${item.text}</div>
+        </div>`;
+      list.appendChild(el);
+    });
+
+    showToast(`${insights.length} insights ready! 🌸`);
+  }, 900);
+});
+
+/* ── RULE-BASED INSIGHTS ENGINE ── */
+function generateInsights() {
+  const insights = [];
+  const log     = JSON.parse(localStorage.getItem('hc_daily_log') || 'null');
+  const profile = JSON.parse(localStorage.getItem('hc_profile')   || 'null');
+
+  // Find the most recent cycle log
+  let cycleLog = null;
+  let latestDate = '';
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('hc_cycle_')) {
+      const dateStr = key.replace('hc_cycle_', '');
+      if (dateStr > latestDate) {
+        try { cycleLog = JSON.parse(localStorage.getItem(key)); latestDate = dateStr; } catch(e) {}
+      }
+    }
   }
-});
 
-/* ── PDF MODAL ── */
-document.getElementById('pdfBtn').addEventListener('click', function () {
-  document.getElementById('pdfModal').classList.add('open');
-});
+  // No data at all — return empty to show empty state
+  if (!log && !cycleLog && !profile) return [];
 
-function closePdfModal() {
-  document.getElementById('pdfModal').classList.remove('open');
+  /* ── SLEEP ─────────────────────────────────────────────── */
+  if (log?.sleep?.bedtime && log?.sleep?.waketime) {
+    const [bh, bm] = log.sleep.bedtime.split(':').map(Number);
+    const [wh, wm] = log.sleep.waketime.split(':').map(Number);
+    let mins = (wh * 60 + wm) - (bh * 60 + bm);
+    if (mins < 0) mins += 1440;
+    const hrs  = Math.floor(mins / 60);
+    const rem  = mins % 60;
+    const label = `${hrs}h ${rem}m`;
+
+    if (mins < 360) {
+      insights.push({ type: 'warning', icon: '😴',
+        title: 'Low Sleep Detected',
+        text: `You slept ${label}. For PCOD management, 7–9 hours helps regulate cortisol and insulin levels. Try setting a consistent bedtime — even 30 minutes earlier makes a difference.`
+      });
+    } else if (mins < 420) {
+      insights.push({ type: 'tip', icon: '🌙',
+        title: 'Sleep Could Be Better',
+        text: `You got ${label} — not bad, but aiming for 7+ hours can noticeably improve your energy, mood, and hormone balance throughout the day.`
+      });
+    } else {
+      insights.push({ type: 'positive', icon: '✨',
+        title: 'Great Sleep!',
+        text: `You slept ${label} — excellent! Good sleep supports healthy cortisol rhythm, which is especially important for managing PCOD symptoms.`
+      });
+    }
+
+    const q = log.sleep.quality || '';
+    if (q.includes('Restless')) {
+      insights.push({ type: 'tip', icon: '🌿',
+        title: 'Restless Sleep',
+        text: 'Restless sleep raises cortisol and worsens hormonal imbalance. Try limiting screens 30 minutes before bed, and consider light stretching or chamomile tea as part of a wind-down routine.'
+      });
+    } else if (q.includes('Refreshed') || q.includes('Deep')) {
+      insights.push({ type: 'positive', icon: '💫',
+        title: 'Quality Sleep',
+        text: 'Waking up refreshed is a great sign! Quality sleep helps your body regulate estrogen and progesterone levels more effectively — keep this up.'
+      });
+    }
+  }
+
+  /* ── HYDRATION ─────────────────────────────────────────── */
+  if (log?.hydration) {
+    const ml = log.hydration.ml || ((log.hydration.glasses || 0) * 250);
+    if (ml >= 2000) {
+      insights.push({ type: 'positive', icon: '💧',
+        title: 'Well Hydrated!',
+        text: `You hit ${ml}ml today — fantastic! Staying hydrated reduces bloating, supports kidney function, and eases PCOD-related water retention.`
+      });
+    } else if (ml >= 1200) {
+      insights.push({ type: 'tip', icon: '🥛',
+        title: 'Drink a Little More Water',
+        text: `You had about ${ml}ml today. Try to reach 2000ml — carry a water bottle and sip regularly. Proper hydration supports hormonal detoxification throughout the day.`
+      });
+    } else if (ml > 0) {
+      insights.push({ type: 'warning', icon: '⚠️',
+        title: 'Low Hydration Today',
+        text: `Only ${ml}ml logged today — below the recommended 2000ml. Dehydration can worsen PCOD symptoms like fatigue, bloating, and mood swings.`
+      });
+    }
+  }
+
+  /* ── MOOD ──────────────────────────────────────────────── */
+  if (log?.mood?.mood) {
+    const mood = log.mood.mood;
+    if (mood === 'Great' || mood === 'Good') {
+      insights.push({ type: 'positive', icon: '🌸',
+        title: `Positive Mood — ${mood}!`,
+        text: `A good mood is a real health indicator. Whatever you did today is clearly working for your body and mind — take note of it and try to repeat it.`
+      });
+    } else if (mood === 'Okay') {
+      insights.push({ type: 'tip', icon: '🌷',
+        title: 'Neutral Mood Today',
+        text: `Feeling "okay" is perfectly valid. A short 10-minute walk, some journaling, or a warm drink can gently shift your mood and support hormone balance.`
+      });
+    } else if (mood === 'Bad' || mood === 'Awful') {
+      insights.push({ type: 'reminder', icon: '💗',
+        title: 'Low Mood Noticed',
+        text: `PCOD can affect mental health through hormonal fluctuations — you are not alone in feeling this. Be gentle with yourself today. Consider reaching out to someone you trust, or try a brief mindfulness exercise.`
+      });
+    }
+
+    const tags = log.mood.tags || [];
+    const stressTags = ['Anxious', 'Stressed', 'Overwhelmed', 'Irritable'];
+    if (tags.some(t => stressTags.includes(t))) {
+      insights.push({ type: 'tip', icon: '🧘',
+        title: 'Stress Management',
+        text: `High stress raises cortisol, which can disrupt your cycle and worsen PCOD symptoms. Even 5 minutes of deep breathing or a short walk creates a meaningful physiological shift.`
+      });
+    }
+  }
+
+  /* ── NUTRITION ─────────────────────────────────────────── */
+  if (log?.nutrition !== undefined) {
+    const n          = Array.isArray(log.nutrition) ? log.nutrition : [];
+    const count      = n.length;
+    const hasLowSugar = n.includes('Low Sugar');
+    const hasProtein  = n.includes('Protein Source');
+
+    if (count === 0) {
+      insights.push({ type: 'warning', icon: '🥗',
+        title: 'No Nutrition Logged',
+        text: `You didn't log any nutrition today. Diet plays a major role in PCOD management — try to include leafy greens, a protein source, and whole grains in your meals tomorrow.`
+      });
+    } else if (count >= 4) {
+      insights.push({ type: 'positive', icon: '🥗',
+        title: 'Excellent Nutrition!',
+        text: `You checked off ${count} nutrition goals today — that's fantastic! A PCOD-friendly diet helps regulate insulin and reduce chronic inflammation.`
+      });
+    } else {
+      insights.push({ type: 'tip', icon: '🌾',
+        title: 'Good Start on Nutrition',
+        text: `You logged ${count} nutrition item${count > 1 ? 's' : ''} today. Aim to add more variety — leafy greens, protein, and whole grains provide the best hormonal support for PCOD.`
+      });
+    }
+
+    if (hasLowSugar) {
+      insights.push({ type: 'positive', icon: '🚫🍬',
+        title: 'Low Sugar — Great for PCOD!',
+        text: `Avoiding processed sugar is one of the most impactful things you can do. It reduces insulin spikes and helps regulate androgen levels. This is a great habit to maintain!`
+      });
+    }
+
+    if (!hasProtein && count > 0) {
+      insights.push({ type: 'tip', icon: '🥚',
+        title: 'Add More Protein',
+        text: `Protein stabilises blood sugar and keeps you fuller longer — both critical for PCOD. Try adding eggs, lentils, tofu, or chicken to your next meal.`
+      });
+    }
+  }
+
+  /* ── ACTIVITY ──────────────────────────────────────────── */
+  if (log?.activities !== undefined) {
+    const acts      = Array.isArray(log.activities) ? log.activities : [];
+    const totalMins = acts.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
+
+    if (acts.length === 0) {
+      insights.push({ type: 'tip', icon: '🚶',
+        title: 'No Activity Today',
+        text: `Even a 20-minute walk significantly improves insulin sensitivity in PCOD. Try building gentle movement into your day — it doesn't need to be intense to be effective.`
+      });
+    } else if (totalMins >= 30) {
+      insights.push({ type: 'positive', icon: '💪',
+        title: `Active Day — ${totalMins} Minutes!`,
+        text: `Great job staying active! Regular exercise is one of the most effective tools for PCOD — it improves insulin resistance, supports a regular cycle, and boosts mood.`
+      });
+    } else {
+      insights.push({ type: 'tip', icon: '🏃',
+        title: 'Keep Building Activity',
+        text: `You moved for ${totalMins} minutes today — a good start. Try to gradually reach 30+ minutes. Light activity like stretching, yoga, or a brisk walk all count.`
+      });
+    }
+  }
+
+  /* ── CYCLE ─────────────────────────────────────────────── */
+  if (cycleLog) {
+    const pain    = cycleLog.pain    || 0;
+    const flow    = cycleLog.flow?.intensity || '';
+    const symptoms = cycleLog.symptoms || {};
+
+    if (pain >= 7) {
+      insights.push({ type: 'reminder', icon: '💗',
+        title: 'High Period Pain',
+        text: `You reported pain level ${pain}/10. Severe pain with PCOD can indicate elevated prostaglandins. Please discuss this with your doctor — relief is possible and you deserve it.`
+      });
+    } else if (pain >= 4) {
+      insights.push({ type: 'warning', icon: '🌡️',
+        title: 'Moderate Period Pain',
+        text: `Pain level ${pain}/10 noted. A warm compress, anti-inflammatory foods like turmeric and ginger, and gentle stretching can help. Track if this pattern continues.`
+      });
+    } else if (pain > 0) {
+      insights.push({ type: 'tip', icon: '🌸',
+        title: 'Mild Discomfort',
+        text: `Low pain level ${pain}/10 — manageable! Staying hydrated and keeping active on low-pain days helps maintain cycle regularity over time.`
+      });
+    }
+
+    if (flow.toLowerCase().includes('heavy')) {
+      insights.push({ type: 'reminder', icon: '🩸',
+        title: 'Heavy Flow Noted',
+        text: `Heavy periods can cause iron deficiency over time. Make sure to eat iron-rich foods — leafy greens, lentils, and lean meat. If this is consistently heavy, speak to your doctor.`
+      });
+    }
+
+    const activeSymptoms = Object.keys(symptoms).filter(k => symptoms[k]?.active);
+    if (activeSymptoms.length >= 3) {
+      insights.push({ type: 'tip', icon: '🌿',
+        title: 'Multiple Symptoms Active',
+        text: `You logged ${activeSymptoms.length} active symptoms today. Tracking these over time reveals patterns and triggers. Consider sharing this log with your gynaecologist at your next visit.`
+      });
+    }
+  }
+
+  /* ── PROFILE / BMI ─────────────────────────────────────── */
+  if (profile?.weight && profile?.height) {
+    const hM  = parseFloat(profile.height) / 100;
+    const w   = parseFloat(profile.weight);
+    const bmi = w / (hM * hM);
+
+    if (bmi > 27) {
+      insights.push({ type: 'tip', icon: '💛',
+        title: 'Weight & PCOD',
+        text: `Even a 5–10% reduction in body weight can significantly improve PCOD symptoms, restore cycle regularity, and improve insulin sensitivity. Small, consistent daily changes add up more than you'd expect.`
+      });
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+      insights.push({ type: 'positive', icon: '⚖️',
+        title: 'Healthy Weight Range',
+        text: `Your BMI (${bmi.toFixed(1)}) is in the healthy range. Maintaining this through balanced nutrition and regular activity is great for long-term PCOD management.`
+      });
+    }
+  }
+
+  return insights;
 }
 
-function downloadPDF() {
-  window.print();
-}
+
+
  </script>
  </body>
  </html>

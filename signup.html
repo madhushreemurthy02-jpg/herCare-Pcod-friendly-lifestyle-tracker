@@ -307,9 +307,9 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script>
     /* ── CONFIG ── */
-    const API_BASE = 'http://127.0.0.1:5000/api';
 
     /* ── TOAST ── */
     function showToast(msg, isError = false) {
@@ -414,7 +414,8 @@
         console.error('Signup error:', err);
         showToast('Account created! (Offline Mode) 🌸');
         localStorage.setItem('hc_token', 'local_token_' + Date.now());
-        localStorage.setItem('hc_username', 'User');
+        localStorage.setItem('hc_username', firstName || 'User');
+        localStorage.setItem('hc_user_email', email);
         setTimeout(() => window.location.href = 'profile.html', 1200);
       }
     }

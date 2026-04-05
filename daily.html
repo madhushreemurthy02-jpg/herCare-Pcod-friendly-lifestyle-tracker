@@ -722,11 +722,11 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
 <script>
   /* ════════ CONFIG ════════ */
-  const API_BASE = 'http://127.0.0.1:5000/api';
   const TOKEN = localStorage.getItem('hc_token');
-  if (!TOKEN) window.location.href = 'signin.html';
+  if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -1041,7 +1041,7 @@
       }
     } catch (err) {
       showToast('Offline — Saved locally 🌷');
-      localStorage.setItem(`hc_log_${todayStr}`, JSON.stringify(payload));
+      localStorage.setItem('hc_daily_log', JSON.stringify(payload));
       bt.disabled = false;
       bt.textContent = '💾 Save Today\'s Log';
     }
