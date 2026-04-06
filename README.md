@@ -14,13 +14,12 @@ monitor symptoms, and receive AI-powered personalised wellness insights
 - 🩸 Cycle Tracker — Period logging, symptom tracking, flow & pain monitoring
 - 🤖 AI Insights — Gemini AI-powered personalised wellness analysis
 - 🔔 Gentle Reminders — Customisable daily wellness alerts
-- 📄 PDF Export — Download your health insights report
+
 
 ## 🛠️ Tech Stack
 ### Frontend
 - HTML5, CSS3, JavaScript (Vanilla)
 - Google Fonts (Dancing Script, Nunito)
-- Gemini AI API (Google)
 
 ### Backend
 - Python 3.10+
