@@ -13,7 +13,6 @@ monitor symptoms, and receive AI-powered personalised wellness insights
 - 📓 Daily Log — Sleep, hydration, mood, nutrition & activity tracking
 - 🩸 Cycle Tracker — Period logging, symptom tracking, flow & pain monitoring
 - 🤖 AI Insights — Gemini AI-powered personalised wellness analysis
-- 🔔 Gentle Reminders — Customisable daily wellness alerts
 - 📄 PDF Export — Download your health insights report
 
 ## 🛠️ Tech Stack

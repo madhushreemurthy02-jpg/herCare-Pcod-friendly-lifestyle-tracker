@@ -9,20 +9,11 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --pink-light: #f9a8b0;
-      --pink-mid:   #f07080;
-      --pink-dark:  #e8506a;
-      --maroon:     #8b1a3a;
-      --cream:      #f5f0e8;
-      --white:      #ffffff;
+      --pink-light: #f9a8b0; --pink-mid: #f07080; --pink-dark: #e8506a;
+      --maroon: #8b1a3a; --cream: #f5f0e8; --white: #ffffff;
     }
 
-    body {
-      min-height: 100vh;
-      background-color: var(--cream);
-      font-family: 'Nunito', sans-serif;
-      overflow-x: hidden;
-    }
+    body { min-height: 100vh; background-color: var(--cream); font-family: 'Nunito', sans-serif; overflow-x: hidden; }
 
     /* ── BLOB BG ── */
     .blob-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
@@ -30,25 +21,13 @@
     .petal { opacity: .18; fill: #fff; }
 
     /* ── NAVBAR ── */
-    .navbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139,26,58,0.10);
-      padding: 0 40px; height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 2px 16px rgba(180,60,80,.08);
-    }
+    .navbar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(139,26,58,0.10); padding: 0 40px; height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 16px rgba(180,60,80,.08); }
     .nav-logo { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; }
     .logo-her  { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--maroon); line-height: 1; }
     .logo-care { font-size: 1.3rem; font-weight: 800; color: var(--maroon); line-height: 1; }
     .logo-flower { font-size: 1.1rem; margin-left: 3px; }
     .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
-    .nav-links a {
-      text-decoration: none; font-size: .88rem; font-weight: 600;
-      color: #666; padding: 6px 14px; border-radius: 20px;
-      transition: background .2s, color .2s;
-    }
+    .nav-links a { text-decoration: none; font-size: .88rem; font-weight: 600; color: #666; padding: 6px 14px; border-radius: 20px; transition: background .2s, color .2s; }
     .nav-links a:hover, .nav-links a.active { background: rgba(232,80,106,.12); color: var(--maroon); }
     .nav-right { display: flex; align-items: center; gap: 14px; }
     .nav-bell { font-size: 1.2rem; cursor: pointer; background: none; border: none; position: relative; padding: 4px; }
@@ -65,197 +44,94 @@
     .welcome-sub { font-size: .92rem; color: #9a7070; font-weight: 500; }
 
     /* ── DATE BAR ── */
-    .date-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px; animation: fadeUp .5s .05s ease both;
-    }
+    .date-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; animation: fadeUp .5s .05s ease both; }
     .date-label { font-size: 1rem; font-weight: 700; color: var(--maroon); }
     .date-label span { font-weight: 400; color: #9a7070; font-size: .88rem; margin-left: 8px; }
-    .save-all-btn {
-      padding: 10px 26px;
-      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
-      color: #fff; border: none; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 700;
-      cursor: pointer; position: relative; overflow: hidden;
-      box-shadow: 0 4px 16px rgba(232,80,106,.3);
-      transition: transform .15s, box-shadow .15s;
-    }
+    .save-all-btn { padding: 10px 26px; background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark)); color: #fff; border: none; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 700; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(232,80,106,.3); transition: transform .15s, box-shadow .15s; }
     .save-all-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,80,106,.4); }
 
     /* ── GRID ── */
     .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 
     /* ── CARD BASE ── */
-    .log-card {
-      background: var(--white); border-radius: 20px;
-      padding: 26px 28px 24px;
-      box-shadow: 0 8px 32px rgba(180,60,80,.09), 0 2px 8px rgba(0,0,0,.04);
-      animation: fadeUp .5s ease both; position: relative; overflow: hidden;
-    }
-    .log-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 100%; height: 4px;
-    }
+    .log-card { background: var(--white); border-radius: 20px; padding: 26px 28px 24px; box-shadow: 0 8px 32px rgba(180,60,80,.09), 0 2px 8px rgba(0,0,0,.04); animation: fadeUp .5s ease both; position: relative; overflow: hidden; }
+    .log-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
     .card-sleep::before      { background: linear-gradient(90deg,#667eea,#764ba2); }
     .card-hydration::before  { background: linear-gradient(90deg,#43b8f0,#1e90ff); }
     .card-mood::before       { background: linear-gradient(90deg,#f7971e,#ffd200); }
     .card-nutrition::before  { background: linear-gradient(90deg,#56ab2f,#a8e063); }
     .card-activity::before   { background: linear-gradient(90deg,#f953c6,#b91d73); }
     .card-notes::before      { background: linear-gradient(90deg,#f5af19,#f0ec32); }
-
     .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .card-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0;
-    }
+    .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
     .icon-sleep     { background: rgba(102,126,234,.12); }
     .icon-hydration { background: rgba(67,184,240,.12); }
     .icon-mood      { background: rgba(247,151,30,.12); }
     .icon-nutrition { background: rgba(86,171,47,.12); }
     .icon-activity  { background: rgba(249,83,198,.12); }
     .icon-notes     { background: rgba(245,175,25,.12); }
-
     .card-title { font-size: 1.05rem; font-weight: 800; color: var(--maroon); }
     .card-sub   { font-size: .75rem; color: #bbb; font-weight: 500; margin-top: 2px; }
 
-    /* ════════════════════════
-       SLEEP TRACKER
-    ════════════════════════ */
+    /* ── SLEEP TRACKER ── */
     .sleep-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .sleep-inputs label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 5px; }
-    .sleep-inputs input[type=time] {
-      width: 100%; padding: 10px 12px;
-      border: 1.8px solid #e8d0d8; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: .9rem;
-      color: #333; outline: none; background: #fdf8f9;
-      transition: border-color .2s, box-shadow .2s;
-    }
+    .sleep-inputs input[type=time] { width: 100%; padding: 10px 12px; border: 1.8px solid #e8d0d8; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .9rem; color: #333; outline: none; background: #fdf8f9; transition: border-color .2s, box-shadow .2s; }
     .sleep-inputs input[type=time]:focus { border-color: #764ba2; box-shadow: 0 0 0 3px rgba(118,75,162,.1); }
-
-    .sleep-result {
-      background: linear-gradient(135deg,#f3f0ff,#ede8ff);
-      border-radius: 10px; padding: 12px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px;
-    }
+    .sleep-result { background: linear-gradient(135deg,#f3f0ff,#ede8ff); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .sleep-result span { font-size: .8rem; color: #7060a0; font-weight: 600; }
     .sleep-hours { font-size: 1.3rem; font-weight: 800; color: #5a3a9a; }
-
     .quality-row { display: flex; gap: 7px; flex-wrap: wrap; }
-    .quality-btn {
-      padding: 5px 13px; border-radius: 20px;
-      border: 1.5px solid #e0d0e8; background: transparent;
-      font-family: 'Nunito', sans-serif; font-size: .75rem; font-weight: 700; color: #888;
-      cursor: pointer; transition: all .18s;
-    }
+    .quality-btn { padding: 5px 13px; border-radius: 20px; border: 1.5px solid #e0d0e8; background: transparent; font-family: 'Nunito', sans-serif; font-size: .75rem; font-weight: 700; color: #888; cursor: pointer; transition: all .18s; }
     .quality-btn:hover, .quality-btn.sel { background: rgba(118,75,162,.12); border-color: #764ba2; color: #5a3080; }
 
-    /* ════════════════════════
-       HYDRATION TRACKER
-    ════════════════════════ */
+    /* ── HYDRATION TRACKER ── */
     .hydration-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .hydration-top span { font-size: .82rem; color: #5a8aaa; font-weight: 700; }
     .hydration-count { font-size: 1.5rem; font-weight: 800; color: #1e7ab0; }
-
     .water-glasses { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 14px; }
-    .glass-btn {
-      width: 38px; height: 50px;
-      background: #eaf6fd; border: 2px solid #b8dff0;
-      border-radius: 6px 6px 10px 10px;
-      cursor: pointer; position: relative;
-      transition: all .2s; overflow: hidden;
-      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px;
-    }
-    .glass-btn::before {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 0%; background: linear-gradient(180deg,#7ad4f5,#43b8f0);
-      transition: height .35s ease; border-radius: 0 0 7px 7px;
-    }
+    .glass-btn { width: 38px; height: 50px; background: #eaf6fd; border: 2px solid #b8dff0; border-radius: 6px 6px 10px 10px; cursor: pointer; position: relative; transition: all .2s; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; }
+    .glass-btn::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0%; background: linear-gradient(180deg,#7ad4f5,#43b8f0); transition: height .35s ease; border-radius: 0 0 7px 7px; }
     .glass-btn.filled::before { height: 100%; }
     .glass-btn.filled { border-color: #1e90ff; }
     .glass-lbl { position: relative; z-index: 1; font-size: .95rem; }
-
     .hydration-bar-wrap { height: 8px; background: #e0f0fb; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
     .hydration-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#43b8f0,#1e90ff); border-radius: 4px; transition: width .4s ease; }
     .hydration-labels { display: flex; justify-content: space-between; }
     .hydration-labels span { font-size: .7rem; color: #aaa; font-weight: 600; }
     .hydration-labels .hl-current { color: #1e7ab0; font-weight: 800; }
-
     .custom-water { display: flex; gap: 8px; margin-top: 12px; }
-    .custom-water input {
-      flex: 1; padding: 8px 12px;
-      border: 1.5px solid #b8dff0; border-radius: 8px;
-      font-family: 'Nunito', sans-serif; font-size: .85rem; outline: none;
-      transition: border-color .2s; background: #f0f8ff;
-    }
+    .custom-water input { flex: 1; padding: 8px 12px; border: 1.5px solid #b8dff0; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: .85rem; outline: none; transition: border-color .2s; background: #f0f8ff; }
     .custom-water input:focus { border-color: #43b8f0; }
-    .custom-water button {
-      padding: 8px 16px; background: linear-gradient(135deg,#43b8f0,#1e90ff);
-      color: #fff; border: none; border-radius: 8px;
-      font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 700;
-      cursor: pointer; transition: transform .15s;
-    }
+    .custom-water button { padding: 8px 16px; background: linear-gradient(135deg,#43b8f0,#1e90ff); color: #fff; border: none; border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 700; cursor: pointer; transition: transform .15s; }
     .custom-water button:hover { transform: translateY(-1px); }
 
-    /* ════════════════════════
-       MOOD TRACKER
-    ════════════════════════ */
+    /* ── MOOD TRACKER ── */
     .mood-emojis { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 16px; }
-    .mood-btn {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
-      padding: 10px 4px; border-radius: 12px; border: 2px solid transparent;
-      background: #fdf8f0; cursor: pointer; transition: all .2s;
-    }
+    .mood-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 4px; border-radius: 12px; border: 2px solid transparent; background: #fdf8f0; cursor: pointer; transition: all .2s; }
     .mood-btn:hover { background: #fff3e0; transform: translateY(-2px); }
     .mood-btn.sel { border-color: #f7971e; background: rgba(247,151,30,.10); transform: translateY(-3px); box-shadow: 0 4px 14px rgba(247,151,30,.22); }
     .mood-emoji { font-size: 1.65rem; line-height: 1; }
     .mood-label { font-size: .62rem; font-weight: 700; color: #a07040; text-align: center; }
-
     .mood-note-label { font-size: .76rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 6px; }
-    .mood-note {
-      width: 100%; padding: 10px 13px;
-      border: 1.5px solid #f0dfc8; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: .86rem; color: #444;
-      resize: none; outline: none; background: #fffaf4;
-      transition: border-color .2s, box-shadow .2s; line-height: 1.5; height: 64px;
-    }
+    .mood-note { width: 100%; padding: 10px 13px; border: 1.5px solid #f0dfc8; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .86rem; color: #444; resize: none; outline: none; background: #fffaf4; transition: border-color .2s, box-shadow .2s; line-height: 1.5; height: 64px; }
     .mood-note:focus { border-color: #f7971e; box-shadow: 0 0 0 3px rgba(247,151,30,.1); }
-
     .mood-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .mood-tag {
-      padding: 4px 11px; border-radius: 20px;
-      border: 1.5px solid #f0dfc8; background: transparent;
-      font-family: 'Nunito', sans-serif; font-size: .7rem; font-weight: 700;
-      color: #c08050; cursor: pointer; transition: all .18s;
-    }
+    .mood-tag { padding: 4px 11px; border-radius: 20px; border: 1.5px solid #f0dfc8; background: transparent; font-family: 'Nunito', sans-serif; font-size: .7rem; font-weight: 700; color: #c08050; cursor: pointer; transition: all .18s; }
     .mood-tag:hover, .mood-tag.sel { background: rgba(247,151,30,.15); border-color: #f7971e; color: #b06020; }
 
-    /* ════════════════════════
-       NUTRITION CHECKLIST
-    ════════════════════════ */
+    /* ── NUTRITION CHECKLIST ── */
     .nutrition-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-    .nutrition-item {
-      display: flex; align-items: center; gap: 11px;
-      padding: 9px 13px; background: #f8fbf3;
-      border-radius: 10px; border: 1.5px solid #d4edc0;
-      cursor: pointer; transition: all .2s;
-    }
+    .nutrition-item { display: flex; align-items: center; gap: 11px; padding: 9px 13px; background: #f8fbf3; border-radius: 10px; border: 1.5px solid #d4edc0; cursor: pointer; transition: all .2s; }
     .nutrition-item:hover { background: #f0f8e8; }
     .nutrition-item.checked { background: rgba(86,171,47,.09); border-color: #7eca45; }
-    .nutrition-cb {
-      width: 20px; height: 20px; border-radius: 6px;
-      border: 2px solid #a8d880; background: #fff;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: all .2s; font-size: .75rem;
-    }
+    .nutrition-cb { width: 20px; height: 20px; border-radius: 6px; border: 2px solid #a8d880; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .2s; font-size: .75rem; }
     .nutrition-item.checked .nutrition-cb { background: linear-gradient(135deg,#56ab2f,#a8e063); border-color: #56ab2f; color: #fff; }
     .nutrition-info { flex: 1; }
     .nutrition-name { font-size: .85rem; font-weight: 700; color: #3a6020; }
     .nutrition-item.checked .nutrition-name { text-decoration: line-through; color: #7aaa50; }
     .nutrition-desc { font-size: .7rem; color: #8aaa60; font-weight: 500; margin-top: 1px; }
     .nutrition-emoji { font-size: 1.15rem; flex-shrink: 0; }
-
     .nutrition-progress { margin-top: 14px; background: #eef7e4; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 14px; }
     .np-ring { width: 42px; height: 42px; flex-shrink: 0; }
     .np-ring svg { transform: rotate(-90deg); }
@@ -265,39 +141,18 @@
     .np-info { font-size: .78rem; font-weight: 700; color: #3a6020; }
     .np-info strong { display: block; font-size: .98rem; color: #2a8010; }
 
-    /* ════════════════════════
-       ACTIVITY TRACKER
-    ════════════════════════ */
+    /* ── ACTIVITY TRACKER ── */
     .activity-types { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-    .act-type-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 20px;
-      border: 1.8px solid #f4c0e0; background: #fdf0f8;
-      font-family: 'Nunito', sans-serif; font-size: .78rem; font-weight: 700;
-      color: #a03070; cursor: pointer; transition: all .2s;
-    }
+    .act-type-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 20px; border: 1.8px solid #f4c0e0; background: #fdf0f8; font-family: 'Nunito', sans-serif; font-size: .78rem; font-weight: 700; color: #a03070; cursor: pointer; transition: all .2s; }
     .act-type-btn:hover { background: #fce0f0; transform: translateY(-1px); }
     .act-type-btn.sel { background: rgba(185,29,115,.12); border-color: #b91d73; color: #8a0050; box-shadow: 0 3px 10px rgba(185,29,115,.15); }
     .act-type-icon { font-size: 1rem; }
-
     .activity-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .act-field label { font-size: .74rem; font-weight: 700; color: #5a3a44; display: block; margin-bottom: 5px; }
-    .act-field input {
-      width: 100%; padding: 9px 12px;
-      border: 1.8px solid #f4c0e0; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: .88rem;
-      color: #333; outline: none; background: #fdf0f8;
-      transition: border-color .2s, box-shadow .2s;
-    }
+    .act-field input { width: 100%; padding: 9px 12px; border: 1.8px solid #f4c0e0; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .88rem; color: #333; outline: none; background: #fdf0f8; transition: border-color .2s, box-shadow .2s; }
     .act-field input:focus { border-color: #b91d73; box-shadow: 0 0 0 3px rgba(185,29,115,.1); }
-
     .activity-log-list { display: flex; flex-direction: column; gap: 8px; }
-    .activity-log-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 13px; background: #fdf0f8; border-radius: 10px;
-      border: 1.5px solid #f4c0e0;
-      animation: fadeUp .3s ease both;
-    }
+    .activity-log-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 13px; background: #fdf0f8; border-radius: 10px; border: 1.5px solid #f4c0e0; animation: fadeUp .3s ease both; }
     .ali-left { display: flex; align-items: center; gap: 10px; }
     .ali-icon { font-size: 1.1rem; }
     .ali-name { font-size: .85rem; font-weight: 700; color: #8a0050; }
@@ -305,40 +160,16 @@
     .ali-cal { font-size: .8rem; font-weight: 800; color: #b91d73; }
     .ali-del { background: none; border: none; cursor: pointer; color: #e0a0c0; font-size: 1rem; transition: color .2s; padding: 2px 4px; }
     .ali-del:hover { color: #b91d73; }
-
-    .activity-summary {
-      display: flex; gap: 10px; margin-top: 14px;
-    }
-    .act-sum-box {
-      flex: 1; background: linear-gradient(135deg,#fdf0f8,#fce0f0);
-      border-radius: 10px; padding: 10px 12px; text-align: center;
-      border: 1px solid #f4c0e0;
-    }
+    .activity-summary { display: flex; gap: 10px; margin-top: 14px; }
+    .act-sum-box { flex: 1; background: linear-gradient(135deg,#fdf0f8,#fce0f0); border-radius: 10px; padding: 10px 12px; text-align: center; border: 1px solid #f4c0e0; }
     .act-sum-val { font-size: 1.2rem; font-weight: 800; color: #b91d73; }
     .act-sum-label { font-size: .68rem; font-weight: 600; color: #c080a0; margin-top: 2px; }
-
-    .add-activity-btn {
-      width: 100%; padding: 10px;
-      background: linear-gradient(135deg,#f953c6,#b91d73);
-      color: #fff; border: none; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 700;
-      cursor: pointer; margin-top: 4px; transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 4px 14px rgba(185,29,115,.25);
-    }
+    .add-activity-btn { width: 100%; padding: 10px; background: linear-gradient(135deg,#f953c6,#b91d73); color: #fff; border: none; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 700; cursor: pointer; margin-top: 4px; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 14px rgba(185,29,115,.25); }
     .add-activity-btn:hover { transform: translateY(-1px); box-shadow: 0 7px 20px rgba(185,29,115,.35); }
 
-    /* ════════════════════════
-       DAILY NOTES (full width)
-    ════════════════════════ */
+    /* ── DAILY NOTES (full width) ── */
     .card-full { grid-column: 1 / -1; }
-    .daily-notes textarea {
-      width: 100%; height: 88px;
-      border: 1.5px solid #e8d0d8; border-radius: 10px;
-      padding: 12px 14px; font-family: 'Nunito', sans-serif;
-      font-size: .9rem; color: #444; resize: none; outline: none;
-      background: #fdf8f9; line-height: 1.5;
-      transition: border-color .2s, box-shadow .2s;
-    }
+    .daily-notes textarea { width: 100%; height: 88px; border: 1.5px solid #e8d0d8; border-radius: 10px; padding: 12px 14px; font-family: 'Nunito', sans-serif; font-size: .9rem; color: #444; resize: none; outline: none; background: #fdf8f9; line-height: 1.5; transition: border-color .2s, box-shadow .2s; }
     .daily-notes textarea:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.1); }
     .char-count { text-align: right; font-size: .7rem; color: #ccc; margin-top: 4px; font-weight: 600; }
 
@@ -347,22 +178,10 @@
     @keyframes rip { to { transform: scale(2.5); opacity: 0; } }
 
     /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 28px; left: 50%;
-      transform: translateX(-50%) translateY(70px);
-      background: var(--maroon); color: #fff;
-      padding: 11px 28px; border-radius: 50px;
-      font-size: .88rem; font-weight: 700;
-      box-shadow: 0 6px 24px rgba(0,0,0,.15);
-      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
-      opacity: 0; z-index: 999; white-space: nowrap;
-    }
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(70px); background: var(--maroon); color: #fff; padding: 11px 28px; border-radius: 50px; font-size: .88rem; font-weight: 700; box-shadow: 0 6px 24px rgba(0,0,0,.15); transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s; opacity: 0; z-index: 999; white-space: nowrap; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 700px) {
       .page-body { padding: 20px 16px 56px; }
@@ -375,54 +194,6 @@
 </head>
 <body>
 
-<!-- ── BLOB BG ── -->
-<div class="blob-wrap">
-  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"   stop-color="#f9a0a8"/>
-        <stop offset="60%"  stop-color="#f07070"/>
-        <stop offset="100%" stop-color="#f06050"/>
-      </linearGradient>
-    </defs>
-    <path fill="url(#blobGrad)"
-      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
-         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
-    <g class="petal">
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
-      </g>
-  </svg>
-</div>
-
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
   <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
@@ -432,11 +203,15 @@
     <li><a href="profile.html">Profile</a></li>
     <li><a href="daily.html" class="active">Daily Tracker</a></li>
     <li><a href="cycletracker.html">Cycle Tracker</a></li>
-    <li><a href="insight.html">AI Insights</a></li>
+    <li><a href="insight.html">Insights</a></li>
     <li><a href="#" onclick="logout()">Logout</a></li>
   </ul>
   <div class="nav-right">
-    <div class="nav-avatar" id="navAvatar">A</div>
+    <div class="nav-avatar" id="navAvatar">
+      <script>
+        document.write((localStorage.getItem('hc_username') || 'User').charAt(0).toUpperCase());
+      </script>
+    </div>
   </div>
 </nav>
 
@@ -541,21 +316,11 @@
         </div>
       </div>
       <div class="mood-emojis">
-        <button class="mood-btn" onclick="selectMood(this,'Awful')">
-          <span class="mood-emoji">😢</span><span class="mood-label">Awful</span>
-        </button>
-        <button class="mood-btn" onclick="selectMood(this,'Bad')">
-          <span class="mood-emoji">😕</span><span class="mood-label">Bad</span>
-        </button>
-        <button class="mood-btn" onclick="selectMood(this,'Okay')">
-          <span class="mood-emoji">😐</span><span class="mood-label">Okay</span>
-        </button>
-        <button class="mood-btn" onclick="selectMood(this,'Good')">
-          <span class="mood-emoji">🙂</span><span class="mood-label">Good</span>
-        </button>
-        <button class="mood-btn" onclick="selectMood(this,'Great')">
-          <span class="mood-emoji">😄</span><span class="mood-label">Great</span>
-        </button>
+        <button class="mood-btn" onclick="selectMood(this,'Awful')"><span class="mood-emoji">😢</span><span class="mood-label">Awful</span></button>
+        <button class="mood-btn" onclick="selectMood(this,'Bad')"><span class="mood-emoji">😕</span><span class="mood-label">Bad</span></button>
+        <button class="mood-btn" onclick="selectMood(this,'Okay')"><span class="mood-emoji">😐</span><span class="mood-label">Okay</span></button>
+        <button class="mood-btn" onclick="selectMood(this,'Good')"><span class="mood-emoji">🙂</span><span class="mood-label">Good</span></button>
+        <button class="mood-btn" onclick="selectMood(this,'Great')"><span class="mood-emoji">😄</span><span class="mood-label">Great</span></button>
       </div>
       <label class="mood-note-label">What's on your mind?</label>
       <textarea class="mood-note" id="moodNote" placeholder="Write a few words about how you're feeling…"></textarea>
@@ -583,50 +348,32 @@
       <ul class="nutrition-list" id="nutritionList">
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Leafy Greens</div>
-            <div class="nutrition-desc">Spinach, kale — rich in iron & folate</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Leafy Greens</div><div class="nutrition-desc">Spinach, kale — rich in iron & folate</div></div>
           <span class="nutrition-emoji">🥬</span>
         </li>
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Protein Source</div>
-            <div class="nutrition-desc">Eggs, lentils, tofu, chicken</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Protein Source</div><div class="nutrition-desc">Eggs, lentils, tofu, chicken</div></div>
           <span class="nutrition-emoji">🥚</span>
         </li>
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Whole Grains</div>
-            <div class="nutrition-desc">Brown rice, oats, quinoa</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Whole Grains</div><div class="nutrition-desc">Brown rice, oats, quinoa</div></div>
           <span class="nutrition-emoji">🌾</span>
         </li>
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Fruits</div>
-            <div class="nutrition-desc">Berries, banana, citrus — antioxidants</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Fruits</div><div class="nutrition-desc">Berries, banana, citrus — antioxidants</div></div>
           <span class="nutrition-emoji">🍎</span>
         </li>
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Healthy Fats</div>
-            <div class="nutrition-desc">Avocado, nuts, olive oil</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Healthy Fats</div><div class="nutrition-desc">Avocado, nuts, olive oil</div></div>
           <span class="nutrition-emoji">🥑</span>
         </li>
         <li class="nutrition-item" onclick="toggleNutrition(this)">
           <div class="nutrition-cb"></div>
-          <div class="nutrition-info">
-            <div class="nutrition-name">Low Sugar</div>
-            <div class="nutrition-desc">Avoided processed sugars today</div>
-          </div>
+          <div class="nutrition-info"><div class="nutrition-name">Low Sugar</div><div class="nutrition-desc">Avoided processed sugars today</div></div>
           <span class="nutrition-emoji">🚫🍬</span>
         </li>
       </ul>
@@ -637,10 +384,7 @@
             <circle class="np-fill" id="npFill" cx="18" cy="18" r="15.9"/>
           </svg>
         </div>
-        <div class="np-info">
-          <strong id="npText">0 / 6</strong>
-          items checked today
-        </div>
+        <div class="np-info"><strong id="npText">0 / 6</strong>items checked today</div>
       </div>
     </div>
 
@@ -653,7 +397,6 @@
           <div class="card-sub">Log your workouts & movements today</div>
         </div>
       </div>
-
       <!-- Activity type selector -->
       <div style="font-size:.76rem;font-weight:700;color:#5a3a44;margin-bottom:10px;">Select Activity Type</div>
       <div class="activity-types" id="activityTypes">
@@ -666,41 +409,20 @@
         <button class="act-type-btn" onclick="selectActType(this)" data-cal="8"><span class="act-type-icon">💃</span> Dance</button>
         <button class="act-type-btn" onclick="selectActType(this)" data-cal="4"><span class="act-type-icon">🧘</span> Stretching</button>
       </div>
-
       <!-- Inputs -->
       <div class="activity-inputs">
-        <div class="act-field">
-          <label>Duration (mins)</label>
-          <input type="number" id="actDuration" placeholder="e.g. 30" min="1" max="300"/>
-        </div>
-        <div class="act-field">
-          <label>Intensity</label>
-          <input type="text" id="actIntensity" placeholder="Low / Moderate / High"/>
-        </div>
-        <div class="act-field">
-          <label>Notes</label>
-          <input type="text" id="actNotes" placeholder="Optional note…"/>
-        </div>
+        <div class="act-field"><label>Duration (mins)</label><input type="number" id="actDuration" placeholder="e.g. 30" min="1" max="300"/></div>
+        <div class="act-field"><label>Intensity</label><input type="text" id="actIntensity" placeholder="Low / Moderate / High"/></div>
+        <div class="act-field"><label>Notes</label><input type="text" id="actNotes" placeholder="Optional note…"/></div>
       </div>
       <button class="add-activity-btn" id="addActBtn">+ Log Activity</button>
-
       <!-- Logged activities list -->
       <div class="activity-log-list" id="activityLogList" style="margin-top:16px;"></div>
-
       <!-- Summary -->
       <div class="activity-summary" id="actSummary" style="display:none;">
-        <div class="act-sum-box">
-          <div class="act-sum-val" id="totalMins">0</div>
-          <div class="act-sum-label">Total Minutes</div>
-        </div>
-        <div class="act-sum-box">
-          <div class="act-sum-val" id="totalCals">0</div>
-          <div class="act-sum-label">Est. Calories</div>
-        </div>
-        <div class="act-sum-box">
-          <div class="act-sum-val" id="totalSessions">0</div>
-          <div class="act-sum-label">Sessions</div>
-        </div>
+        <div class="act-sum-box"><div class="act-sum-val" id="totalMins">0</div><div class="act-sum-label">Total Minutes</div></div>
+        <div class="act-sum-box"><div class="act-sum-val" id="totalCals">0</div><div class="act-sum-label">Est. Calories</div></div>
+        <div class="act-sum-box"><div class="act-sum-val" id="totalSessions">0</div><div class="act-sum-label">Sessions</div></div>
       </div>
     </div>
 
@@ -724,90 +446,79 @@
 
 <script src="config.js"></script>
 <script>
-  /* ════════ CONFIG ════════ */
+  /* ── CONFIG & AUTH ── */
   const TOKEN = localStorage.getItem('hc_token');
   if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
-
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayObj = new Date();
+  const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
 
   /* ── TODAY DATE ── */
-  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', opts);
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
   /* ── TOAST ── */
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
   /* ── LOGOUT ── */
-  function logout() {
-    localStorage.clear();
-    window.location.href = 'signin.html';
-  }
+  function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
 
-  /* ════════ LOAD DATA ════════ */
+  /* ── LOAD DATA ── */
   async function loadDailyData() {
     try {
-      const res = await fetch(`${API_BASE}/daily-log?date=${todayStr}`, {
-        headers: { 'Authorization': `Bearer ${TOKEN}` }
-      });
+      const res = await fetch(`${API_BASE}/daily-log?date=${todayStr}`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
       const data = await res.json();
       if (data.success) {
         const log = data.data;
-        
         // Restore Sleep
         if (log.sleep) {
           document.getElementById('bedtime').value = log.sleep.bedtime || '';
           document.getElementById('waketime').value = log.sleep.waketime || '';
-          // quality handled via .sel class on btns
           if (log.sleep.quality) {
-             const qBtns = document.querySelectorAll('.quality-btn');
-             const idx = Math.floor(log.sleep.quality / 2); // rough mapping to 5 buttons
-             if (qBtns[idx]) selectQuality(qBtns[idx]);
+            const qBtns = document.querySelectorAll('.quality-btn');
+            if (!isNaN(Number(log.sleep.quality))) {
+              const idx = Math.floor(Number(log.sleep.quality) / 2);
+              if (qBtns[idx]) selectQuality(qBtns[idx]);
+            } else {
+              qBtns.forEach(btn => {
+                const text = btn.textContent.trim();
+                const qual = log.sleep.quality.trim();
+                if (text.includes(qual) || qual.includes(text)) {
+                  selectQuality(btn);
+                }
+              });
+            }
           }
           calcSleep();
         }
-
         // Restore Hydration
         if (log.hydration) {
           glassCount = log.hydration.glasses || 0;
           totalMl = log.hydration.ml || 0;
-          document.querySelectorAll('.glass-btn').forEach((btn, i) => {
-            btn.classList.toggle('filled', i < glassCount);
-          });
+          document.querySelectorAll('.glass-btn').forEach((btn, i) => btn.classList.toggle('filled', i < glassCount));
           updateHydration();
         }
-
         // Restore Mood
         if (log.mood) {
-          selectedMood = log.mood.mood;
-          document.querySelectorAll('.mood-btn').forEach(btn => {
-            if (btn.textContent.includes(selectedMood)) btn.classList.add('sel');
-          });
-          document.getElementById('moodNotes').value = log.mood.note || '';
+          selectedMood = log.mood.mood || '';
+          document.querySelectorAll('.mood-btn').forEach(btn => { if (btn.textContent.includes(selectedMood)) btn.classList.add('sel'); });
+          document.getElementById('moodNote').value = log.mood.note || '';
+          if (Array.isArray(log.mood.tags)) {
+            document.querySelectorAll('.mood-tag').forEach(btn => { if (log.mood.tags.some(t => btn.textContent.includes(t))) btn.classList.add('sel'); });
+          }
         }
-
         // Restore Nutrition
-        if (log.nutrition) {
+        if (log.nutrition && Array.isArray(log.nutrition)) {
           document.querySelectorAll('.nutrition-item').forEach(item => {
-            const label = item.querySelector('.nutrition-label').textContent.trim();
-            if (log.nutrition.includes(label)) {
-              item.classList.add('checked');
-              item.querySelector('.nutrition-cb').textContent = '✓';
-            }
+            const label = item.querySelector('.nutrition-name').textContent.trim();
+            if (log.nutrition.includes(label)) { item.classList.add('checked'); item.querySelector('.nutrition-cb').textContent = '✓'; }
           });
           updateNutritionProgress();
         }
-
         // Restore Activity
-        if (log.activities) {
-          activities = log.activities;
-          renderActivities();
-        }
-
+        if (log.activities) { activities = log.activities; renderActivities(); }
         // Notes
         document.getElementById('dailyNotes').value = log.notes || '';
         updateChar();
@@ -815,7 +526,7 @@
     } catch (err) { console.log('Fresh start for today! 🌸'); }
   }
 
-  /* ════════ SLEEP ════════ */
+  /* ── SLEEP ── */
   function calcSleep() {
     const b = document.getElementById('bedtime').value;
     const w = document.getElementById('waketime').value;
@@ -830,17 +541,15 @@
   }
   document.getElementById('bedtime').addEventListener('change', calcSleep);
   document.getElementById('waketime').addEventListener('change', calcSleep);
-
   function selectQuality(btn) {
     document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('sel'));
     btn.classList.add('sel');
+    autosaveDraft();
   }
 
-  /* ════════ HYDRATION ════════ */
-  let glassCount = 0;
-  let totalMl = 0;
+  /* ── HYDRATION ── */
+  let glassCount = 0, totalMl = 0;
   const GOAL_ML = 2000;
-
   const glassContainer = document.getElementById('waterGlasses');
   for (let i = 0; i < 8; i++) {
     const btn = document.createElement('button');
@@ -850,27 +559,22 @@
     btn.addEventListener('click', () => toggleGlass(btn, i));
     glassContainer.appendChild(btn);
   }
-
   function toggleGlass(btn, idx) {
     const filled = btn.classList.toggle('filled');
-    glassCount += filled ? 1 : -1;
-    totalMl += filled ? 250 : -250;
+    glassCount = Math.max(0, glassCount + (filled ? 1 : -1));
+    totalMl = Math.max(0, totalMl + (filled ? 250 : -250));
     updateHydration();
   }
-
   function addCustomWater() {
     const ml = parseInt(document.getElementById('customMl').value);
     if (!ml || ml < 50) { showToast('Enter a valid amount (min 50ml)'); return; }
     totalMl = Math.min(totalMl + ml, 3000);
     glassCount = Math.round(totalMl / 250);
-    document.querySelectorAll('.glass-btn').forEach((btn, i) => {
-      btn.classList.toggle('filled', i < glassCount);
-    });
+    document.querySelectorAll('.glass-btn').forEach((btn, i) => btn.classList.toggle('filled', i < glassCount));
     document.getElementById('customMl').value = '';
     updateHydration();
     showToast(`💧 Added ${ml}ml of water!`);
   }
-
   function updateHydration() {
     document.getElementById('glassCount').textContent = Math.min(glassCount, 8);
     const pct = Math.min((totalMl / GOAL_ML) * 100, 100);
@@ -878,63 +582,56 @@
     document.getElementById('mlLabel').textContent = totalMl + ' ml consumed';
   }
 
-  /* ════════ MOOD ════════ */
+  /* ── MOOD ── */
   let selectedMood = '';
   function selectMood(btn, mood) {
     document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
-    btn.classList.add('sel');
-    selectedMood = mood;
+    btn.classList.add('sel'); selectedMood = mood;
+    autosaveDraft();
   }
-  function toggleTag(btn) { btn.classList.toggle('sel'); }
+  function toggleTag(btn) { btn.classList.toggle('sel'); autosaveDraft(); }
 
-  /* ════════ NUTRITION ════════ */
+  /* ── NUTRITION ── */
   function toggleNutrition(item) {
     item.classList.toggle('checked');
     item.querySelector('.nutrition-cb').textContent = item.classList.contains('checked') ? '✓' : '';
     updateNutritionProgress();
+    autosaveDraft();
   }
   function updateNutritionProgress() {
     const total = document.querySelectorAll('.nutrition-item').length;
     const done  = document.querySelectorAll('.nutrition-item.checked').length;
     document.getElementById('npText').textContent = `${done} / ${total}`;
-    const offset = 100 - (done / total * 100);
-    document.getElementById('npFill').style.strokeDashoffset = offset;
+    document.getElementById('npFill').style.strokeDashoffset = 100 - (done / total * 100);
     if (done === total) showToast('🥗 Nutrition goals all checked — great job!');
   }
 
-  /* ════════ ACTIVITY ════════ */
+  /* ── ACTIVITY ── */
   let selectedActType = { name: 'Walking', calPerMin: 6 };
   let activities = [];
-
   function selectActType(btn) {
     document.querySelectorAll('.act-type-btn').forEach(b => b.classList.remove('sel'));
     btn.classList.add('sel');
     selectedActType = { name: btn.textContent.trim(), calPerMin: parseInt(btn.dataset.cal) };
   }
-
   document.getElementById('addActBtn').addEventListener('click', function(e) {
-    const dur  = parseInt(document.getElementById('actDuration').value);
+    const dur = parseInt(document.getElementById('actDuration').value);
     const intensity = document.getElementById('actIntensity').value.trim() || 'Moderate';
     const notes = document.getElementById('actNotes').value.trim();
-
     if (!dur || dur < 1) { showToast('Please enter a valid duration ⏱️'); return; }
-
     const cal = dur * selectedActType.calPerMin;
     const act = { name: selectedActType.name, duration: dur, intensity, notes, cal };
-    activities.push(act);
-    renderActivities();
-
+    activities.push(act); renderActivities();
     document.getElementById('actDuration').value = '';
     document.getElementById('actIntensity').value = '';
     document.getElementById('actNotes').value = '';
     showToast(`✅ ${act.name} logged — ~${cal} kcal burned!`);
+    autosaveDraft();
   });
-
   function renderActivities() {
     const list = document.getElementById('activityLogList');
     list.innerHTML = '';
     let totalM = 0, totalC = 0;
-
     activities.forEach((act, idx) => {
       totalM += act.duration; totalC += act.cal;
       const icons = {'Walking':'🚶‍♀️','Running':'🏃‍♀️','Yoga':'🧘‍♀️','Cycling':'🚴‍♀️','Swimming':'🏊‍♀️','Strength':'💪','Dance':'💃','Stretching':'🧘'};
@@ -944,10 +641,7 @@
       div.innerHTML = `
         <div class="ali-left">
           <span class="ali-icon">${icon}</span>
-          <div>
-            <div class="ali-name">${act.name}</div>
-            <div class="ali-details">${act.duration} mins · ${act.intensity}${act.notes ? ' · ' + act.notes : ''}</div>
-          </div>
+          <div><div class="ali-name">${act.name}</div><div class="ali-details">${act.duration} mins · ${act.intensity}${act.notes ? ' · ' + act.notes : ''}</div></div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="ali-cal">~${act.cal} kcal</div>
@@ -955,99 +649,219 @@
         </div>`;
       list.appendChild(div);
     });
-
     const summary = document.getElementById('actSummary');
     summary.style.display = activities.length ? 'flex' : 'none';
     document.getElementById('totalMins').textContent = totalM;
     document.getElementById('totalCals').textContent = totalC;
     document.getElementById('totalSessions').textContent = activities.length;
   }
+  function deleteActivity(idx) { activities.splice(idx, 1); renderActivities(); autosaveDraft(); }
 
-  function deleteActivity(idx) {
-    activities.splice(idx, 1);
-    renderActivities();
-  }
-
-  /* ════════ NOTES ════════ */
+  /* ── NOTES ── */
   function updateChar() {
-    const val = document.getElementById('dailyNotes').value;
-    document.getElementById('charCount').textContent = val.length;
+    document.getElementById('charCount').textContent = document.getElementById('dailyNotes').value.length;
+    autosaveDraft();
   }
 
-  /* ════════ SAVE ALL ════════ */
+  /* ── AUTOSAVE DRAFT ── */
+  function autosaveDraft() {
+    const nutrition = [];
+    document.querySelectorAll('.nutrition-item.checked .nutrition-name').forEach(el => nutrition.push(el.textContent.trim()));
+    const moodTags = [];
+    document.querySelectorAll('.mood-tag.sel').forEach(el => moodTags.push(el.textContent.trim()));
+    const selQualBtn = document.querySelector('.quality-btn.sel');
+    const draft = {
+      date: todayStr,
+      sleep: { bedtime: document.getElementById('bedtime').value, waketime: document.getElementById('waketime').value, quality: selQualBtn ? selQualBtn.textContent.trim() : '' },
+      hydration: { glasses: glassCount, ml: totalMl },
+      mood: { mood: selectedMood, note: document.getElementById('moodNote').value, tags: moodTags },
+      nutrition, activities,
+      notes: document.getElementById('dailyNotes').value
+    };
+    localStorage.setItem('hc_draft_' + todayStr, JSON.stringify(draft));
+  }
+
+  /* ── RESTORE DRAFT ── */
+  function restoreDraft() {
+    const raw = localStorage.getItem('hc_draft_' + todayStr);
+    if (!raw) return false;
+    try {
+      const log = JSON.parse(raw);
+      // Sleep
+      if (log.sleep) {
+        document.getElementById('bedtime').value = log.sleep.bedtime || '';
+        document.getElementById('waketime').value = log.sleep.waketime || '';
+        if (log.sleep.quality) {
+          document.querySelectorAll('.quality-btn').forEach(btn => {
+            if (btn.textContent.trim() === log.sleep.quality) selectQuality(btn);
+          });
+        }
+        calcSleep();
+      }
+      // Hydration
+      if (log.hydration) {
+        glassCount = log.hydration.glasses || 0;
+        totalMl = log.hydration.ml || 0;
+        document.querySelectorAll('.glass-btn').forEach((btn, i) => btn.classList.toggle('filled', i < glassCount));
+        updateHydration();
+      }
+      // Mood
+      if (log.mood) {
+        selectedMood = log.mood.mood || '';
+        document.querySelectorAll('.mood-btn').forEach(btn => { if (btn.textContent.includes(selectedMood)) btn.classList.add('sel'); });
+        document.getElementById('moodNote').value = log.mood.note || '';
+        if (Array.isArray(log.mood.tags)) {
+          document.querySelectorAll('.mood-tag').forEach(btn => { if (log.mood.tags.some(t => btn.textContent.includes(t))) btn.classList.add('sel'); });
+        }
+      }
+      // Nutrition
+      if (log.nutrition && Array.isArray(log.nutrition)) {
+        document.querySelectorAll('.nutrition-item').forEach(item => {
+          const label = item.querySelector('.nutrition-name').textContent.trim();
+          if (log.nutrition.includes(label)) { item.classList.add('checked'); item.querySelector('.nutrition-cb').textContent = '✓'; }
+        });
+        updateNutritionProgress();
+      }
+      // Activities
+      if (log.activities) { activities = log.activities; renderActivities(); }
+      // Notes
+      document.getElementById('dailyNotes').value = log.notes || '';
+      updateChar();
+      return true;
+    } catch(e) { return false; }
+  }
+
+  /* ── SAVE ALL ── */
   document.getElementById('saveAllBtn').addEventListener('click', async function(e) {
     const bt = this;
-    // ripple
+    // ripple effect
     const rp = document.createElement('span'); rp.className = 'ripple';
     const rect = bt.getBoundingClientRect();
     const s = Math.max(rect.width, rect.height);
     rp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px;`;
-    bt.appendChild(rp);
-    setTimeout(() => rp.remove(), 550);
+    bt.appendChild(rp); setTimeout(() => rp.remove(), 550);
 
     const nutrition = [];
-    document.querySelectorAll('.nutrition-item.checked .nutrition-label').forEach(el => nutrition.push(el.textContent.trim()));
-
+    document.querySelectorAll('.nutrition-item.checked .nutrition-name').forEach(el => nutrition.push(el.textContent.trim()));
     const moodTags = [];
-    document.querySelectorAll('.tag-btn.sel').forEach(el => moodTags.push(el.textContent.trim()));
-
+    document.querySelectorAll('.mood-tag.sel').forEach(el => moodTags.push(el.textContent.trim()));
     const selQualBtn = document.querySelector('.quality-btn.sel');
-    const sleepQual = selQualBtn ? parseInt(selQualBtn.textContent) || 5 : 5;
 
     const payload = {
       date: todayStr,
-      sleep: {
-        bedtime: document.getElementById('bedtime').value,
-        waketime: document.getElementById('waketime').value,
-        quality: sleepQual
-      },
+      sleep: { bedtime: document.getElementById('bedtime').value, waketime: document.getElementById('waketime').value, quality: selQualBtn ? selQualBtn.textContent.trim() : '' },
       hydration: { glasses: glassCount, ml: totalMl },
-      mood: {
-        mood: selectedMood,
-        note: document.getElementById('moodNotes').value,
-        tags: moodTags
-      },
-      nutrition: nutrition,
-      activities: activities,
+      mood: { mood: selectedMood, note: document.getElementById('moodNote').value, tags: moodTags },
+      nutrition, activities,
       notes: document.getElementById('dailyNotes').value
     };
 
-    bt.textContent = 'Saving…';
-    bt.disabled = true;
-
+    bt.textContent = 'Saving…'; bt.disabled = true;
     try {
       const res = await fetch(`${API_BASE}/daily-log`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${TOKEN}`
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
         body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (data.success) {
         showToast('🌸 Today\'s log saved successfully!');
+        localStorage.setItem('hc_daily_log', JSON.stringify(payload));
+        localStorage.setItem('hc_daily_' + todayStr, JSON.stringify(payload));
         bt.textContent = '✓ Saved!';
         bt.style.background = 'linear-gradient(135deg,#2ecc71,#27ae60)';
-        setTimeout(() => {
-          bt.textContent = '💾 Save Today\'s Log';
-          bt.style.background = '';
-          bt.disabled = false;
-        }, 2500);
+        setTimeout(() => { bt.textContent = '💾 Save Today\'s Log'; bt.style.background = ''; bt.disabled = false; }, 2500);
       } else {
         showToast(data.message || 'Error occurred');
-        bt.disabled = false;
-        bt.textContent = '💾 Save Today\'s Log';
+        bt.disabled = false; bt.textContent = '💾 Save Today\'s Log';
       }
     } catch (err) {
       showToast('Offline — Saved locally 🌷');
       localStorage.setItem('hc_daily_log', JSON.stringify(payload));
-      bt.disabled = false;
-      bt.textContent = '💾 Save Today\'s Log';
+      localStorage.setItem('hc_daily_' + todayStr, JSON.stringify(payload));
+      bt.disabled = false; bt.textContent = '💾 Save Today\'s Log';
     }
   });
 
-  // Init
+  // Also autosave when sleep time fields change
+  document.getElementById('bedtime').addEventListener('change', autosaveDraft);
+  document.getElementById('waketime').addEventListener('change', autosaveDraft);
+  document.getElementById('moodNote').addEventListener('input', autosaveDraft);
+
+  // Init — try API first, fall back to local draft
+  async function init() {
+    const hasDraft = restoreDraft();
+    await loadDailyData();
+    // After API load, if API returned empty/no data, restore draft again
+    // (loadDailyData may have cleared draft-loaded state)
+  }
+
+  // Override loadDailyData to prefer API but fall back to draft
+  const _origLoad = loadDailyData;
+  loadDailyData = async function() {
+    const hadDraft = localStorage.getItem('hc_draft_' + todayStr);
+    try {
+      const res = await fetch(`${API_BASE}/daily-log?date=${todayStr}`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+      const data = await res.json();
+      if (data.success && data.data && Object.keys(data.data).length > 0) {
+        const log = data.data;
+        // Restore Sleep
+        if (log.sleep) {
+          document.getElementById('bedtime').value = log.sleep.bedtime || '';
+          document.getElementById('waketime').value = log.sleep.waketime || '';
+          if (log.sleep.quality) {
+            const qBtns = document.querySelectorAll('.quality-btn');
+            if (!isNaN(Number(log.sleep.quality))) {
+              const idx = Math.floor(Number(log.sleep.quality) / 2);
+              if (qBtns[idx]) selectQuality(qBtns[idx]);
+            } else {
+              qBtns.forEach(btn => {
+                const text = btn.textContent.trim();
+                const qual = log.sleep.quality.trim();
+                if (text.includes(qual) || qual.includes(text)) selectQuality(btn);
+              });
+            }
+          }
+          calcSleep();
+        }
+        if (log.hydration) {
+          glassCount = log.hydration.glasses || 0;
+          totalMl = log.hydration.ml || 0;
+          document.querySelectorAll('.glass-btn').forEach((btn, i) => btn.classList.toggle('filled', i < glassCount));
+          updateHydration();
+        }
+        if (log.mood) {
+          selectedMood = log.mood.mood || '';
+          document.querySelectorAll('.mood-btn').forEach(btn => { if (btn.textContent.includes(selectedMood)) btn.classList.add('sel'); });
+          document.getElementById('moodNote').value = log.mood.note || '';
+          if (Array.isArray(log.mood.tags)) {
+            document.querySelectorAll('.mood-tag').forEach(btn => { if (log.mood.tags.some(t => btn.textContent.includes(t))) btn.classList.add('sel'); });
+          }
+        }
+        if (log.nutrition && Array.isArray(log.nutrition)) {
+          document.querySelectorAll('.nutrition-item').forEach(item => {
+            const label = item.querySelector('.nutrition-name').textContent.trim();
+            if (log.nutrition.includes(label)) { item.classList.add('checked'); item.querySelector('.nutrition-cb').textContent = '✓'; }
+          });
+          updateNutritionProgress();
+        }
+        if (log.activities) { activities = log.activities; renderActivities(); }
+        document.getElementById('dailyNotes').value = log.notes || '';
+        updateChar();
+        // Update draft to match server data
+        autosaveDraft();
+      } else if (hadDraft) {
+        // API returned nothing but we have a local draft — restore it
+        restoreDraft();
+      }
+    } catch (err) {
+      console.log('Offline — restoring draft 🌸');
+      if (hadDraft) restoreDraft();
+    }
+  };
+
+  // On page load: restore draft immediately, then try API
+  restoreDraft();
   loadDailyData();
 </script>
 </body>

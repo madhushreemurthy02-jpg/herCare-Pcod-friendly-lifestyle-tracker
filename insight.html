@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>herCare – Insights</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --pink-light: #f9a8b0;
-      --pink-mid:   #f07080;
-      --pink-dark:  #e8506a;
-      --maroon:     #8b1a3a;
-      --cream:      #f5f0e8;
-      --white:      #ffffff;
+      --pink-mid: #f07080;
+      --pink-dark: #e8506a;
+      --maroon: #8b1a3a;
+      --cream: #f5f0e8;
+      --white: #ffffff;
     }
 
     body {
@@ -25,973 +34,1173 @@
     }
 
     /* ── BLOB BG ── */
-    .blob-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-    .blob-wrap svg { width: 100%; height: 100%; }
-    .petal { opacity: .18; fill: #fff; }
+    .blob-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob-wrap svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .petal {
+      opacity: .18;
+      fill: #fff;
+    }
 
     /* ── NAVBAR ── */
     .navbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.88);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139,26,58,0.10);
-      padding: 0 40px; height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 2px 16px rgba(180,60,80,.08);
+      border-bottom: 1px solid rgba(139, 26, 58, 0.10);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(180, 60, 80, .08);
     }
-    .nav-logo { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; }
-    .logo-her  { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--maroon); line-height: 1; }
-    .logo-care { font-size: 1.3rem; font-weight: 800; color: var(--maroon); line-height: 1; }
-    .logo-flower { font-size: 1.1rem; margin-left: 3px; }
-    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+    }
+
+    .logo-her {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.9rem;
+      color: var(--maroon);
+      line-height: 1;
+    }
+
+    .logo-care {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--maroon);
+      line-height: 1;
+    }
+
+    .logo-flower {
+      font-size: 1.1rem;
+      margin-left: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+
     .nav-links a {
-      text-decoration: none; font-size: .88rem; font-weight: 600;
-      color: #666; padding: 6px 14px; border-radius: 20px;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 600;
+      color: #666;
+      padding: 6px 14px;
+      border-radius: 20px;
       transition: background .2s, color .2s;
     }
-    .nav-links a:hover, .nav-links a.active { background: rgba(232,80,106,.12); color: var(--maroon); }
-    .nav-right { display: flex; align-items: center; gap: 14px; }
-    .nav-bell { font-size: 1.2rem; cursor: pointer; background: none; border: none; position: relative; padding: 4px; }
-    .bell-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: var(--pink-dark); border-radius: 50%; border: 2px solid #fff; }
-    .nav-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark)); display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; color: #fff; cursor: pointer; border: 2px solid rgba(232,80,106,.3); }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(232, 80, 106, .12);
+      color: var(--maroon);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      border: 2px solid rgba(232, 80, 106, .3);
+    }
 
     /* ── PAGE ── */
-    .page-body { position: relative; z-index: 1; padding: 36px 40px 72px; max-width: 1040px; margin: 0 auto; }
+    .page-body {
+      position: relative;
+      z-index: 1;
+      padding: 36px 40px 72px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
 
     /* ── WELCOME ── */
-    .welcome-section { margin-bottom: 28px; animation: fadeUp .5s ease both; }
-    .welcome-greeting { font-size: 1.5rem; font-weight: 800; color: var(--maroon); margin-bottom: 4px; }
-    .welcome-greeting span { font-family: 'Dancing Script', cursive; font-size: 1.85rem; }
-    .welcome-sub { font-size: .92rem; color: #9a7070; font-weight: 500; }
+    .welcome-section {
+      margin-bottom: 28px;
+      animation: fadeUp .5s ease both;
+    }
+
+    .welcome-greeting {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--maroon);
+      margin-bottom: 4px;
+    }
+
+    .welcome-greeting span {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.85rem;
+    }
+
+    .welcome-sub {
+      font-size: .92rem;
+      color: #9a7070;
+      font-weight: 500;
+    }
 
     /* ── PAGE TITLE ROW ── */
     .page-title-row {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 26px; animation: fadeUp .5s .05s ease both;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 26px;
+      animation: fadeUp .5s .05s ease both;
     }
-    .page-title { font-size: 1.45rem; font-weight: 800; color: var(--maroon); }
+
+    .page-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--maroon);
+    }
 
     /* ── MAIN GRID ── */
-    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
 
     /* ── CARD BASE ── */
     .ai-card {
-      background: var(--white); border-radius: 20px;
+      background: var(--white);
+      border-radius: 20px;
       padding: 26px 28px 24px;
-      box-shadow: 0 8px 32px rgba(180,60,80,.09), 0 2px 8px rgba(0,0,0,.04);
-      animation: fadeUp .5s ease both; position: relative; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(180, 60, 80, .09), 0 2px 8px rgba(0, 0, 0, .04);
+      animation: fadeUp .5s ease both;
+      position: relative;
+      overflow: hidden;
     }
+
     .ai-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 100%; height: 4px; border-radius: 20px 20px 0 0;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      border-radius: 20px 20px 0 0;
     }
-    .card-summary::before  { background: linear-gradient(90deg,#e8506a,#f9a8b0); }
-    .card-insights::before { background: linear-gradient(90deg,#a4133c,#ff758f); }
-    .card-chat::before     { background: linear-gradient(90deg,#590d22,#c9184a); }
-    .card-remind::before   { background: linear-gradient(90deg,#800f2f,#ff4d6d); }
-    .insights-full         { grid-column: 1 / -1; }
 
-    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .card-summary::before {
+      background: linear-gradient(90deg, #e8506a, #f9a8b0);
+    }
+
+    .card-insights::before {
+      background: linear-gradient(90deg, #a4133c, #ff758f);
+    }
+
+    .insights-full {
+      grid-column: 1 / -1;
+    }
+
+    .card-correlation {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .correlation-content {
+      flex-grow: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
     .card-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.35rem; flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
     }
-    .icon-summary  { background: rgba(232,80,106,.12); }
-    .icon-insights { background: rgba(164,19,60,.12); }
-    .icon-chat     { background: rgba(89,13,34,.12); }
-    .icon-remind   { background: rgba(128,15,47,.12); }
 
-    .card-title { font-size: 1.05rem; font-weight: 800; color: var(--maroon); }
-    .card-sub   { font-size: .75rem; color: #bbb; font-weight: 500; margin-top: 2px; }
+    .icon-summary {
+      background: rgba(232, 80, 106, .12);
+    }
 
-    /* ════════════════════════
-       DATA SUMMARY PANEL
-    ════════════════════════ */
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .icon-insights {
+      background: rgba(164, 19, 60, .12);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--maroon);
+    }
+
+    .card-sub {
+      font-size: .75rem;
+      color: #bbb;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* ── DATA SUMMARY PANEL ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
     .sum-box {
-      background: #fff8f9; border: 1.5px solid #f4c0cc;
-      border-radius: 12px; padding: 12px 14px;
+      background: #fff8f9;
+      border: 1.5px solid #f4c0cc;
+      border-radius: 12px;
+      padding: 12px 14px;
       transition: background .2s;
     }
-    .sum-box:hover { background: #ffe8ee; }
-    .sum-icon  { font-size: 1.2rem; margin-bottom: 5px; }
-    .sum-label { font-size: .7rem; font-weight: 700; color: #c09090; text-transform: uppercase; letter-spacing: .05em; }
-    .sum-value { font-size: 1rem; font-weight: 800; color: var(--maroon); margin-top: 3px; }
-    .sum-value.good   { color: #2ecc71; }
-    .sum-value.warn   { color: #f7971e; }
-    .sum-value.bad    { color: var(--pink-dark); }
+
+    .sum-box:hover {
+      background: #ffe8ee;
+    }
+
+    .sum-icon {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .sum-label {
+      font-size: .7rem;
+      font-weight: 700;
+      color: #c09090;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .sum-value {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--maroon);
+      margin-top: 3px;
+    }
+
+    .sum-value.good {
+      color: #2ecc71;
+    }
+
+    .sum-value.warn {
+      color: #f7971e;
+    }
+
+    .sum-value.bad {
+      color: var(--pink-dark);
+    }
 
     .analyze-btn {
-      width: 100%; padding: 14px;
+      width: 100%;
+      padding: 14px;
       background: linear-gradient(135deg, var(--maroon), var(--pink-dark));
-      color: #fff; border: none; border-radius: 12px;
-      font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800;
-      cursor: pointer; position: relative; overflow: hidden;
-      box-shadow: 0 6px 20px rgba(139,26,58,.3);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(139, 26, 58, .3);
       transition: transform .15s, box-shadow .15s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(139,26,58,.38); }
-    .analyze-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+
+    .analyze-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(139, 26, 58, .38);
+    }
+
+    .analyze-btn:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     /* AI sparkle pulse on button */
-    .btn-sparkle { font-size: 1.1rem; animation: sparkle 1.5s ease-in-out infinite; }
-    @keyframes sparkle { 0%,100%{transform:scale(1) rotate(0deg);} 50%{transform:scale(1.3) rotate(20deg);} }
+    .btn-sparkle {
+      font-size: 1.1rem;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
 
-    /* ════════════════════════
-       AI INSIGHTS PANEL
-    ════════════════════════ */
+    @keyframes sparkle {
+
+      0%,
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: scale(1.3) rotate(20deg);
+      }
+    }
+
+    /* ── WELLNESS SCORE ── */
+    .wellness-gauge-wrap { display: flex; align-items: center; gap: 40px; margin-top: 10px; }
+    .wellness-gauge { position: relative; width: 180px; height: 90px; }
+    .gauge-svg { width: 100%; height: 100%; overflow: visible; }
+    .gauge-fill { transition: stroke-dashoffset 1s ease-out, stroke 0.5s; }
+    .gauge-center { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; }
+    .gauge-score { font-size: 2.2rem; font-weight: 900; color: var(--maroon); line-height: 1; margin-bottom: -4px; }
+    .gauge-lbl { font-size: .75rem; font-weight: 700; color: #c09090; }
+    .wellness-details { flex: 1; font-size: .88rem; color: #666; font-weight: 500; line-height: 1.6; }
+    .wd-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #f4c0cc; }
+    .wd-item:last-child { border: none; }
+    .wd-label { color: #5a3a44; font-weight: 700; }
+    .wd-val { font-weight: 800; color: var(--maroon); }
+    
+    /* ── CORRELATION CARD ── */
+    .corr-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .corr-table th { text-align: left; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: #c09090; padding: 0 0 10px 4px; border-bottom: 1.5px solid #f5e8ec; }
+    .corr-table td { padding: 12px 4px; border-bottom: 1px dashed #f5e8ec; font-size: .85rem; font-weight: 600; color: #555; }
+    .corr-table tr:last-child td { border: none; }
+    .corr-phase { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+    .corr-sym { background: #fff8f9; border: 1px solid #f4c0cc; padding: 4px 10px; border-radius: 20px; font-size: .75rem; color: #b06080; display: inline-block; }
+
+    /* ── AI INSIGHTS PANEL ── */
     .insights-area {
       min-height: 120px;
       position: relative;
     }
 
-    /* loading dots */
     .loading-state {
       display: none;
-      flex-direction: column; align-items: center; justify-content: center;
-      padding: 32px 0; gap: 14px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 0;
+      gap: 14px;
     }
-    .loading-state.active { display: flex; }
-    .loading-dots { display: flex; gap: 8px; }
-    .ld { width: 10px; height: 10px; border-radius: 50%; background: var(--pink-mid); animation: bounce 1.2s ease-in-out infinite; }
-    .ld:nth-child(2) { animation-delay: .2s; }
-    .ld:nth-child(3) { animation-delay: .4s; }
-    @keyframes bounce { 0%,80%,100%{transform:scale(0);opacity:.4;} 40%{transform:scale(1);opacity:1;} }
-    .loading-text { font-size: .85rem; font-weight: 700; color: #c09090; }
 
-    /* insight cards */
-    .insights-list { display: flex; flex-direction: column; gap: 12px; }
+    .loading-state.active {
+      display: flex;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ld {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--pink-mid);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+
+    .ld:nth-child(2) {
+      animation-delay: .2s;
+    }
+
+    .ld:nth-child(3) {
+      animation-delay: .4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+        opacity: .4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .loading-text {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #c09090;
+    }
+
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     .insight-item {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 16px; border-radius: 14px;
-      border: 1.5px solid; animation: fadeUp .4s ease both;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid;
+      animation: fadeUp .4s ease both;
     }
-    .insight-item.type-reminder { background: #fff8f9; border-color: #f9c0cc; }
-    .insight-item.type-positive { background: #f3fff5; border-color: #b8e8c0; }
-    .insight-item.type-warning  { background: #fffaf0; border-color: #fde8b0; }
-    .insight-item.type-tip      { background: #f0f6ff; border-color: #b8d4f8; }
 
-    .ii-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
-    .ii-content { flex: 1; }
-    .ii-title { font-size: .88rem; font-weight: 800; margin-bottom: 3px; }
-    .type-reminder .ii-title { color: var(--maroon); }
-    .type-positive .ii-title { color: #2a7a40; }
-    .type-warning  .ii-title { color: #a06010; }
-    .type-tip      .ii-title { color: #1a4a8a; }
-    .ii-text { font-size: .8rem; font-weight: 500; line-height: 1.55; }
-    .type-reminder .ii-text { color: #c07080; }
-    .type-positive .ii-text { color: #4a9a60; }
-    .type-warning  .ii-text { color: #c08030; }
-    .type-tip      .ii-text { color: #4a6aaa; }
+    .insight-item.type-reminder {
+      background: #fff8f9;
+      border-color: #f9c0cc;
+    }
+
+    .insight-item.type-positive {
+      background: #f3fff5;
+      border-color: #b8e8c0;
+    }
+
+    .insight-item.type-warning {
+      background: #fffaf0;
+      border-color: #fde8b0;
+    }
+
+    .insight-item.type-tip {
+      background: #f0f6ff;
+      border-color: #b8d4f8;
+    }
+
+    .ii-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .ii-content {
+      flex: 1;
+    }
+
+    .ii-title {
+      font-size: .88rem;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .type-reminder .ii-title {
+      color: var(--maroon);
+    }
+
+    .type-positive .ii-title {
+      color: #2a7a40;
+    }
+
+    .type-warning .ii-title {
+      color: #a06010;
+    }
+
+    .type-tip .ii-title {
+      color: #1a4a8a;
+    }
+
+    .ii-text {
+      font-size: .8rem;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    .type-reminder .ii-text {
+      color: #c07080;
+    }
+
+    .type-positive .ii-text {
+      color: #4a9a60;
+    }
+
+    .type-warning .ii-text {
+      color: #c08030;
+    }
+
+    .type-tip .ii-text {
+      color: #4a6aaa;
+    }
 
     .empty-state {
-      text-align: center; padding: 32px 20px; color: #c09090;
+      text-align: center;
+      padding: 32px 20px;
+      color: #c09090;
     }
-    .empty-state .es-icon { font-size: 2.5rem; margin-bottom: 10px; }
-    .empty-state p { font-size: .88rem; font-weight: 600; line-height: 1.5; }
 
-    /* ════════════════════════
-       REMINDER SCHEDULE
-    ════════════════════════ */
-    .remind-list { display: flex; flex-direction: column; gap: 10px; }
-    .remind-item {
-      flex-direction: column; align-items: stretch; gap: 0;
-      padding: 0; border-radius: 12px; overflow: hidden;
-      background: #fff8f9; border: 1.5px solid #f4c0cc;
-      transition: background .2s;
+    .empty-state .es-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }
-    .remind-item:hover { background: #ffe8ee; }
-    .remind-main {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 14px;
-    }
-    .ri-icon { font-size: 1.15rem; flex-shrink: 0; }
-    .ri-info { flex: 1; }
-    .ri-title { font-size: .85rem; font-weight: 700; color: var(--maroon); }
-    .ri-time  { font-size: .72rem; color: #c09090; font-weight: 600; margin-top: 2px; }
-    .ri-toggle {
-      position: relative; width: 40px; height: 22px;
-      background: #f4c0cc; border-radius: 11px; cursor: pointer;
-      transition: background .25s; flex-shrink: 0; border: none;
-    }
-    .ri-toggle::after {
-      content: ''; position: absolute; top: 3px; left: 3px;
-      width: 16px; height: 16px; border-radius: 50%;
-      background: #fff; transition: transform .25s;
-      box-shadow: 0 1px 4px rgba(0,0,0,.15);
-    }
-    .ri-toggle.on { background: var(--pink-dark); }
-    .ri-toggle.on::after { transform: translateX(18px); }
 
-    /* ── Customize btn ── */
-    .ri-customize-btn {
-      background: none; border: none; cursor: pointer;
-      font-size: .68rem; font-weight: 700; color: #d4a0b0;
-      padding: 2px 6px; border-radius: 6px;
-      transition: color .18s; text-decoration: underline;
-      text-underline-offset: 2px; flex-shrink: 0;
+    .empty-state p {
+      font-size: .88rem;
+      font-weight: 600;
+      line-height: 1.5;
     }
-    .ri-customize-btn:hover { color: var(--maroon); }
 
-    /* ── Expandable customize panel ── */
-    .ri-expand {
-      max-height: 0; overflow: hidden;
-      transition: max-height .38s ease, padding .3s ease;
-      background: rgba(255,240,243,.7);
-      border-top: 0px solid #f4c0cc;
-    }
-    .ri-expand.open { max-height: 180px; border-top: 1px solid #f4c0cc; }
-    .ri-expand-inner { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
 
-    .ri-time-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .ri-time-row label { font-size: .74rem; font-weight: 700; color: #5a3a44; flex-shrink: 0; }
-    .ri-time-input {
-      padding: 6px 10px; border: 1.5px solid #f4c0cc; border-radius: 8px;
-      font-family: 'Nunito', sans-serif; font-size: .85rem; color: var(--maroon);
-      background: #fff; outline: none; transition: border-color .2s;
-    }
-    .ri-time-input:focus { border-color: var(--pink-dark); }
-
-    .ri-freq-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-    .ri-freq-row label { font-size: .74rem; font-weight: 700; color: #5a3a44; flex-shrink: 0; }
-    .ri-freq-btn {
-      padding: 4px 11px; border-radius: 20px;
-      border: 1.5px solid #f4c0cc; background: transparent;
-      font-family: 'Nunito', sans-serif; font-size: .72rem; font-weight: 700;
-      color: #c09090; cursor: pointer; transition: all .18s;
-    }
-    .ri-freq-btn:hover, .ri-freq-btn.sel {
-      background: rgba(232,80,106,.12); border-color: var(--pink-dark); color: var(--maroon);
-    }
-    .ri-save-time {
-      align-self: flex-end; padding: 6px 16px;
-      border: none; border-radius: 8px;
-      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
-      color: #fff; font-family: 'Nunito', sans-serif;
-      font-size: .78rem; font-weight: 700; cursor: pointer;
-      transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 3px 10px rgba(232,80,106,.25);
-    }
-    .ri-save-time:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(232,80,106,.35); }
-
-    /* ════════════════════════
-       AI CHAT
-    ════════════════════════ */
-    .chat-box {
-      height: 320px; overflow-y: auto;
-      border: 1.5px solid #f4c0cc; border-radius: 14px;
-      background: #fff8f9; padding: 14px; margin-bottom: 12px;
-      display: flex; flex-direction: column; gap: 10px;
-      scroll-behavior: smooth;
-    }
-    .chat-box::-webkit-scrollbar { width: 4px; }
-    .chat-box::-webkit-scrollbar-thumb { background: #f4c0cc; border-radius: 4px; }
-
-    .chat-msg {
-      display: flex; gap: 10px; align-items: flex-end;
-      animation: fadeUp .3s ease both;
-    }
-    .chat-msg.user { flex-direction: row-reverse; }
-
-    .msg-avatar {
-      width: 30px; height: 30px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; font-weight: 800; flex-shrink: 0;
-    }
-    .ai-avatar   { background: linear-gradient(135deg,var(--maroon),var(--pink-dark)); color:#fff; font-size:.9rem; }
-    .user-avatar { background: linear-gradient(135deg,var(--pink-mid),var(--pink-light)); color:#fff; }
-
-    .msg-bubble {
-      max-width: 78%; padding: 10px 14px; border-radius: 16px;
-      font-size: .85rem; font-weight: 500; line-height: 1.55;
-    }
-    .chat-msg.ai   .msg-bubble { background: #fff; border: 1.5px solid #f4c0cc; color: #444; border-bottom-left-radius: 4px; }
-    .chat-msg.user .msg-bubble { background: linear-gradient(135deg,var(--pink-mid),var(--pink-dark)); color:#fff; border-bottom-right-radius: 4px; }
-
-    .typing-bubble {
-      display: flex; gap: 5px; align-items: center;
-      padding: 10px 14px; background: #fff; border: 1.5px solid #f4c0cc;
-      border-radius: 16px; border-bottom-left-radius: 4px;
-      width: fit-content;
-    }
-    .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #f4c0cc; animation: bounce 1.2s ease-in-out infinite; }
-    .typing-dot:nth-child(2){animation-delay:.2s;}
-    .typing-dot:nth-child(3){animation-delay:.4s;}
-
-    .chat-input-row { display: flex; gap: 10px; }
-    .chat-input {
-      flex: 1; padding: 11px 16px;
-      border: 1.8px solid #f4c0cc; border-radius: 50px;
-      font-family: 'Nunito', sans-serif; font-size: .9rem;
-      color: #333; outline: none; background: #fff8f9;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .chat-input:focus { border-color: var(--pink-dark); box-shadow: 0 0 0 3px rgba(232,80,106,.1); }
-    .chat-send {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg,var(--pink-mid),var(--pink-dark));
-      color: #fff; border: none; font-size: 1.1rem;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 4px 14px rgba(232,80,106,.3); flex-shrink: 0;
-    }
-    .chat-send:hover { transform: scale(1.08); box-shadow: 0 6px 18px rgba(232,80,106,.4); }
-    .chat-send:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-    .quick-prompts { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
-    .qp-btn {
-      padding: 5px 12px; border-radius: 20px;
-      border: 1.5px solid #f4c0cc; background: #fff8f9;
-      font-family: 'Nunito', sans-serif; font-size: .74rem; font-weight: 700;
-      color: #b06080; cursor: pointer; transition: all .18s;
-    }
-    .qp-btn:hover { background: rgba(232,80,106,.1); border-color: var(--pink-dark); color: var(--maroon); }
-
-    /* ── COL FULL ── */
-    .col-full { grid-column: 1 / -1; }
-
-    /* ── RIPPLE ── */
-    .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,.3); transform: scale(0); animation: rip .5s linear; pointer-events: none; }
-    @keyframes rip { to { transform: scale(2.5); opacity: 0; } }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed; bottom: 28px; left: 50%;
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
       transform: translateX(-50%) translateY(70px);
-      background: var(--maroon); color: #fff;
-      padding: 11px 28px; border-radius: 50px;
-      font-size: .88rem; font-weight: 700;
-      box-shadow: 0 6px 24px rgba(0,0,0,.15);
-      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
-      opacity: 0; z-index: 999; white-space: nowrap;
+      background: var(--maroon);
+      color: #fff;
+      padding: 11px 28px;
+      border-radius: 50px;
+      font-size: .88rem;
+      font-weight: 700;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, .15);
+      transition: transform .4s cubic-bezier(.22, 1, .36, 1), opacity .35s;
+      opacity: 0;
+      z-index: 999;
+      white-space: nowrap;
     }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .3);
+      transform: scale(0);
+      animation: rip .5s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rip {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @media (max-width: 760px) {
-      .page-body { padding: 20px 16px 56px; }
-      .main-grid { grid-template-columns: 1fr; }
-      .col-full  { grid-column: 1; }
-      .nav-links { display: none; }
-      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .page-body {
+        padding: 20px 16px 56px;
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media print {
+      .navbar, .welcome-section, .btn-export-pdf, #analyzeBtn, .loading-text, .toast {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .page-body {
+        padding: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+      .main-grid {
+        display: block !important;
+      }
+      .ai-card {
+        box-shadow: none !important;
+        border: 1px solid #e0d0d8 !important;
+        page-break-inside: avoid;
+        margin-bottom: 24px !important;
+        background: #fff !important;
+      }
+      .card-insights {
+        display: block !important;
+      }
     }
   </style>
-
 </head>
+
 <body>
-<!-- ── BLOB BG ── -->
-<div class="blob-wrap">
-  <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"   stop-color="#f9a0a8"/>
-        <stop offset="60%"  stop-color="#f07070"/>
-        <stop offset="100%" stop-color="#f06050"/>
-      </linearGradient>
-    </defs>
-    <path fill="url(#blobGrad)"
-      d="M-30,0 C60,0 200,-20 280,80 C360,180 300,340 320,460
-         C340,580 420,680 360,760 C300,840 100,820 -30,800 Z"/>
-    <g class="petal">
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(-30 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(42 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(114 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(186 80 620)"/>
-        <ellipse cx="80"  cy="620" rx="28" ry="14" transform="rotate(258 80 620)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(-20 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(52 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(124 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(196 240 130)"/>
-        <ellipse cx="240" cy="130" rx="32" ry="15" transform="rotate(268 240 130)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(10 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(82 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(154 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(226 150 370)"/>
-        <ellipse cx="150" cy="370" rx="20" ry="10" transform="rotate(298 150 370)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(5 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(77 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(149 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(221 60 220)"/>
-        <ellipse cx="60"  cy="220" rx="18" ry="9" transform="rotate(293 60 220)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(-15 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(57 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(129 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(201 300 520)"/>
-        <ellipse cx="300" cy="520" rx="22" ry="11" transform="rotate(273 300 520)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(20 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(92 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(164 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(236 190 700)"/>
-        <ellipse cx="190" cy="700" rx="16" ry="8" transform="rotate(308 190 700)"/>
-      </g>
-  </svg>
-</div>
 
-<!-- ── NAVBAR ── -->
-<nav class="navbar">
-  <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
-    <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
-  </div>
-  <ul class="nav-links">
-    <li><a href="profile.html">Profile</a></li>
-    <li><a href="daily.html">Daily Tracker</a></li>
-    <li><a href="cycletracker.html">Cycle Tracker</a></li>
-    <li><a href="insight.html" class="active">AI Insights</a></li>
-    <li><a href="#" onclick="logout()">Logout</a></li>
-  </ul>
-  <div class="nav-right">
-    <div class="nav-avatar" id="navAvatar">A</div>
-  </div>
-</nav>
-
-<!-- ── PAGE BODY ── -->
-<div class="page-body">
-
-  <div class="welcome-section">
-    <div class="welcome-greeting">Your Wellness Insights, <span id="usernameDisplay"></span> 🌸</div>
-    <div class="welcome-sub">Analyse your health data and get gentle personalised insights — all in one place.</div>
-  </div>
-
-  <div class="page-title-row">
-    <div class="page-title">✨ Insights & Reminders</div>
-  </div>
-
-  <div class="main-grid">
-
-    <!-- ══ LEFT — DATA SUMMARY ══ -->
-    <div class="ai-card card-summary">
-      <div class="card-header">
-        <div class="card-icon icon-summary">📊</div>
-        <div>
-          <div class="card-title">Today's Data Summary</div>
-          <div class="card-sub">Your logged wellness data</div>
-        </div>
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nav-logo" style="cursor:pointer;" onclick="window.location.href='profile.html'">
+      <span class="logo-her">her</span><span class="logo-care">Care</span><span class="logo-flower">🌸</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="daily.html">Daily Tracker</a></li>
+      <li><a href="cycletracker.html">Cycle Tracker</a></li>
+      <li><a href="insight.html" class="active"> Insights</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="nav-avatar" id="navAvatar">
+        <script>
+          document.write((localStorage.getItem('hc_username') || 'User').charAt(0).toUpperCase());
+        </script>
       </div>
-      <div class="summary-grid">
-        <div class="sum-box"><div class="sum-icon">😴</div><div class="sum-label">Sleep</div><div class="sum-value warn" id="sumSleep">Not logged</div></div>
-        <div class="sum-box"><div class="sum-icon">💧</div><div class="sum-label">Hydration</div><div class="sum-value warn" id="sumHydration">0 / 8 glasses</div></div>
-        <div class="sum-box"><div class="sum-icon">🌈</div><div class="sum-label">Mood</div><div class="sum-value good" id="sumMood">Not logged</div></div>
-        <div class="sum-box"><div class="sum-icon">🏃‍♀️</div><div class="sum-label">Activity</div><div class="sum-value good" id="sumActivity">Not logged</div></div>
-        <div class="sum-box"><div class="sum-icon">🩸</div><div class="sum-label">Cycle Phase</div><div class="sum-value" id="sumCycle">—</div></div>
-        <div class="sum-box"><div class="sum-icon">🔍</div><div class="sum-label">Symptoms</div><div class="sum-value bad" id="sumSymptoms">None reported</div></div>
-        <div class="sum-box"><div class="sum-icon">🥗</div><div class="sum-label">Nutrition</div><div class="sum-value warn" id="sumNutrition">0 / 6 checked</div></div>
-        <div class="sum-box"><div class="sum-icon">📅</div><div class="sum-label">Next Period</div><div class="sum-value" id="sumNextPeriod">—</div></div>
-      </div>
-      <button class="analyze-btn" id="analyzeBtn">
-        <span class="btn-sparkle">✨</span> Analyse My Insights
+    </div>
+  </nav>
+
+  <!-- ── PAGE BODY ── -->
+  <div class="page-body">
+
+    <div class="welcome-section">
+      <div class="welcome-greeting">Your Wellness Insights, <span id="usernameDisplay"></span> 🌸</div>
+      <div class="welcome-sub">Analyse your health data and get gentle personalised insights — all in one place.</div>
+    </div>
+
+    <div class="page-title-row">
+      <div class="page-title">✨ Insights</div>
+      <button onclick="exportToPDF()" class="btn-export-pdf" style="background: var(--pink-dark); color: white; border: none; border-radius: 20px; padding: 10px 22px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(232,80,106,.2); transition: all 0.3s ease;">
+        <span>📄</span> Export Report (PDF)
       </button>
     </div>
 
-    <!-- ══ RIGHT — REMINDERS ══ -->
-    <div class="ai-card card-remind">
-      <div class="card-header">
-        <div class="card-icon icon-remind">🔔</div>
-        <div>
-          <div class="card-title">Gentle Reminders</div>
-          <div class="card-sub">Toggle & customise your daily wellness alerts</div>
+    <div class="main-grid">
+
+      <!-- ══ TOP — WELLNESS SCORE FULL WIDTH ══ -->
+      <div class="ai-card card-wellness insights-full">
+        <div class="card-header">
+          <div class="card-icon icon-summary">💯</div>
+          <div>
+            <div class="card-title">PCOD Wellness Score</div>
+            <div class="card-sub">Your daily health &amp; habit score</div>
+          </div>
+        </div>
+        <div class="wellness-gauge-wrap">
+          <div class="wellness-gauge">
+            <svg viewBox="0 0 100 50" class="gauge-svg">
+              <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f5e8ec" stroke-width="12" stroke-linecap="round"/>
+              <path class="gauge-fill" id="gaugeFill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e8506a" stroke-width="12" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="126"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-score" id="wellnessScoreNum">--</div>
+              <div class="gauge-lbl">/ 100</div>
+            </div>
+          </div>
+          <div class="wellness-details" id="wellnessScoreDetails">
+            Loading your score...
+          </div>
         </div>
       </div>
-      <div class="remind-list">
 
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">💊</span>
-            <div class="ri-info"><div class="ri-title">Log Daily Symptoms</div><div class="ri-time" id="time-display-0">Every day at 8:00 PM</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(0)">✏️ Customize</button>
-            <button class="ri-toggle on" onclick="toggleReminder(this)"></button>
-          </div>
-          <div class="ri-expand" id="expand-0">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Time</label><input type="time" class="ri-time-input" id="time-input-0" value="20:00"/></div>
-              <div class="ri-freq-row"><label>🔁 Repeat</label><button class="ri-freq-btn sel" onclick="selFreq(this)">Daily</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekdays</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekends</button></div>
-              <button class="ri-save-time" onclick="saveTime(0)">Save ✓</button>
-            </div>
+      <!-- ══ LEFT — DATA SUMMARY ══ -->
+      <div class="ai-card card-summary">
+        <div class="card-header">
+          <div class="card-icon icon-summary">📊</div>
+          <div>
+            <div class="card-title">Today's Data Summary</div>
+            <div class="card-sub">Your logged wellness data</div>
           </div>
         </div>
-
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">💧</span>
-            <div class="ri-info"><div class="ri-title">Drink Water Reminder</div><div class="ri-time" id="time-display-1">Every 2 hours, 8 AM – 8 PM</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(1)">✏️ Customize</button>
-            <button class="ri-toggle on" onclick="toggleReminder(this)"></button>
+        <div class="summary-grid">
+          <div class="sum-box">
+            <div class="sum-icon">😴</div>
+            <div class="sum-label">Sleep</div>
+            <div class="sum-value warn" id="sumSleep">Not logged</div>
           </div>
-          <div class="ri-expand" id="expand-1">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Start</label><input type="time" class="ri-time-input" id="time-input-1a" value="08:00"/><label>End</label><input type="time" class="ri-time-input" id="time-input-1b" value="20:00"/></div>
-              <div class="ri-freq-row"><label>🔁 Every</label><button class="ri-freq-btn" onclick="selFreq(this)">1 hr</button><button class="ri-freq-btn sel" onclick="selFreq(this)">2 hrs</button><button class="ri-freq-btn" onclick="selFreq(this)">3 hrs</button><button class="ri-freq-btn" onclick="selFreq(this)">4 hrs</button></div>
-              <button class="ri-save-time" onclick="saveTime(1)">Save ✓</button>
-            </div>
+          <div class="sum-box">
+            <div class="sum-icon">💧</div>
+            <div class="sum-label">Hydration</div>
+            <div class="sum-value warn" id="sumHydration">0 / 8 glasses</div>
           </div>
-        </div>
-
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">🩸</span>
-            <div class="ri-info"><div class="ri-title">Period Prediction Alert</div><div class="ri-time" id="time-display-2">3 days before predicted date</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(2)">✏️ Customize</button>
-            <button class="ri-toggle on" onclick="toggleReminder(this)"></button>
+          <div class="sum-box">
+            <div class="sum-icon">🌈</div>
+            <div class="sum-label">Mood</div>
+            <div class="sum-value good" id="sumMood">Not logged</div>
           </div>
-          <div class="ri-expand" id="expand-2">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Alert Time</label><input type="time" class="ri-time-input" id="time-input-2" value="09:00"/></div>
-              <div class="ri-freq-row"><label>📅 Alert me</label><button class="ri-freq-btn" onclick="selFreq(this)">1 day before</button><button class="ri-freq-btn sel" onclick="selFreq(this)">3 days before</button><button class="ri-freq-btn" onclick="selFreq(this)">5 days before</button></div>
-              <button class="ri-save-time" onclick="saveTime(2)">Save ✓</button>
-            </div>
+          <div class="sum-box">
+            <div class="sum-icon">🏃‍♀️</div>
+            <div class="sum-label">Activity</div>
+            <div class="sum-value good" id="sumActivity">Not logged</div>
           </div>
-        </div>
-
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">😴</span>
-            <div class="ri-info"><div class="ri-title">Bedtime Wind-Down</div><div class="ri-time" id="time-display-3">Every night at 10:00 PM</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(3)">✏️ Customize</button>
-            <button class="ri-toggle" onclick="toggleReminder(this)"></button>
+          <div class="sum-box">
+            <div class="sum-icon">🩸</div>
+            <div class="sum-label">Cycle Phase</div>
+            <div class="sum-value" id="sumCycle">—</div>
           </div>
-          <div class="ri-expand" id="expand-3">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Bedtime</label><input type="time" class="ri-time-input" id="time-input-3" value="22:00"/></div>
-              <div class="ri-freq-row"><label>🔁 Repeat</label><button class="ri-freq-btn sel" onclick="selFreq(this)">Daily</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekdays</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekends</button></div>
-              <button class="ri-save-time" onclick="saveTime(3)">Save ✓</button>
-            </div>
+          <div class="sum-box">
+            <div class="sum-icon">🔍</div>
+            <div class="sum-label">Symptoms</div>
+            <div class="sum-value bad" id="sumSymptoms">None reported</div>
+          </div>
+          <div class="sum-box">
+            <div class="sum-icon">🥗</div>
+            <div class="sum-label">Nutrition</div>
+            <div class="sum-value warn" id="sumNutrition">0 / 6 checked</div>
+          </div>
+          <div class="sum-box">
+            <div class="sum-icon">📅</div>
+            <div class="sum-label">Next Period</div>
+            <div class="sum-value" id="sumNextPeriod">—</div>
           </div>
         </div>
-
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">🏃‍♀️</span>
-            <div class="ri-info"><div class="ri-title">Movement Break</div><div class="ri-time" id="time-display-4">Every day at 6:00 PM</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(4)">✏️ Customize</button>
-            <button class="ri-toggle" onclick="toggleReminder(this)"></button>
-          </div>
-          <div class="ri-expand" id="expand-4">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Time</label><input type="time" class="ri-time-input" id="time-input-4" value="18:00"/></div>
-              <div class="ri-freq-row"><label>🔁 Repeat</label><button class="ri-freq-btn sel" onclick="selFreq(this)">Daily</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekdays</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekends</button></div>
-              <button class="ri-save-time" onclick="saveTime(4)">Save ✓</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="remind-item">
-          <div class="remind-main">
-            <span class="ri-icon">🥗</span>
-            <div class="ri-info"><div class="ri-title">Nutrition Check-in</div><div class="ri-time" id="time-display-5">Every day at 1:00 PM</div></div>
-            <button class="ri-customize-btn" onclick="toggleCustomize(5)">✏️ Customize</button>
-            <button class="ri-toggle on" onclick="toggleReminder(this)"></button>
-          </div>
-          <div class="ri-expand" id="expand-5">
-            <div class="ri-expand-inner">
-              <div class="ri-time-row"><label>⏰ Time</label><input type="time" class="ri-time-input" id="time-input-5" value="13:00"/></div>
-              <div class="ri-freq-row"><label>🔁 Repeat</label><button class="ri-freq-btn sel" onclick="selFreq(this)">Daily</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekdays</button><button class="ri-freq-btn" onclick="selFreq(this)">Weekends</button></div>
-              <button class="ri-save-time" onclick="saveTime(5)">Save ✓</button>
-            </div>
-          </div>
-        </div>
-
+        <button class="analyze-btn" id="analyzeBtn"><span class="btn-sparkle">✨</span> Analyse My Insights</button>
       </div>
+
+      <!-- ══ RIGHT — CORRELATION ══ -->
+      <div class="ai-card card-correlation">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(86,171,47,.12)">🔄</div>
+          <div>
+            <div class="card-title">Symptom–Phase Correlation</div>
+            <div class="card-sub">How your symptoms align with your cycle</div>
+          </div>
+        </div>
+        <div class="correlation-content" id="correlationContent">
+          Loading correlation data...
+        </div>
+      </div>
+
+      <!-- ══ BOTTOM — INSIGHTS FULL WIDTH ══ -->
+      <div class="ai-card card-insights insights-full">
+        <div class="card-header">
+          <div class="card-icon icon-insights">🌸</div>
+          <div>
+            <div class="card-title">Health Insights</div>
+            <div class="card-sub">Your personalised wellness insights</div>
+          </div>
+        </div>
+        <div class="insights-area">
+          <div class="loading-state" id="loadingState">
+            <div class="loading-dots">
+              <div class="ld"></div>
+              <div class="ld"></div>
+              <div class="ld"></div>
+            </div>
+            <div class="loading-text">Generating your gentle insights…</div>
+          </div>
+          <div class="insights-list" id="insightsList">
+            <div class="empty-state">
+              <div class="es-icon">🌸</div>
+              <p>Click <strong>"Analyse My Insights"</strong> above to generate your personalised wellness insights.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <!-- ══ BOTTOM — INSIGHTS FULL WIDTH ══ -->
-    <div class="ai-card card-insights insights-full">
-      <div class="card-header">
-        <div class="card-icon icon-insights">🌸</div>
-        <div>
-          <div class="card-title">Health Insights</div>
-          <div class="card-sub">Your personalised wellness insights</div>
-        </div>
-      </div>
-      <div class="insights-area">
-        <div class="loading-state" id="loadingState">
-          <div class="loading-dots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>
-          <div class="loading-text">Generating your gentle insights…</div>
-        </div>
-        <div class="insights-list" id="insightsList">
-          <div class="empty-state">
-            <div class="es-icon">🌸</div>
-            <p>Click <strong>"Analyse My Insights"</strong> above to generate your personalised wellness insights.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script src="config.js"></script>
-<script>
- 
-/* ── CONFIG ── */
-const TOKEN = localStorage.getItem('hc_token');
-if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
+  <script src="config.js"></script>
+  <script>
+    /* ── CONFIG ── */
+    const TOKEN = localStorage.getItem('hc_token');
+    if (!TOKEN && !DEV_MODE) { window.location.href = 'signin.html'; throw new Error('No token'); }
 
-/* ── BASIC USER SETUP ── */
-if (!localStorage.getItem('hc_username')) {
-  localStorage.setItem('hc_username', 'User');
-}
-
-var storedName = localStorage.getItem('hc_username');
-document.getElementById('usernameDisplay').textContent = storedName;
-document.getElementById('navAvatar').textContent = storedName.charAt(0).toUpperCase();
-
-/* ── TOAST ── */
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-/* ── LOGOUT ── */
-function logout() {
-  localStorage.clear();
-  window.location.href = 'signin.html';
-}
-
-/* ── SUMMARY LOAD ── */
-function loadRealSummary() {
-  try {
-    var log = JSON.parse(localStorage.getItem('hc_daily_log') || '{}');
-
-    if (log.sleep?.duration_mins) {
-      let h = Math.floor(log.sleep.duration_mins / 60);
-      let m = log.sleep.duration_mins % 60;
-      document.getElementById('sumSleep').textContent = h + 'h ' + m + 'm';
+    /* ── HELPER: PARSE LOCAL DATE ── */
+    function getLocalDateObj(ds) {
+      if (!ds) return null;
+      const [y, m, d] = ds.split('-');
+      return new Date(y, m - 1, d);
     }
 
-    if (log.hydration?.glasses !== undefined) {
-      document.getElementById('sumHydration').textContent =
-        log.hydration.glasses + ' / 8 glasses';
+    /* ── USER SETUP ── */
+    if (!localStorage.getItem('hc_username')) localStorage.setItem('hc_username', 'User');
+    var storedName = localStorage.getItem('hc_username');
+    document.getElementById('usernameDisplay').textContent = storedName;
+    document.getElementById('navAvatar').textContent = storedName.charAt(0).toUpperCase();
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-  } catch (e) {
-    console.log(e);
-  }
-}
-loadRealSummary();
+    /* ── LOGOUT ── */
+    function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
 
-/* ── REMINDERS ── */
-function toggleReminder(btn) {
-  btn.classList.toggle('on');
-  showToast("Reminder updated!");
-}
+    /* ── SUMMARY LOAD ── */
+    async function loadRealSummary() {
+      const todayObj = new Date();
+      const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
+      let log = JSON.parse(localStorage.getItem('hc_daily_log') || '{}');
+      let prof = JSON.parse(localStorage.getItem('hc_profile') || '{}');
+      let cycleLog = JSON.parse(localStorage.getItem('hc_cycle_latest') || '{}');
 
-function toggleCustomize(idx) {
-  var panel = document.getElementById('expand-' + idx);
-  panel.classList.toggle('open');
-}
+      // Try API
+      try {
+        const res = await fetch(`${API_BASE}/daily-log?date=${todayStr}`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+        const data = await res.json();
+        if (data.success) { log = data.data; localStorage.setItem('hc_daily_log', JSON.stringify(log)); }
+      } catch (e) { console.log('Daily log fetch failed', e); }
 
-function selFreq(btn) {
-  btn.parentElement.querySelectorAll('.ri-freq-btn')
-    .forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-}
+      try {
+        const pData = await fetch(`${API_BASE}/profile`, { headers: { 'Authorization': `Bearer ${TOKEN}` } }).then(r => r.json());
+        if (pData.success) { prof = pData.data; localStorage.setItem('hc_profile', JSON.stringify(prof)); }
+      } catch (e) { console.log('Profile fetch failed', e); }
 
-function formatTime(val) {
-  let [h, m] = val.split(':');
-  return (h % 12 || 12) + ':' + m + (h >= 12 ? ' PM' : ' AM');
-}
+      try {
+        const cycleData = await fetch(`${API_BASE}/cycle/history`, { headers: { 'Authorization': `Bearer ${TOKEN}` } }).then(r => r.json());
+        if (cycleData.success && Array.isArray(cycleData.data) && cycleData.data.length > 0) {
+          cycleLog = cycleData.data[0];
+          localStorage.setItem('hc_cycle_latest', JSON.stringify(cycleLog));
+        }
+      } catch (e) { console.log('Cycle fetch failed', e); }
 
-function saveTime(idx) {
-  let display = document.getElementById('time-display-' + idx);
-  let input = document.getElementById('time-input-' + idx);
+      // ── UPDATE DOM WITH MERGED DATA ── //
 
-  if (input) {
-    display.textContent = "Daily at " + formatTime(input.value);
-  }
+      // Sleep
+      if (log.sleep?.bedtime && log.sleep?.waketime) {
+        const [bh, bm] = log.sleep.bedtime.split(':').map(Number);
+        const [wh, wm] = log.sleep.waketime.split(':').map(Number);
+        let mins = (wh * 60 + wm) - (bh * 60 + bm);
+        if (mins < 0) mins += 1440;
+        document.getElementById('sumSleep').textContent = Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm';
+        document.getElementById('sumSleep').className = 'sum-value good';
+      } else if (log.sleep) {
+        document.getElementById('sumSleep').textContent = 'Synced locally';
+      }
 
-  showToast("Saved!");
-}
+      // Hydration
+      if (log.hydration) {
+        document.getElementById('sumHydration').textContent = (log.hydration.glasses || 0) + ' / 8 glasses';
+        document.getElementById('sumHydration').className = log.hydration.glasses >= 8 ? 'sum-value good' : 'sum-value warn';
+      }
 
-/* ── ANALYZE BUTTON (Rule-Based Insights) ── */
-document.getElementById('analyzeBtn').addEventListener('click', function () {
-  const list   = document.getElementById('insightsList');
-  const loader = document.getElementById('loadingState');
+      // Mood
+      if (log.mood?.mood) { document.getElementById('sumMood').textContent = log.mood.mood; document.getElementById('sumMood').className = 'sum-value good'; }
 
-  list.innerHTML   = '';
-  list.style.display   = 'none';
-  loader.classList.add('active');
+      // Activity
+      if (log.activities?.length) { document.getElementById('sumActivity').textContent = log.activities.length + ' sessions'; document.getElementById('sumActivity').className = 'sum-value good'; }
 
-  // Brief loading pause for UX feel
-  setTimeout(() => {
-    loader.classList.remove('active');
-    list.style.display = 'flex';
-    list.style.flexDirection = 'column';
+      // Nutrition
+      if (log.nutrition?.length) {
+        document.getElementById('sumNutrition').textContent = log.nutrition.length + ' / 6 items';
+        document.getElementById('sumNutrition').className = log.nutrition.length >= 4 ? 'sum-value good' : 'sum-value warn';
+      }
 
-    const insights = generateInsights();
+      // Symptoms
+      if (log.notes) {
+        document.getElementById('sumSymptoms').textContent = log.notes.length > 20 ? log.notes.substring(0, 20) + '...' : log.notes;
+        document.getElementById('sumSymptoms').className = 'sum-value warn';
+      }
 
-    if (insights.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <div class="es-icon">📋</div>
-          <p>No health data found yet!<br>Log your daily habits on the Daily Tracker page first, then come back for insights 🌸</p>
-        </div>`;
-      return;
+      // ── CYCLE LOGIC ── //
+      let cycleLength = parseInt(prof.cycle_length) || 28;
+      let lastStartDate = null;
+      if (cycleLog && cycleLog.start_date) {
+        lastStartDate = cycleLog.start_date;
+      } else if (prof && prof.last_period && prof.last_period !== "null" && prof.last_period !== "") {
+        lastStartDate = prof.last_period;
+      }
+
+      if (lastStartDate && lastStartDate !== "null" && lastStartDate !== "undefined" && lastStartDate !== "") {
+        const lp = getLocalDateObj(lastStartDate);
+        lp.setDate(lp.getDate() + cycleLength);
+        document.getElementById('sumNextPeriod').textContent = lp.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+        // Calculate Cycle Phase
+        const today = new Date();
+        const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const start = getLocalDateObj(lastStartDate);
+        const diffTime = todayLocal - start;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // Day 1 is the start date
+
+        let phase = "Luteal";
+        if (diffDays >= 1 && diffDays <= 5) phase = "Menstrual";
+        else if (diffDays > 5 && diffDays <= 13) phase = "Follicular";
+        else if (diffDays === 14) phase = "Ovulation";
+
+        document.getElementById('sumCycle').textContent = phase + ` (Day ${diffDays})`;
+      } else {
+        document.getElementById('sumCycle').textContent = cycleLength + ' days';
+        document.getElementById('sumNextPeriod').textContent = '—';
+      }
+
+      // ── PCOD WELLNESS SCORE ── //
+      let score = 40; // Base score
+      let scoreDetails = [];
+      
+      if (log.sleep?.bedtime && log.sleep?.waketime) {
+        const [bh, bm] = log.sleep.bedtime.split(':').map(Number);
+        const [wh, wm] = log.sleep.waketime.split(':').map(Number);
+        let mins = (wh * 60 + wm) - (bh * 60 + bm);
+        if (mins < 0) mins += 1440;
+        if (mins >= 420 && mins <= 540) { score += 15; scoreDetails.push({l: 'Sleep (7-9h)', v: '+15'}); }
+        else if (mins > 540) { score += 10; scoreDetails.push({l: 'Sleep (>9h)', v: '+10'}); }
+        else { score += 5; scoreDetails.push({l: 'Sleep (<7h)', v: '+5'}); }
+      } else { scoreDetails.push({l: 'Sleep', v: '0'}); }
+
+      if (log.hydration?.glasses >= 8 || log.hydration?.ml >= 2000) { score += 15; scoreDetails.push({l: 'Hydration', v: '+15'}); }
+      else if (log.hydration?.glasses > 0) { score += 5; scoreDetails.push({l: 'Hydration', v: '+5'}); }
+      else { scoreDetails.push({l: 'Hydration', v: '0'}); }
+
+      if (log.activities && log.activities.length > 0) { score += 15; scoreDetails.push({l: 'Activity', v: '+15'}); }
+      else { scoreDetails.push({l: 'Activity', v: '0'}); }
+
+      if (log.nutrition && log.nutrition.length >= 4) { score += 15; scoreDetails.push({l: 'Nutrition', v: '+15'}); }
+      else if (log.nutrition && log.nutrition.length > 0) { score += 5; scoreDetails.push({l: 'Nutrition', v: '+5'}); }
+      else { scoreDetails.push({l: 'Nutrition', v: '0'}); }
+
+      const finalScore = Math.min(100, Math.max(0, score));
+      document.getElementById('wellnessScoreNum').textContent = finalScore;
+      document.getElementById('wellnessScoreNum').style.color = finalScore >= 80 ? '#2ecc71' : finalScore >= 60 ? '#f7971e' : '#e8506a';
+      
+      const dashOffset = Math.round(126 * (1 - finalScore / 100));
+      document.getElementById('gaugeFill').style.strokeDashoffset = dashOffset;
+      document.getElementById('gaugeFill').style.stroke = finalScore >= 80 ? '#2ecc71' : finalScore >= 60 ? '#f7971e' : '#e8506a';
+
+      let detailsHtml = '';
+      scoreDetails.forEach(d => {
+        detailsHtml += `<div class="wd-item"><div class="wd-label">${d.l}</div><div class="wd-val" style="color:${d.v === '0' ? '#999' : 'var(--maroon)'}">${d.v}</div></div>`;
+      });
+      document.getElementById('wellnessScoreDetails').innerHTML = detailsHtml;
+
+      // ── SYMPTOM-PHASE CORRELATION ── //
+      let corrHtml = '<table class="corr-table"><tr><th>Cycle Phase</th><th>Correlated Symptoms</th></tr>';
+      
+      if (cycleLog && cycleLog.symptoms && Object.keys(cycleLog.symptoms).length > 0) {
+        const syms = Object.keys(cycleLog.symptoms).filter(k => cycleLog.symptoms[k]?.active);
+        if (syms.length > 0) {
+           corrHtml += `<tr><td><div class="corr-phase">🌸 Menstrual</div></td><td>${syms.map(s => `<span class="corr-sym">${s}</span>`).join(' ')}</td></tr>`;
+        } else {
+           corrHtml += `<tr><td><div class="corr-phase">🌸 Menstrual</div></td><td><span class="corr-sym" style="background:#f3fff5;border-color:#b8e8c0;color:#2a7a40">None recorded</span></td></tr>`;
+        }
+      } else {
+         corrHtml += `<tr><td><div class="corr-phase">🌸 Menstrual</div></td><td><span class="corr-sym">Cramps</span> <span class="corr-sym">Fatigue</span></td></tr>`;
+      }
+      corrHtml += `<tr><td><div class="corr-phase">🌱 Follicular</div></td><td><span class="corr-sym" style="background:#f3fff5;border-color:#b8e8c0;color:#2a7a40">High Energy</span> <span class="corr-sym">Clear Skin</span></td></tr>`;
+      corrHtml += `<tr><td><div class="corr-phase">🌕 Ovulation</div></td><td><span class="corr-sym">Bloating</span> <span class="corr-sym" style="background:#f3fff5;border-color:#b8e8c0;color:#2a7a40">Social</span></td></tr>`;
+      corrHtml += `<tr><td><div class="corr-phase">🍂 Luteal</div></td><td><span class="corr-sym">Sugar Cravings</span> <span class="corr-sym">Mood Swings</span> <span class="corr-sym">Acne</span></td></tr>`;
+      corrHtml += '</table>';
+      document.getElementById('correlationContent').innerHTML = corrHtml;
+
     }
+    loadRealSummary();
 
-    insights.forEach((item, i) => {
-      const el = document.createElement('div');
-      el.className = `insight-item type-${item.type}`;
-      el.style.animationDelay = `${i * 0.08}s`;
-      el.innerHTML = `
-        <div class="ii-icon">${item.icon}</div>
-        <div class="ii-content">
-          <div class="ii-title">${item.title}</div>
-          <div class="ii-text">${item.text}</div>
-        </div>`;
-      list.appendChild(el);
+
+
+    /* ── ANALYZE BUTTON (API-powered Rule-Based / Gemini Insights) ── */
+    document.getElementById('analyzeBtn').addEventListener('click', async function () {
+      const list = document.getElementById('insightsList');
+      const loader = document.getElementById('loadingState');
+      list.innerHTML = ''; list.style.display = 'none';
+      loader.classList.add('active'); this.disabled = true;
+
+      // ── Synchronize cache first ──
+      try {
+        const todayObj = new Date();
+        const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
+        const logData = await (await fetch(`${API_BASE}/daily-log?date=${todayStr}`, { headers: { 'Authorization': `Bearer ${TOKEN}` } })).json();
+        if (logData.success) localStorage.setItem('hc_daily_log', JSON.stringify(logData.data));
+
+        const profData = await (await fetch(`${API_BASE}/profile`, { headers: { 'Authorization': `Bearer ${TOKEN}` } })).json();
+        if (profData.success) localStorage.setItem('hc_profile', JSON.stringify(profData.data));
+
+        const cycleData = await (await fetch(`${API_BASE}/cycle/history`, { headers: { 'Authorization': `Bearer ${TOKEN}` } })).json();
+        if (cycleData.success && Array.isArray(cycleData.data) && cycleData.data.length > 0)
+          localStorage.setItem('hc_cycle_latest', JSON.stringify(cycleData.data[0]));
+      } catch (e) { console.log('API fetch failed — using cached data:', e); }
+
+      let insights = [];
+      let isAiPowered = false;
+
+      // ── Try fetching Gemini/Backend insights ──
+      try {
+        const res = await fetch(`${API_BASE}/insights/`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+        const resData = await res.json();
+        if (resData.success && Array.isArray(resData.insights)) {
+          insights = resData.insights;
+          isAiPowered = resData.ai_powered || false;
+        }
+      } catch (e) {
+        console.log('Backend insights fetch failed — falling back to client-side rule-based insights:', e);
+      }
+
+      // If backend insights failed or empty, fallback to local rule-based
+      if (insights.length === 0) {
+        insights = generateInsights();
+      }
+
+      // Brief pause for UX feel
+      setTimeout(() => {
+        loader.classList.remove('active'); this.disabled = false;
+        list.style.display = 'flex'; list.style.flexDirection = 'column';
+        
+        if (insights.length === 0) {
+          list.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><p>No health data found yet!<br>Log your daily habits on the Daily Tracker page first, then come back for insights 🌸</p></div>`;
+          return;
+        }
+        
+        insights.forEach((item, i) => {
+          const el = document.createElement('div');
+          el.className = `insight-item type-${item.type}`;
+          el.style.animationDelay = `${i * 0.08}s`;
+          el.innerHTML = `<div class="ii-icon">${item.icon}</div><div class="ii-content"><div class="ii-title">${item.title}</div><div class="ii-text">${item.text}</div></div>`;
+          list.appendChild(el);
+        });
+        
+        showToast(`${insights.length} insights ready! ${isAiPowered ? '✨ (AI-powered)' : '🌸'}`);
+      }, 900);
     });
 
-    showToast(`${insights.length} insights ready! 🌸`);
-  }, 900);
-});
+    /* ── RULE-BASED INSIGHTS ENGINE ── */
+    function generateInsights() {
+      const insights = [];
+      const log = JSON.parse(localStorage.getItem('hc_daily_log') || 'null');
+      const profile = JSON.parse(localStorage.getItem('hc_profile') || 'null');
+      const cycleLog = JSON.parse(localStorage.getItem('hc_cycle_latest') || 'null');
 
-/* ── RULE-BASED INSIGHTS ENGINE ── */
-function generateInsights() {
-  const insights = [];
-  const log     = JSON.parse(localStorage.getItem('hc_daily_log') || 'null');
-  const profile = JSON.parse(localStorage.getItem('hc_profile')   || 'null');
+      // No data at all — return empty to show empty state
+      if (!log && !cycleLog && !profile) return [];
 
-  // Find the most recent cycle log
-  let cycleLog = null;
-  let latestDate = '';
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith('hc_cycle_')) {
-      const dateStr = key.replace('hc_cycle_', '');
-      if (dateStr > latestDate) {
-        try { cycleLog = JSON.parse(localStorage.getItem(key)); latestDate = dateStr; } catch(e) {}
+      /* ── SLEEP ── */
+      if (log?.sleep?.bedtime && log?.sleep?.waketime) {
+        const [bh, bm] = log.sleep.bedtime.split(':').map(Number);
+        const [wh, wm] = log.sleep.waketime.split(':').map(Number);
+        let mins = (wh * 60 + wm) - (bh * 60 + bm);
+        if (mins < 0) mins += 1440;
+        const label = `${Math.floor(mins / 60)}h ${mins % 60}m`;
+        if (mins < 360) insights.push({ type: 'warning', icon: '😴', title: 'Low Sleep Detected', text: `You slept ${label}. For PCOD management, 7–9 hours helps regulate cortisol and insulin levels. Try setting a consistent bedtime — even 30 minutes earlier makes a difference.` });
+        else if (mins < 420) insights.push({ type: 'tip', icon: '🌙', title: 'Sleep Could Be Better', text: `You got ${label} — not bad, but aiming for 7+ hours can noticeably improve your energy, mood, and hormone balance throughout the day.` });
+        else insights.push({ type: 'positive', icon: '✨', title: 'Great Sleep!', text: `You slept ${label} — excellent! Good sleep supports healthy cortisol rhythm, which is especially important for managing PCOD symptoms.` });
+
+        const q = log.sleep.quality || '';
+        if (q.includes('Restless')) insights.push({ type: 'tip', icon: '🌿', title: 'Restless Sleep', text: 'Restless sleep raises cortisol and worsens hormonal imbalance. Try limiting screens 30 minutes before bed, and consider light stretching or chamomile tea as part of a wind-down routine.' });
+        else if (q.includes('Refreshed') || q.includes('Deep')) insights.push({ type: 'positive', icon: '💫', title: 'Quality Sleep', text: 'Waking up refreshed is a great sign! Quality sleep helps your body regulate estrogen and progesterone levels more effectively — keep this up.' });
       }
-    }
-  }
 
-  // No data at all — return empty to show empty state
-  if (!log && !cycleLog && !profile) return [];
+      /* ── HYDRATION ── */
+      if (log?.hydration) {
+        const ml = log.hydration.ml || ((log.hydration.glasses || 0) * 250);
+        if (ml >= 2000) insights.push({ type: 'positive', icon: '💧', title: 'Well Hydrated!', text: `You hit ${ml}ml today — fantastic! Staying hydrated reduces bloating, supports kidney function, and eases PCOD-related water retention.` });
+        else if (ml >= 1200) insights.push({ type: 'tip', icon: '🥛', title: 'Drink a Little More Water', text: `You had about ${ml}ml today. Try to reach 2000ml — carry a water bottle and sip regularly. Proper hydration supports hormonal detoxification throughout the day.` });
+        else if (ml > 0) insights.push({ type: 'warning', icon: '⚠️', title: 'Low Hydration Today', text: `Only ${ml}ml logged today — below the recommended 2000ml. Dehydration can worsen PCOD symptoms like fatigue, bloating, and mood swings.` });
+      }
 
-  /* ── SLEEP ─────────────────────────────────────────────── */
-  if (log?.sleep?.bedtime && log?.sleep?.waketime) {
-    const [bh, bm] = log.sleep.bedtime.split(':').map(Number);
-    const [wh, wm] = log.sleep.waketime.split(':').map(Number);
-    let mins = (wh * 60 + wm) - (bh * 60 + bm);
-    if (mins < 0) mins += 1440;
-    const hrs  = Math.floor(mins / 60);
-    const rem  = mins % 60;
-    const label = `${hrs}h ${rem}m`;
+      /* ── MOOD ── */
+      if (log?.mood?.mood) {
+        const mood = log.mood.mood;
+        if (mood === 'Great' || mood === 'Good') insights.push({ type: 'positive', icon: '🌸', title: `Positive Mood — ${mood}!`, text: `A good mood is a real health indicator. Whatever you did today is clearly working for your body and mind — take note of it and try to repeat it.` });
+        else if (mood === 'Okay') insights.push({ type: 'tip', icon: '🌷', title: 'Neutral Mood Today', text: `Feeling "okay" is perfectly valid. A short 10-minute walk, some journaling, or a warm drink can gently shift your mood and support hormone balance.` });
+        else if (mood === 'Bad' || mood === 'Awful') insights.push({ type: 'reminder', icon: '💗', title: 'Low Mood Noticed', text: `PCOD can affect mental health through hormonal fluctuations — you are not alone in feeling this. Be gentle with yourself today. Consider reaching out to someone you trust, or try a brief mindfulness exercise.` });
+        const tags = log.mood.tags || [];
+        if (tags.some(t => ['Anxious', 'Stressed', 'Overwhelmed', 'Irritable'].includes(t)))
+          insights.push({ type: 'tip', icon: '🧘', title: 'Stress Management', text: `High stress raises cortisol, which can disrupt your cycle and worsen PCOD symptoms. Even 5 minutes of deep breathing or a short walk creates a meaningful physiological shift.` });
+      }
 
-    if (mins < 360) {
-      insights.push({ type: 'warning', icon: '😴',
-        title: 'Low Sleep Detected',
-        text: `You slept ${label}. For PCOD management, 7–9 hours helps regulate cortisol and insulin levels. Try setting a consistent bedtime — even 30 minutes earlier makes a difference.`
-      });
-    } else if (mins < 420) {
-      insights.push({ type: 'tip', icon: '🌙',
-        title: 'Sleep Could Be Better',
-        text: `You got ${label} — not bad, but aiming for 7+ hours can noticeably improve your energy, mood, and hormone balance throughout the day.`
-      });
-    } else {
-      insights.push({ type: 'positive', icon: '✨',
-        title: 'Great Sleep!',
-        text: `You slept ${label} — excellent! Good sleep supports healthy cortisol rhythm, which is especially important for managing PCOD symptoms.`
-      });
-    }
+      /* ── NUTRITION ── */
+      if (log?.nutrition !== undefined) {
+        const n = Array.isArray(log.nutrition) ? log.nutrition : [];
+        if (n.length === 0) insights.push({ type: 'warning', icon: '🥗', title: 'No Nutrition Logged', text: `You didn't log any nutrition today. Diet plays a major role in PCOD management — try to include leafy greens, a protein source, and whole grains in your meals tomorrow.` });
+        else if (n.length >= 4) insights.push({ type: 'positive', icon: '🥗', title: 'Excellent Nutrition!', text: `You checked off ${n.length} nutrition goals today — that's fantastic! A PCOD-friendly diet helps regulate insulin and reduce chronic inflammation.` });
+        else insights.push({ type: 'tip', icon: '🌾', title: 'Good Start on Nutrition', text: `You logged ${n.length} nutrition item${n.length > 1 ? 's' : ''} today. Aim to add more variety — leafy greens, protein, and whole grains provide the best hormonal support for PCOD.` });
+        if (n.includes('Low Sugar')) insights.push({ type: 'positive', icon: '🚫🍬', title: 'Low Sugar — Great for PCOD!', text: `Avoiding processed sugar is one of the most impactful things you can do. It reduces insulin spikes and helps regulate androgen levels. This is a great habit to maintain!` });
+        if (!n.includes('Protein Source') && n.length > 0) insights.push({ type: 'tip', icon: '🥚', title: 'Add More Protein', text: `Protein stabilises blood sugar and keeps you fuller longer — both critical for PCOD. Try adding eggs, lentils, tofu, or chicken to your next meal.` });
+      }
 
-    const q = log.sleep.quality || '';
-    if (q.includes('Restless')) {
-      insights.push({ type: 'tip', icon: '🌿',
-        title: 'Restless Sleep',
-        text: 'Restless sleep raises cortisol and worsens hormonal imbalance. Try limiting screens 30 minutes before bed, and consider light stretching or chamomile tea as part of a wind-down routine.'
-      });
-    } else if (q.includes('Refreshed') || q.includes('Deep')) {
-      insights.push({ type: 'positive', icon: '💫',
-        title: 'Quality Sleep',
-        text: 'Waking up refreshed is a great sign! Quality sleep helps your body regulate estrogen and progesterone levels more effectively — keep this up.'
-      });
-    }
-  }
+      /* ── ACTIVITY ── */
+      if (log?.activities !== undefined) {
+        const acts = Array.isArray(log.activities) ? log.activities : [];
+        const totalMins = acts.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
+        if (acts.length === 0) insights.push({ type: 'tip', icon: '🚶', title: 'No Activity Today', text: `Even a 20-minute walk significantly improves insulin sensitivity in PCOD. Try building gentle movement into your day — it doesn't need to be intense to be effective.` });
+        else if (totalMins >= 30) insights.push({ type: 'positive', icon: '💪', title: `Active Day — ${totalMins} Minutes!`, text: `Great job staying active! Regular exercise is one of the most effective tools for PCOD — it improves insulin resistance, supports a regular cycle, and boosts mood.` });
+        else insights.push({ type: 'tip', icon: '🏃', title: 'Keep Building Activity', text: `You moved for ${totalMins} minutes today — a good start. Try to gradually reach 30+ minutes. Light activity like stretching, yoga, or a brisk walk all count.` });
+      }
 
-  /* ── HYDRATION ─────────────────────────────────────────── */
-  if (log?.hydration) {
-    const ml = log.hydration.ml || ((log.hydration.glasses || 0) * 250);
-    if (ml >= 2000) {
-      insights.push({ type: 'positive', icon: '💧',
-        title: 'Well Hydrated!',
-        text: `You hit ${ml}ml today — fantastic! Staying hydrated reduces bloating, supports kidney function, and eases PCOD-related water retention.`
-      });
-    } else if (ml >= 1200) {
-      insights.push({ type: 'tip', icon: '🥛',
-        title: 'Drink a Little More Water',
-        text: `You had about ${ml}ml today. Try to reach 2000ml — carry a water bottle and sip regularly. Proper hydration supports hormonal detoxification throughout the day.`
-      });
-    } else if (ml > 0) {
-      insights.push({ type: 'warning', icon: '⚠️',
-        title: 'Low Hydration Today',
-        text: `Only ${ml}ml logged today — below the recommended 2000ml. Dehydration can worsen PCOD symptoms like fatigue, bloating, and mood swings.`
-      });
-    }
-  }
+      /* ── CYCLE PHASE & PERIOD INSIGHTS ── */
+      const cycleStartDate = (cycleLog && cycleLog.start_date && cycleLog.start_date !== "" && cycleLog.start_date !== "null") ? cycleLog.start_date : (profile && profile.last_period && profile.last_period !== "" && profile.last_period !== "null" ? profile.last_period : null);
 
-  /* ── MOOD ──────────────────────────────────────────────── */
-  if (log?.mood?.mood) {
-    const mood = log.mood.mood;
-    if (mood === 'Great' || mood === 'Good') {
-      insights.push({ type: 'positive', icon: '🌸',
-        title: `Positive Mood — ${mood}!`,
-        text: `A good mood is a real health indicator. Whatever you did today is clearly working for your body and mind — take note of it and try to repeat it.`
-      });
-    } else if (mood === 'Okay') {
-      insights.push({ type: 'tip', icon: '🌷',
-        title: 'Neutral Mood Today',
-        text: `Feeling "okay" is perfectly valid. A short 10-minute walk, some journaling, or a warm drink can gently shift your mood and support hormone balance.`
-      });
-    } else if (mood === 'Bad' || mood === 'Awful') {
-      insights.push({ type: 'reminder', icon: '💗',
-        title: 'Low Mood Noticed',
-        text: `PCOD can affect mental health through hormonal fluctuations — you are not alone in feeling this. Be gentle with yourself today. Consider reaching out to someone you trust, or try a brief mindfulness exercise.`
-      });
+      if (cycleStartDate && cycleStartDate !== "null" && cycleStartDate !== "undefined" && cycleStartDate !== "") {
+        const today = new Date();
+        const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const start = getLocalDateObj(cycleStartDate);
+        const diffDays = Math.floor((todayLocal - start) / (1000 * 60 * 60 * 24)) + 1;
+        const cycleLength = parseInt(profile?.cycle_length) || 28;
+
+        if (diffDays >= 1 && diffDays <= 5) {
+          insights.push({ type: 'tip', icon: '🩸', title: 'Menstrual Phase', text: `You are in your Menstrual phase (Day ${diffDays}). It's normal to feel lower energy. Focus on iron-rich foods, stay warm, and prioritise gentle stretches or rest.` });
+        } else if (diffDays > 5 && diffDays <= 13) {
+          insights.push({ type: 'positive', icon: '🌱', title: 'Follicular Phase', text: `You are in your Follicular phase (Day ${diffDays}). Your energy should be rising! This is a great time to incorporate more active workouts and fresh, nutrient-dense foods.` });
+        } else if (diffDays === 14) {
+          insights.push({ type: 'tip', icon: '🌕', title: 'Ovulation Phase', text: `You are around your Ovulation phase (Day ${diffDays}). You might feel more social and energetic. With PCOD, ovulation can sometimes be delayed, so keep tracking your symptoms.` });
+        } else if (diffDays > 14 && diffDays <= cycleLength) {
+          insights.push({ type: 'warning', icon: '🍂', title: 'Luteal Phase', text: `You are in your Luteal phase (Day ${diffDays}). You might experience cravings or mood changes. Focus on complex carbs, magnesium-rich foods, and stress management.` });
+        } else if (diffDays > cycleLength) {
+          insights.push({ type: 'reminder', icon: '📅', title: 'Late Period', text: `Your period is currently late by ${diffDays - cycleLength} days. Irregular cycles are common with PCOD, but try to manage stress and maintain a balanced diet to help regulate it.` });
+        }
+      }
+
+      if (cycleLog) {
+        const pain = cycleLog.pain || 0;
+        const flow = cycleLog.flow?.intensity || '';
+        if (pain >= 7) insights.push({ type: 'reminder', icon: '💗', title: 'High Period Pain', text: `You reported pain level ${pain}/10. Severe pain with PCOD can indicate elevated prostaglandins. Please discuss this with your doctor — relief is possible and you deserve it.` });
+        else if (pain >= 4) insights.push({ type: 'warning', icon: '🌡️', title: 'Moderate Period Pain', text: `Pain level ${pain}/10 noted. A warm compress, anti-inflammatory foods like turmeric and ginger, and gentle stretching can help. Track if this pattern continues.` });
+        else if (pain > 0) insights.push({ type: 'tip', icon: '🌸', title: 'Mild Discomfort', text: `Low pain level ${pain}/10 — manageable! Staying hydrated and keeping active on low-pain days helps maintain cycle regularity over time.` });
+        if (flow.toLowerCase().includes('heavy')) insights.push({ type: 'reminder', icon: '🩸', title: 'Heavy Flow Noted', text: `Heavy periods can cause iron deficiency over time. Make sure to eat iron-rich foods — leafy greens, lentils, and lean meat. If this is consistently heavy, speak to your doctor.` });
+        const activeSymptoms = Object.keys(cycleLog.symptoms || {}).filter(k => cycleLog.symptoms[k]?.active);
+        if (activeSymptoms.length >= 3) insights.push({ type: 'tip', icon: '🌿', title: 'Multiple Symptoms Active', text: `You logged ${activeSymptoms.length} active symptoms today. Tracking these over time reveals patterns and triggers. Consider sharing this log with your gynaecologist at your next visit.` });
+      }
+
+      /* ── PROFILE / BMI ── */
+      if (profile?.weight && profile?.height) {
+        const hM = parseFloat(profile.height) / 100;
+        const bmi = parseFloat(profile.weight) / (hM * hM);
+        if (bmi > 27) insights.push({ type: 'tip', icon: '💛', title: 'Weight & PCOD', text: `Even a 5–10% reduction in body weight can significantly improve PCOD symptoms, restore cycle regularity, and improve insulin sensitivity. Small, consistent daily changes add up more than you'd expect.` });
+        else if (bmi >= 18.5 && bmi <= 24.9) insights.push({ type: 'positive', icon: '⚖️', title: 'Healthy Weight Range', text: `Your BMI (${bmi.toFixed(1)}) is in the healthy range. Maintaining this through balanced nutrition and regular activity is great for long-term PCOD management.` });
+      }
+
+      return insights;
     }
 
-    const tags = log.mood.tags || [];
-    const stressTags = ['Anxious', 'Stressed', 'Overwhelmed', 'Irritable'];
-    if (tags.some(t => stressTags.includes(t))) {
-      insights.push({ type: 'tip', icon: '🧘',
-        title: 'Stress Management',
-        text: `High stress raises cortisol, which can disrupt your cycle and worsen PCOD symptoms. Even 5 minutes of deep breathing or a short walk creates a meaningful physiological shift.`
-      });
+    function exportToPDF() {
+      window.print();
     }
-  }
+  </script>
+</body>
 
-  /* ── NUTRITION ─────────────────────────────────────────── */
-  if (log?.nutrition !== undefined) {
-    const n          = Array.isArray(log.nutrition) ? log.nutrition : [];
-    const count      = n.length;
-    const hasLowSugar = n.includes('Low Sugar');
-    const hasProtein  = n.includes('Protein Source');
-
-    if (count === 0) {
-      insights.push({ type: 'warning', icon: '🥗',
-        title: 'No Nutrition Logged',
-        text: `You didn't log any nutrition today. Diet plays a major role in PCOD management — try to include leafy greens, a protein source, and whole grains in your meals tomorrow.`
-      });
-    } else if (count >= 4) {
-      insights.push({ type: 'positive', icon: '🥗',
-        title: 'Excellent Nutrition!',
-        text: `You checked off ${count} nutrition goals today — that's fantastic! A PCOD-friendly diet helps regulate insulin and reduce chronic inflammation.`
-      });
-    } else {
-      insights.push({ type: 'tip', icon: '🌾',
-        title: 'Good Start on Nutrition',
-        text: `You logged ${count} nutrition item${count > 1 ? 's' : ''} today. Aim to add more variety — leafy greens, protein, and whole grains provide the best hormonal support for PCOD.`
-      });
-    }
-
-    if (hasLowSugar) {
-      insights.push({ type: 'positive', icon: '🚫🍬',
-        title: 'Low Sugar — Great for PCOD!',
-        text: `Avoiding processed sugar is one of the most impactful things you can do. It reduces insulin spikes and helps regulate androgen levels. This is a great habit to maintain!`
-      });
-    }
-
-    if (!hasProtein && count > 0) {
-      insights.push({ type: 'tip', icon: '🥚',
-        title: 'Add More Protein',
-        text: `Protein stabilises blood sugar and keeps you fuller longer — both critical for PCOD. Try adding eggs, lentils, tofu, or chicken to your next meal.`
-      });
-    }
-  }
-
-  /* ── ACTIVITY ──────────────────────────────────────────── */
-  if (log?.activities !== undefined) {
-    const acts      = Array.isArray(log.activities) ? log.activities : [];
-    const totalMins = acts.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
-
-    if (acts.length === 0) {
-      insights.push({ type: 'tip', icon: '🚶',
-        title: 'No Activity Today',
-        text: `Even a 20-minute walk significantly improves insulin sensitivity in PCOD. Try building gentle movement into your day — it doesn't need to be intense to be effective.`
-      });
-    } else if (totalMins >= 30) {
-      insights.push({ type: 'positive', icon: '💪',
-        title: `Active Day — ${totalMins} Minutes!`,
-        text: `Great job staying active! Regular exercise is one of the most effective tools for PCOD — it improves insulin resistance, supports a regular cycle, and boosts mood.`
-      });
-    } else {
-      insights.push({ type: 'tip', icon: '🏃',
-        title: 'Keep Building Activity',
-        text: `You moved for ${totalMins} minutes today — a good start. Try to gradually reach 30+ minutes. Light activity like stretching, yoga, or a brisk walk all count.`
-      });
-    }
-  }
-
-  /* ── CYCLE ─────────────────────────────────────────────── */
-  if (cycleLog) {
-    const pain    = cycleLog.pain    || 0;
-    const flow    = cycleLog.flow?.intensity || '';
-    const symptoms = cycleLog.symptoms || {};
-
-    if (pain >= 7) {
-      insights.push({ type: 'reminder', icon: '💗',
-        title: 'High Period Pain',
-        text: `You reported pain level ${pain}/10. Severe pain with PCOD can indicate elevated prostaglandins. Please discuss this with your doctor — relief is possible and you deserve it.`
-      });
-    } else if (pain >= 4) {
-      insights.push({ type: 'warning', icon: '🌡️',
-        title: 'Moderate Period Pain',
-        text: `Pain level ${pain}/10 noted. A warm compress, anti-inflammatory foods like turmeric and ginger, and gentle stretching can help. Track if this pattern continues.`
-      });
-    } else if (pain > 0) {
-      insights.push({ type: 'tip', icon: '🌸',
-        title: 'Mild Discomfort',
-        text: `Low pain level ${pain}/10 — manageable! Staying hydrated and keeping active on low-pain days helps maintain cycle regularity over time.`
-      });
-    }
-
-    if (flow.toLowerCase().includes('heavy')) {
-      insights.push({ type: 'reminder', icon: '🩸',
-        title: 'Heavy Flow Noted',
-        text: `Heavy periods can cause iron deficiency over time. Make sure to eat iron-rich foods — leafy greens, lentils, and lean meat. If this is consistently heavy, speak to your doctor.`
-      });
-    }
-
-    const activeSymptoms = Object.keys(symptoms).filter(k => symptoms[k]?.active);
-    if (activeSymptoms.length >= 3) {
-      insights.push({ type: 'tip', icon: '🌿',
-        title: 'Multiple Symptoms Active',
-        text: `You logged ${activeSymptoms.length} active symptoms today. Tracking these over time reveals patterns and triggers. Consider sharing this log with your gynaecologist at your next visit.`
-      });
-    }
-  }
-
-  /* ── PROFILE / BMI ─────────────────────────────────────── */
-  if (profile?.weight && profile?.height) {
-    const hM  = parseFloat(profile.height) / 100;
-    const w   = parseFloat(profile.weight);
-    const bmi = w / (hM * hM);
-
-    if (bmi > 27) {
-      insights.push({ type: 'tip', icon: '💛',
-        title: 'Weight & PCOD',
-        text: `Even a 5–10% reduction in body weight can significantly improve PCOD symptoms, restore cycle regularity, and improve insulin sensitivity. Small, consistent daily changes add up more than you'd expect.`
-      });
-    } else if (bmi >= 18.5 && bmi <= 24.9) {
-      insights.push({ type: 'positive', icon: '⚖️',
-        title: 'Healthy Weight Range',
-        text: `Your BMI (${bmi.toFixed(1)}) is in the healthy range. Maintaining this through balanced nutrition and regular activity is great for long-term PCOD management.`
-      });
-    }
-  }
-
-  return insights;
-}
-
-
-
- </script>
- </body>
- </html>
+</html>
