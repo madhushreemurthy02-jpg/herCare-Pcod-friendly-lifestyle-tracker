@@ -19,7 +19,6 @@ monitor symptoms, and receive AI-powered personalised wellness insights
 ### Frontend
 - HTML5, CSS3, JavaScript (Vanilla)
 - Google Fonts (Dancing Script, Nunito)
-- Gemini AI API (Google)
 
 ### Backend
 - Python 3.10+
